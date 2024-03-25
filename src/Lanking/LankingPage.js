@@ -1,4 +1,4 @@
-import Header from "../etc/Header";
+import Header from "../etc/components/Header"
 
 function LankingPage() {
     return (

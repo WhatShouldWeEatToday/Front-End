@@ -1,10 +1,17 @@
-import Header from "../etc/Header";
+import Header from "../etc/components/Header"
+import MainSession from "./components/MainSession";
+import Vote from "./components/Vote";
+import './css/MainPage.css'
+
 
 function MainPage() {
     return (
         <div className="MainPage">
             <Header></Header>
-            메인페이지입니다.
+            <div className="Main">
+                <MainSession></MainSession>
+                <Vote></Vote>
+            </div>
         </div>
     );
 }
