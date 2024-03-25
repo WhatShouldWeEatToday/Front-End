@@ -3,10 +3,9 @@ import { Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 import MainPage from './Main/MainPage';
 import LoginPage from '../src/User/Login/LoginPage';
 import RegisterPage from '../src/User/Register/RegisterPage';
-import NotFoundPage from '../src/etc/NotFoundPage';
+import NotFoundPage from './etc/components/NotFoundPage';
 import SearchPage from '../src/Map/MapPage';
 import ReviewPage from '../src/Review/ReviewPage';
-import RecipePage from '../src/Recipe/RecipiePage';
 import LankingPage from '../src/Lanking/LankingPage';
 import MyPage from '../src/User/Mypage/MyPage';
 
@@ -41,10 +40,6 @@ function App() {
     {
       path:'/review',
       element: <ReviewPage/>
-    },
-    {
-      path:'/recipe',
-      element: <RecipePage/>
     },
     {
       path:'/lanking',
