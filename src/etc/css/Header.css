@@ -1,7 +1,7 @@
 .Header{
     display: flex;
     flex-direction: row;
-    height: 20%;
+    height: 20vh;
 }
 
 .MainLogo{

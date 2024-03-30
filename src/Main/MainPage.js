@@ -1,16 +1,20 @@
 import Header from "../etc/components/Header"
 import MainSession from "./components/MainSession";
-import Vote from "./components/Vote";
 import './css/MainPage.css'
+import GroupSession from "./components/GroupSession";
 
 
 function MainPage() {
     return (
         <div className="MainPage">
-            <Header></Header>
+            <div className="Header-area">
+                <Header/>
+            </div>
             <div className="Main">
-                <MainSession></MainSession>
-                <Vote></Vote>
+                <MainSession/>
+            <div className="GroupSession">
+                <GroupSession/>
+            </div>
             </div>
         </div>
     );
