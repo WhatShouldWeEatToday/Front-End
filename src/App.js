@@ -8,6 +8,7 @@ import SearchPage from '../src/Map/MapPage';
 import ReviewPage from '../src/Review/ReviewPage';
 import LankingPage from '../src/Lanking/LankingPage';
 import MyPage from '../src/User/Mypage/MyPage';
+import BookMarkPage from './User/BookMark/BookMarkPage';
 
 
 function App() {
@@ -22,19 +23,15 @@ function App() {
       element: <MainPage/>
     },
     {
-      path:'/main',
-      element: <MainPage/>
-    },
-    {
-      path:'/register',
+      path:'/signup',
       element: <RegisterPage/>
     },
     {
-      path:'*',
-      element: <NotFoundPage/>
+      path:'/signin',
+      element: <LoginPage/>
     },
     {
-      path:'/search',
+      path:'/restaurant/search',
       element: <SearchPage/>
     },
     {
@@ -46,9 +43,17 @@ function App() {
       element: <LankingPage/>
     },
     {
+      path:'/restaurant/bookmark',
+      element: <BookMarkPage/>
+    },
+    {
       path:'/mypage',
       element: <MyPage/>
     },
+    {
+      path:'*',
+      element: <NotFoundPage/>
+    }
   ]
 
   const linkPage = () =>{
