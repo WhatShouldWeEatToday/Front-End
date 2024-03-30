@@ -17,7 +17,7 @@ function Header() {
                             <NavLink to="/" activeClassName="active">소개</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/search" activeClassName="active">맛집 검색</NavLink>
+                            <NavLink to="/restaurant/search" activeClassName="active">맛집 검색</NavLink>
                         </li>
                         <li className="Menu_Box">
                             <NavLink to="/review" activeClassName="active">맛집 리뷰</NavLink>

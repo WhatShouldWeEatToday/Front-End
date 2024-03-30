@@ -1,10 +1,8 @@
-import '../css/Vote.css'
+import '../css/Vote.css';
 
 function Vote() {
     return (
-        <div className="Vote">
-            그룹만들기  
-        </div>
+        <div></div>
     );
 }
 
