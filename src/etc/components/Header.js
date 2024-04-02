@@ -23,7 +23,7 @@ function Header() {
                             <NavLink to="/review" activeClassName="active">맛집 리뷰</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/lanking" activeClassName="active">랭킹</NavLink>
+                            <NavLink to="/ranking" activeClassName="active">랭킹</NavLink>
                         </li>
                     </ul>
             </div>

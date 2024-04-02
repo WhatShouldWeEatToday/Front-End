@@ -48,7 +48,7 @@ function MainSession() {
                     {isOpen &&
                     <ul>
                         {FOOD_LIST.map((select, id) => (
-                        <DropDown key={id} value={select.value} setIsOpen={setIsOpen} setSelectedFood={setSelectedFood} isOpen={isOpen}/>
+                        <DropDown key={id} value={select.value} setIsOpen={setIsOpen} setSelected={setSelectedFood} isOpen={isOpen}/>
                         ))}    
                     </ul>}
                 </div>
