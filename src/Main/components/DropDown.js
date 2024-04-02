@@ -1,6 +1,6 @@
-export const DropDown = ({value, setSelectedFood, setIsOpen, isOpen}) =>{
+export const DropDown = ({value, setSelected, setIsOpen, isOpen}) =>{
     const ValueClick = () => {
-        setSelectedFood(value)
+        setSelected(value)
         setIsOpen(!isOpen)
     }
     return(

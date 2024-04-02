@@ -6,9 +6,9 @@ import RegisterPage from '../src/User/Register/RegisterPage';
 import NotFoundPage from './etc/components/NotFoundPage';
 import SearchPage from '../src/Map/MapPage';
 import ReviewPage from '../src/Review/ReviewPage';
-import LankingPage from '../src/Lanking/LankingPage';
 import MyPage from '../src/User/Mypage/MyPage';
 import BookMarkPage from './User/BookMark/BookMarkPage';
+import RankingPage from './Ranking/RankingPage';
 
 
 function App() {
@@ -39,8 +39,8 @@ function App() {
       element: <ReviewPage/>
     },
     {
-      path:'/lanking',
-      element: <LankingPage/>
+      path:'/ranking',
+      element: <RankingPage/>
     },
     {
       path:'/restaurant/bookmark',
