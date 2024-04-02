@@ -6,7 +6,7 @@ function Header() {
     return (
         <div className="Header">
             <div className='MainLogo'>
-                <NavLink to="/main">
+                <NavLink to="/">
                 <img src={process.env.PUBLIC_URL + '/img/LOGO.png'} width='200px' alt='Logo' className='Logo'/>
                 </NavLink>
             </div>
