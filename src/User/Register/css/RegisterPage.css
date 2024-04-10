@@ -1,0 +1,143 @@
+.RegisterPage {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #ffffff;
+    width: 100%;
+  }
+  
+  .RegisterPage .Container {
+    width: 1440px;
+    height: 1274px;
+    background-color: #ffffff;
+    position: relative;
+  }
+  
+  /* 로고 */
+  .RegisterPage .LOGO {
+    width: auto;
+    height: 306px;
+    top: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+  }
+  
+  /* 폼태그 양식 */
+  .RegisterPage .registerForm {
+    height: 880px;
+    left: 120px;
+    position: absolute;
+    top: 394px;
+    width: 1200px;
+  }
+  
+  /* 폼태그 입력 요소 이름표 */
+  .RegisterPage .labelId,
+  .labelPw,
+  .labelPwCheck,
+  .labelName {
+    color: #000000;
+    font-family: "Inter-Black", Helvetica;
+    font-size: 36px;
+    font-weight: 900;
+    left: 93px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+  }
+  .RegisterPage .labelId {
+    top: 63px;
+  }
+  
+  .RegisterPage .labelPw {
+    top: 173px;
+  }
+  .RegisterPage .labelPwCheck {
+    top: 283px;
+  }
+  .RegisterPage .labelName {
+    top: 393px;
+  }
+  
+  /* 입력칸 */
+  .RegisterPage .inputId,
+  .inputPw,
+  .inputPwCheck,
+  .inputName {
+    width: 600px;
+    height: 60px;
+    background-color: #ffffff;
+    border: 1px solid;
+    border-color: #000000;
+    border-radius: 5px;
+    color: #afafaf;
+    font-family: "Inter-SemiBold", Helvetica;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 0 0 0 21px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 356px;
+  }
+  
+  .RegisterPage .inputId {
+    top: 56px;
+  }
+  .RegisterPage .inputPw {
+    top: 166px;
+  }
+  .RegisterPage .inputPwCheck {
+    top: 276px;
+  }
+  .RegisterPage .inputName {
+    top: 386px;
+  }
+  
+  /* 가입 버튼 */
+  .RegisterPage .registerBtnBox {
+    height: 80px;
+    left: 378px;
+    position: absolute;
+    top: 580px;
+    width: 452px;
+  }
+  
+  .RegisterPage .registerBtn {
+    color: #000000;
+    font-family: "Inter-Bold", Helvetica;
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    background-color: #fbe156;
+    border: 1px solid;
+    border-color: #000000;
+    border-radius: 5px;
+    height: 80px;
+    position: relative;
+    width: 450px;
+    padding: 0;
+  }
+  
+  .RegisterPage .registerBtn:hover {
+    cursor: pointer;
+  }
+  
+  /* 구분선 */
+  .RegisterPage .BlackLine1 {
+    background-color: #000000;
+    height: 3px;
+    left: 0;
+    position: absolute;
+    top: 527px;
+    width: 1200px;
+  }
+  .RegisterPage .BlackLine2 {
+    background-color: #000000;
+    height: 3px;
+    left: 120px;
+    position: absolute;
+    top: 390px;
+    width: 1200px;
+  }
