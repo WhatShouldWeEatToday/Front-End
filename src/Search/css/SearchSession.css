@@ -1,0 +1,90 @@
+.SearchSession{
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    margin: auto;
+    align-items: center;
+}
+
+.search-bar-area{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 8vh;
+    margin: 50px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+.search-word{
+    font-size: xx-large;
+}
+
+.search-bar{
+    margin: 20px;
+    width: 80%;
+    height: 50%;
+    border: solid black 3px;
+    border-radius: 30px;
+    font-size: x-large;
+}
+
+.search-map-area{
+    width: 100%;
+    height: 30vh;
+    background-color: aliceblue;
+    padding: 15px;
+}
+
+/* option */
+.collect-area{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 80%;
+    padding: 15px;
+}
+
+.list-btn{
+    width: 150px;
+    border: none;
+    background-color: white;
+    border-right: solid 2px black;
+    margin: 5px;
+    font-size: x-large;
+    font-family: 'Pretendard-Regular';
+    justify-content: flex-start;
+}
+
+.categori-btn{
+    background-color: #FBE156;
+    width: 150px;
+    border: none;
+    border-radius: 30px;
+    margin: 5px;
+    font-size: x-large;
+    font-family: 'Pretendard-Regular';
+    justify-content: flex-end;
+}
+
+/* 맛집목록 */
+.restaurant-list-area{
+    margin: 10px;
+    width: 100%;
+    height: 80%;
+    border-top: solid black 3px;
+    padding: 15px;
+}
+
+.restaurant-name{
+    font-size: 35px;
+}
+
+.restaurant-address {
+    font-size: 25px;
+}
+
+.restaurant-btn-area{
+    text-align: right;
+}
