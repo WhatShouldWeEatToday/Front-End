@@ -4,7 +4,7 @@ import MainPage from './Main/MainPage';
 import LoginPage from '../src/User/Login/LoginPage';
 import RegisterPage from '../src/User/Register/RegisterPage';
 import NotFoundPage from './etc/components/NotFoundPage';
-import SearchPage from '../src/Map/MapPage';
+import SearchPage from '../src/Search/SearchPage';
 import ReviewPage from '../src/Review/ReviewPage';
 import MyPage from '../src/User/Mypage/MyPage';
 import BookMarkPage from './User/BookMark/BookMarkPage';
