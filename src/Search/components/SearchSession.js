@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import '../css/SearchSession.css';
+import Map from "./Map";
 
 const Information = [
     {
@@ -48,21 +49,23 @@ function SearchSession() {
     const serched = Information.filter((item) => 
         item.name.toLowerCase().includes(search));
 
-        const items = serched.map(data =>{
-            return(
-                <div className="restaurant-list-area">
-                    <div className="restaurant-name">{data.name}</div>
-                    <div className="restaurant-address">{data.address_road}</div>
-                    <div className="restaurant-number">{data.tel}</div>
-                    <div className="restaurant-stars">별점</div>
-                    <div className="restaurant-btn-area">
-                        <button className="restaurant-btn">즐겨찾기</button>
-                        <button className="restaurant-btn">리뷰보기</button>
-                    </div>
-               </div>
-            )
-        })
+    const items = serched.map(data =>{
+        return(
+            <div className="restaurant-list-area">
+                <div className="restaurant-name">{data.name}</div>
+                <div className="restaurant-address">{data.address_road}</div>
+                <div className="restaurant-number">{data.tel}</div>
+                <div className="restaurant-stars">별점</div>
+                <div className="restaurant-btn-area">
+                    <button className="restaurant-btn">즐겨찾기</button>
+                    <button className="restaurant-btn">리뷰보기</button>
+                </div>
+            </div>
+        )
+    })
 
+    
+    
     return (
         <div className='SearchSession'>
            <div className="search-bar-area">
@@ -75,7 +78,7 @@ function SearchSession() {
                     </input>
             </div>
             <div className="search-map-area">
-                지도
+                <Map/>
             </div>
            <div className="collect-area">
                 <div className="collect-list">
@@ -89,17 +92,6 @@ function SearchSession() {
                 </div>
            </div>
            {items}
-           <div></div>
-           {/* <div className="restaurant-list-area">
-                <div className="restaurant-name">한솥</div>
-                <div className="restaurant-address">주소</div>
-                <div className="restaurant-number">054-</div>
-                <div className="restaurant-stars">별점</div>
-                <div className="restaurant-btn-area">
-                    <button className="restaurant-btn">즐겨찾기</button>
-                    <button className="restaurant-btn">리뷰보기</button>
-                </div>
-           </div> */}
         </div>
     );
 }
