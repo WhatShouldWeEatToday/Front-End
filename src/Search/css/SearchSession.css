@@ -87,3 +87,13 @@
 .restaurant-btn-area{
     text-align: right;
 }
+
+.restaurant-btn{
+    background-color: #FBE156;
+    margin-left: 20px;
+    width: 150px;
+    border: none;
+    border-radius: 30px;
+    font-size: x-large;
+    font-family: 'Pretendard-Regular';
+}
