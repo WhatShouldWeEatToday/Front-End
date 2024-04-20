@@ -4,7 +4,7 @@ import "./css/RegisterPage.css";
 function RegisterPage() {
   return (
     <div className="RegisterPage">
-       <div className="Container">
+      <div className="Container">
         <NavLink to="/signup">
           <img
             className="LOGO"
@@ -12,8 +12,8 @@ function RegisterPage() {
             src={process.env.PUBLIC_URL + "/img/LOGO.png"}
           />
         </NavLink>
+        <div className="BlackLine1" />
         <form className="registerForm" method="post">
-          <div className="BlackLine1" />
           <label className="labelId">아이디</label>
           <input
             className="inputId"
@@ -42,15 +42,33 @@ function RegisterPage() {
             placeholder="이름을 입력해주세요"
             required
           />
-          <div className="registerBtnBox">
+          <label className="labelGender">성별</label>
+          <label>
             <input
-              type="submit"
-              value="가입하기"
-              className="registerBtn"
-            ></input>
+              className="inputGender"
+              name="gender"
+              type="radio"
+              value="male"
+              checked
+            />
+            남자
+          </label>
+          <label>
+            <input
+              className="inputGender"
+              name="gender"
+              type="radio"
+              value="female"
+            />
+            여자
+          </label>
+          <label className="labelAge">나이</label>
+          <input type="number" min="0" />
+          <div className="registerBtnBox">
+            <input type="submit" value="가입하기" className="registerBtn" />
           </div>
+          <div className="BlackLine2" />
         </form>
-        <div className="BlackLine2" />
       </div>
     </div>
   );
