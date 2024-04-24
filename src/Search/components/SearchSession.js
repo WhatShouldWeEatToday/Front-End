@@ -1,42 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../css/SearchSession.css';
 import Map from "./Map";
 import axios from "axios";
 
 function SearchSession() {
 
-    //통신데이터저장
-    const [data, setData] = useState([]);
+    //통신데이터(맛집데이터) 저장
+    const [restaurant, setRestaurant] = useState([]);
+
+    //검색데이터 저장
+    const [search, setSearch] = useState('');
+
     //axios 통신
-    const getData = async () => {
+    const getRestaurant = async () => {
         try{
             const respone = await axios
             .get("http://localhost:8080/restaurant/findAll");
-            setData(respone.data.content);
+            setRestaurant(respone.data.content);
         } catch (err){
             console.log({error: err});
         }
     };
 
     useEffect(() =>{
-        getData();
+        getRestaurant();
     }, []);
 
-    console.log(data); //data 확인용 콘솔
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            getRestaurant();
+        }, 500);
 
-    const [search, setSearch] = useState('');
+        return () => clearTimeout(timer);
+    }, [search]);
+
+    const restLen = restaurant.length;
+
+    //검색어 상태 업데이트
     const getValue = (e) => {
         setSearch(e.target.value.toLowerCase())
     };
 
-    const serched = data.filter((item) => 
+    //검색 데이터 필터링
+    const serched = restaurant.filter((item) => 
         item.name.toLowerCase().includes(search));
 
     const items = serched.map(data =>{
         return(
             <div className="restaurant-list-area" key={data.id}>
                 <div className="restaurant-name">{data.name}</div>
-                <div className="restaurant-address">{data.address_road}</div>
+                <div className="restaurant-address">{data.addressRoad}</div>
                 <div className="restaurant-number">{data.tel}</div>
                 <div className="restaurant-stars">별점 :{data.degree}</div>
                 <div className="restaurant-btn-area">
@@ -59,7 +72,7 @@ function SearchSession() {
                     </input>
             </div>
             <div className="search-map-area">
-                <Map/>
+                <Map restaurant={restaurant} restLen={restLen}/>
             </div>
            <div className="collect-area">
                 <div className="collect-list">
