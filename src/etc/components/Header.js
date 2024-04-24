@@ -14,16 +14,16 @@ function Header() {
                 <TopHeader></TopHeader>
                 <ul className='Menu'>
                         <li className="Menu_Box">
-                            <NavLink to="/" activeClassName="active">소개</NavLink>
+                            <NavLink to="/" className="active">소개</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/restaurant/search" activeClassName="active">맛집 검색</NavLink>
+                            <NavLink to="/restaurant/search" className="active">맛집 검색</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/review" activeClassName="active">맛집 리뷰</NavLink>
+                            <NavLink to="/review" className="active">맛집 리뷰</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/ranking" activeClassName="active">랭킹</NavLink>
+                            <NavLink to="/ranking" className="active">랭킹</NavLink>
                         </li>
                     </ul>
             </div>
