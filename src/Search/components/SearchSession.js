@@ -7,6 +7,7 @@ function SearchSession() {
 
     //통신데이터(맛집데이터) 저장
     const [restaurant, setRestaurant] = useState([]);
+    const restLen = restaurant.length;
 
     //검색데이터 저장
     const [search, setSearch] = useState('');
@@ -22,19 +23,82 @@ function SearchSession() {
         }
     };
 
+    //검색어 보내기
+    const ClickSearch = async () => {
+        try{
+            const respone = await axios
+            .get("http://localhost:8080/restaurant/search");
+            setRestaurant(respone.data.content);
+        } catch (err){
+            console.log({error: err});
+        }
+    };
+
     useEffect(() =>{
         getRestaurant();
+        // ClickSearch();
     }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             getRestaurant();
+            // ClickSearch();
         }, 500);
 
         return () => clearTimeout(timer);
     }, [search]);
 
-    const restLen = restaurant.length;
+    
+    //목록별 조회 - 별점순
+    const getStar = async () => {
+        try{
+            const respone = await axios
+            .get("http://localhost:8080/restaurant/search/degree");
+            setRestaurant(respone.data.content);
+        } catch (err){
+            console.log({error: err});
+        }
+        console.log("별점순 작동");
+    };
+
+    //목록별 조회 - 리뷰순
+    const getReviw = async () => {
+        try{
+            const respone = await axios
+            .get("http://localhost:8080/restaurant/search/reviews");
+            setRestaurant(respone.data.content);
+        } catch (err){
+            console.log({error: err});
+        }
+        
+        console.log("리뷰순 작동");
+    };
+    // 카페 목록
+
+    const getOnlyCafe = async () => {
+        try{
+            const respone = await axios
+            .get("http://localhost:8080/restaurant/search/onlycafes");
+            setRestaurant(respone.data.content);
+        } catch (err){
+            console.log({error: err});
+        }
+        
+        console.log("리뷰순 작동");
+    };
+    //음식점 목록
+    const getOnlyRestuarant = async () => {
+        try{
+            const respone = await axios
+            .get("http://localhost:8080/restaurant/search/onlyrestaurants");
+            setRestaurant(respone.data.content);
+        } catch (err){
+            console.log({error: err});
+        }
+        
+        console.log("리뷰순 작동");
+    };
+
 
     //검색어 상태 업데이트
     const getValue = (e) => {
@@ -70,6 +134,7 @@ function SearchSession() {
                     // onChange={event => {setSearch(event.target.value)}}>
                     onChange={getValue}>
                     </input>
+                    <button onClick={ClickSearch}>검색버튼</button>
             </div>
             <div className="search-map-area">
                 <Map restaurant={restaurant} restLen={restLen}/>
@@ -77,8 +142,8 @@ function SearchSession() {
            <div className="collect-area">
                 <div className="collect-list">
                     <button className="list-btn">거리순</button>
-                    <button className="list-btn">별점순</button>
-                    <button className="list-btn">리뷰순</button>
+                    <button className="list-btn" onClick={getStar}>별점순</button>
+                    <button className="list-btn" onClick={getReviw}>리뷰순</button>
                 </div>
                 <div className="collect-categori">
                     <button className="categori-btn">음식점</button>
