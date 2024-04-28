@@ -31,7 +31,6 @@ const Friends = [
 ];
 
 
-
 function GroupList() {
 
     //나의 친구 데이터 통신

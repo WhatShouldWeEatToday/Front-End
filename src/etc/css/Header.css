@@ -40,8 +40,3 @@
     text-decoration: none;
     color: black;
 }
-
-.Menu_Box a.active{
-    width: 100%;
-    border-bottom: 5px solid #FBE156;
-}
