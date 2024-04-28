@@ -3,6 +3,12 @@ import '../css/Header.css'
 import { NavLink } from "react-router-dom";
 
 function Header() {
+
+    const activeStyle = {
+        width: '100%',
+        borderBottom: '5px solid #FBE156'
+    };
+
     return (
         <div className="Header">
             <div className='MainLogo'>
@@ -14,16 +20,24 @@ function Header() {
                 <TopHeader></TopHeader>
                 <ul className='Menu'>
                         <li className="Menu_Box">
-                            <NavLink to="/" className="active">소개</NavLink>
+                            <NavLink to="/" className="active"
+                                style={({ isActive }) => (isActive ? activeStyle : {})}>
+                            소개</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/restaurant/search" className="active">맛집 검색</NavLink>
+                            <NavLink to="/restaurant/search" className="active"
+                                style={({ isActive }) => (isActive ? activeStyle : {})}>
+                                맛집 검색</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/review" className="active">맛집 리뷰</NavLink>
+                            <NavLink to="/review" className="active"
+                                style={({ isActive }) => (isActive ? activeStyle : {})}>
+                                맛집 리뷰</NavLink>
                         </li>
                         <li className="Menu_Box">
-                            <NavLink to="/ranking" className="active">랭킹</NavLink>
+                            <NavLink to="/ranking" className="active"
+                                style={({ isActive }) => (isActive ? activeStyle : {})}>
+                                랭킹</NavLink>
                         </li>
                     </ul>
             </div>
