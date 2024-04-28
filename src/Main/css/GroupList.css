@@ -1,0 +1,77 @@
+.GroupList{
+    display: flex;
+    flex-direction: column;
+}
+
+.FriendsList-title{
+    padding: 10px;
+    border-bottom: solid #D9D9D9 3px;
+    font-size: x-large;
+}
+
+.Friends-search{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: auto;
+    align-items: center;
+}
+
+.freinds-serach-bar{
+    margin: 20px;
+    width: 100%;
+    height: 50%;
+    border: solid #FBE156 3px;
+    border-radius: 30px;
+    font-size: x-large;
+}
+
+.search_icon{
+    width: 30px;
+    height: 30px;
+}
+
+.FriendsList-body{
+    width: 100%;
+    height: 650px;
+    overflow: scroll;
+}
+.friends-list{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100px;
+    border-bottom: solid 3px #D9D9D9;
+    align-items: center;
+}
+
+.friends-profile{
+    width: 50px;
+    height: 50px;
+    margin: 20px;
+}
+.friends-name{
+    font-size: x-large;
+    margin: 20px;
+}
+
+.friends-invite{
+    width: 50px;
+    height: 50px;
+    margin: 20px;
+    margin-left: auto;
+}
+
+.Group{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-top: 10px;
+    margin: auto;
+
+}
+.make-group{
+    width: 70px;
+    margin: auto;
+}
