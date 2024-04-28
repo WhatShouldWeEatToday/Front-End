@@ -14,7 +14,7 @@ const SelectBox = (props) =>{
             {props.options.map((option) => (
                 <option
                 className='select-food-option'
-                id={option.id}
+                key={option.id}
                 defaultValue={props.defaultValue === option.id}>
                     {option.value}
                 </option>
@@ -68,8 +68,8 @@ function MainSession() {
                     </ul>}
                 </div> */}
                 <SelectBox
-                options={FOOD_LIST}
-                defaultValue=' + 음식 추가하기'>
+                    options={FOOD_LIST}
+                    defaultValue=' + 음식 추가하기'>
                 </SelectBox>
             </div>
             <div className='selectedImg'>
