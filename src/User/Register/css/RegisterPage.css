@@ -23,7 +23,7 @@
   position: absolute;
 }
 
-/* 폼태그 양식 */
+/* 화원가입 양식 */
 .RegisterPage .registerForm {
   height: 880px;
   left: 120px;
@@ -32,7 +32,7 @@
   width: 1200px;
 }
 
-/* 폼태그 입력 요소 이름표 */
+/* 회원가입 입력 요소 이름표 */
 .RegisterPage .labelId,
 .labelPw,
 .labelPwCheck,
@@ -101,6 +101,32 @@
   top: 496px;
 }
 
+/* 아이디 중복 확인 버튼 */
+.checkIdBtn,
+.checkNameBtn {
+  color: #000000;
+  font-family: "Inter-Bold", Helvetica;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.checkIdBtn {
+  width: 174px;
+  height: 45px;
+  top: 65px;
+  left: 969px;
+  position: absolute;
+}
+.checkNameBtn {
+  width: 174px;
+  height: 45px;
+  top: 393px;
+  left: 969px;
+  position: absolute;
+}
+
+/* 닉네임 중복 확인 버튼 */
+
 /* 가입 버튼 */
 .RegisterPage .registerBtnBox {
   height: 80px;
@@ -131,7 +157,7 @@
 }
 
 /* 구분선 */
-.RegisterPage .BlackLine1 {
+.RegisterPage .DividingLine1 {
   background-color: #000000;
   height: 3px;
   left: 120px;
@@ -139,7 +165,7 @@
   top: 390px;
   width: 1200px;
 }
-.RegisterPage .BlackLine2 {
+.RegisterPage .DividingLine2 {
   background-color: #000000;
   height: 3px;
   left: 0px;
