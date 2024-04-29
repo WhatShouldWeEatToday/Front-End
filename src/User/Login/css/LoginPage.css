@@ -1,0 +1,100 @@
+.LoginPage {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.LoginPage .Container {
+  background-color: #ffffff;
+  width: 1440px;
+  height: 1024px;
+  position: relative;
+}
+
+.LoginPage .LOGO {
+  width: auto;
+  height: 479px;
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+}
+
+.LoginPage .labelId {
+  color: #000000;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 36px;
+  left: 446px;
+  position: absolute;
+  text-align: center;
+  top: 601px;
+}
+
+.LoginPage .labelPw {
+  padding: 0;
+  color: #000000;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 36px;
+  left: 424px;
+  position: absolute;
+  text-align: center;
+  top: 673px;
+}
+
+.LoginPage .inputId {
+  border: 5px solid;
+  border-color: #fbe156;
+  border-radius: 50px;
+  height: 57px;
+  left: 501px;
+  position: absolute;
+  top: 595px;
+  width: 318px;
+}
+
+.LoginPage .inputPw {
+  border: 5px solid;
+  border-color: #fbe156;
+  border-radius: 50px;
+  height: 57px;
+  left: 501px;
+  position: absolute;
+  top: 667px;
+  width: 318px;
+}
+
+/* 버튼 */
+.LoginPage .LoginBtn {
+  background-color: #fbe156;
+  border-radius: 30px;
+  border: 0px;
+  height: 129px;
+  left: 838px;
+  position: absolute;
+  top: 595px;
+  width: 179px;
+  text-align: center;
+  color: #000000;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 32px;
+}
+.LoginPage .LoginBtn:hover {
+  cursor: pointer;
+}
+
+.LoginPage .goRegisterPageBtn {
+  top: 738px;
+  left: 601px;
+  position: absolute;
+  background-color: #ffffff;
+  border: 0px;
+  color: #000000;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 32px;
+  text-align: center;
+}
+
+.LoginPage .goRegisterPageBtn:hover {
+  cursor: pointer;
+}
