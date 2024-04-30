@@ -1,0 +1,22 @@
+.pagination{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 50px;
+}
+
+.page-btn{
+    margin: auto;
+    background-color: #FBE156;
+    border: none;
+    width: 100px;
+    height: 50px;
+    border-radius: 30px;
+    font-family: 'Pretendard-Regular';
+    font-size: x-large;
+}
+
+.page{
+    margin: auto;
+    font-size: x-large;
+}
