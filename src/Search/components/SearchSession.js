@@ -3,12 +3,10 @@ import '../css/SearchSession.css';
 import Map from "./Map";
 import axios from "axios";
 import Pagination from "./Pagination";
-
 function SearchSession() {
-
     //통신데이터(맛집데이터) 저장
     const [restaurant, setRestaurant] = useState([]);
-    
+
     //검색데이터 저장
     const [search, setSearch] = useState('');
 
@@ -18,8 +16,10 @@ function SearchSession() {
     const [restLen, setRestLen] = useState(0); // 검색 데이터 수
 
     useEffect(() => {
-        if (!search && page === 0) {
+        if(!search){
             getRestaurant();
+        } else{
+            ClickSearch();
         }
     }, [page, search]);
 
@@ -32,6 +32,7 @@ function SearchSession() {
            setRestaurant(content);
            setTotalPages(totalPages);
            setRestLen(numberOfElements);
+
         } catch (err){
             console.log({error: err});
         }
@@ -46,9 +47,7 @@ function SearchSession() {
            setRestaurant(content);
            setTotalPages(totalPages);
            setRestLen(numberOfElements);
-           setPage(0);
 
-           console.log(content);
         } catch (err){
             console.log({error: err});
         }
@@ -75,7 +74,6 @@ function SearchSession() {
         }
         console.log("별점순 작동");
     };
-
     //목록별 조회 - 리뷰순
     const getReviw = async () => {
         try{
@@ -88,7 +86,6 @@ function SearchSession() {
         
         console.log("리뷰순 작동");
     };
-
     //음식점 목록
     const getOnlyRestuarant = async () => {
         try{
@@ -101,7 +98,6 @@ function SearchSession() {
         
         console.log("음식점 작동");
     };
-
     // 카페 목록
     const getOnlyCafe = async () => {
         try{
@@ -111,7 +107,7 @@ function SearchSession() {
         } catch (err){
             console.log({error: err});
         }
-        
+
     };
 
     //음식점을 클릭했는지
@@ -138,7 +134,6 @@ function SearchSession() {
             </div>
         )
     })
-
     return (
         <div className='SearchSession'>
            <div className="search-bar-area">
@@ -179,5 +174,4 @@ function SearchSession() {
         </div>
     );
 }
-
 export default SearchSession;

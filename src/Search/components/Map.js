@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/Map.css";
-
 const {Tmapv2} = window;
-
 function Map({restaurant, restLen}) {
 
     const [mapLoaded, setMapLoaded] = useState(null);
@@ -66,7 +64,6 @@ function Map({restaurant, restLen}) {
         });
         mapLoaded.fitBounds(bounds);
     }
-
     return (
         <div id="map_div"></div>
     );
