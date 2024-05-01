@@ -80,6 +80,9 @@
     padding: 15px;
 }
 
+.restaurant-list-area:hover{
+    background-color: aliceblue;
+}
 .restaurant-name{
     font-size: 35px;
 }

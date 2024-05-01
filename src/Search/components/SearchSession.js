@@ -9,46 +9,46 @@ function SearchSession() {
     //통신데이터(맛집데이터) 저장
     const [restaurant, setRestaurant] = useState([]);
     
-
     //검색데이터 저장
     const [search, setSearch] = useState('');
 
-    
-    //검색어 보내기
-    // const ClickSearch = async () => {
-    //     try{
-    //         const respone = await axios
-    //         .get(`http://localhost:8080/restaurant/search/?word=${search}`);
-    //         setRestaurant(respone.data.content);
-    //     } catch (err){
-    //         console.log({error: err});
-    //     }
-    // };
-
     /*Pagination*/
-    //페이지 숫자
     const [page, setPage] = useState(0); //페이지 숫자
     const [totalPages, setTotalPages] = useState(0); //전체 데이터 수
-    const [pageSize] = useState(10); //한 페이지 당 받는 데이터 수
     const [restLen, setRestLen] = useState(0); // 검색 데이터 수
 
     useEffect(() => {
-        const timer = setTimeout(() => {
+        if (!search && page === 0) {
             getRestaurant();
-        }, 100);
-
-        return () => clearTimeout(timer);
+        }
     }, [page, search]);
 
     //전체 음식점 조회
     const getRestaurant = async () => {
         try{
             const respone = await axios
-            .get("http://localhost:8080/restaurant/findAll");
-           const {content, totalElements, numberOfElements } = respone.data; //데이터 받아오기
+            .get(`http://localhost:8080/restaurant/findAll?page=${page}`);
+           const {content, totalPages, numberOfElements } = respone.data; //데이터 받아오기
            setRestaurant(content);
-           setTotalPages(Math.ceil(totalElements/ pageSize));
+           setTotalPages(totalPages);
            setRestLen(numberOfElements);
+        } catch (err){
+            console.log({error: err});
+        }
+    };
+
+    // 검색어 보내기
+    const ClickSearch = async () => {
+        try{
+            const respone = await axios
+            .get(`http://localhost:8080/restaurant/search?word=${search}&page=${page}`);
+            const {content, totalPages, numberOfElements } = respone.data; //데이터 받아오기
+           setRestaurant(content);
+           setTotalPages(totalPages);
+           setRestLen(numberOfElements);
+           setPage(0);
+
+           console.log(content);
         } catch (err){
             console.log({error: err});
         }
@@ -114,13 +114,19 @@ function SearchSession() {
         
     };
 
-    //검색 데이터 필터링
-    const serched = restaurant.filter((item) => 
-        item.name.toLowerCase().includes(search) || item.menus.toLowerCase().includes(search));
+    //음식점을 클릭했는지
+    const [selectRest, setSelectRest] = useState(null);
 
-    const items = serched.map(data =>{
+    //음식점 클릭이벤트
+    const clickRestaurant = (select) => {
+        setSelectRest(select);
+    };
+
+    const items = restaurant.map(data =>{
         return(
-            <div className="restaurant-list-area" key={data.id}>
+            <div className="restaurant-list-area"
+                onClick={() => clickRestaurant(data)}
+                key={data.id}>
                 <div className="restaurant-name">{data.name}</div>
                 <div className="restaurant-address">{data.addressRoad}</div>
                 <div className="restaurant-number">{data.tel}</div>
@@ -146,11 +152,12 @@ function SearchSession() {
                     <img src={process.env.PUBLIC_URL + '/img/yellow_search.png'}
                         className="search_icon"
                         alt='search'
-                        onClick={getRestaurant}
+                        onClick={ClickSearch}
                         />
             </div>
             <div className="search-map-area">
-                <Map restaurant={restaurant} restLen={restLen}/>
+            <Map restaurant={search ? restaurant : (selectRest ? [selectRest] : restaurant)} restLen={restLen}/>
+
             </div>
            <div className="collect-area">
                 <div className="collect-list">
