@@ -6,7 +6,7 @@ const {Tmapv2} = window;
 function Map({restaurant, restLen}) {
 
     const [mapLoaded, setMapLoaded] = useState(null);
-    const [dataLoaded, setDataLoaded] = useState(false);
+    const [markers, setMarkers] = useState([]);
 
     useEffect(() => {
         initMap();
@@ -14,17 +14,14 @@ function Map({restaurant, restLen}) {
 
     useEffect(() => {
         if(mapLoaded && restaurant && restLen > 0) {
+            clearMarkers(); // 새로운 마커 추가 전에 이전 마커 제거
             addMarkers();
             findCenter();
-            setDataLoaded(true);
         }
     }, [restaurant]);
 
     //지도 생성
     var map;  
-
-    //마커들 저장할 배열
-    // var markers = [];
 
     function initMap(){
         const mapDiv = document.getElementById("map_div");
@@ -41,14 +38,24 @@ function Map({restaurant, restLen}) {
 
     //지도에 마커 생성
     function addMarkers() {
-        restaurant.forEach(rest => {
+        const newMarkers = restaurant.map(rest => {
             var marker = new Tmapv2.Marker({
                 position: new Tmapv2.LatLng(rest.latitude, rest.longitude),
                 label: rest.name
             });
             marker.setMap(mapLoaded);
-        })
+            return marker;
+        });
+        setMarkers(newMarkers);
     } 
+
+    // 이전 마커 제거
+    function clearMarkers() {
+        markers.forEach(marker => {
+            marker.setMap(null);
+        });
+        setMarkers([]);
+    }
 
     function findCenter() {
         if(!mapLoaded) return;
