@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import '../css/SearchSession.css';
 import Map from "./Map";
-import axios from "axios";
+import axios from "../../etc/utils/apis";
 import Pagination from "./Pagination";
+
 function SearchSession() {
     //통신데이터(맛집데이터) 저장
     const [restaurant, setRestaurant] = useState([]);

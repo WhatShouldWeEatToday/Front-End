@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import "./css/LoginPage.css";
 import { useState } from "react";
-import axios from "axios";
+import axios from "../../etc/utils/apis";
 
 function LoginPage() {
   const saveTokensToLocalStorage = (accessToken, refreshToken) => {

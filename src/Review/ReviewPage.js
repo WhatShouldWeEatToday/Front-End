@@ -1,8 +1,7 @@
 import Header from "../etc/components/Header";
 import "./css/ReviewPage.css";
 import { useState } from "react";
-import axios from "axios";
-import axiosInstance from "../utils/apis";
+import axios from "../etc/utils/apis";
 
 function ReviewPage() {
   const [restaurantId, setRestaurantId] = useState(1);
@@ -38,7 +37,7 @@ function ReviewPage() {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
-    axiosInstance
+    axios
       .post(
         `http://localhost:8080/api/review/${restaurantId}`,
         {
