@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import "./css/RegisterPage.css";
 import { useState } from "react";
-import axios from "axios";
+import axios from "../../etc/utils/apis";
 
 function RegisterPage() {
   const navigate = useNavigate();
