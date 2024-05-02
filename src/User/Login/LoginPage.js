@@ -4,6 +4,13 @@ import { useState } from "react";
 import axios from "axios";
 
 function LoginPage() {
+  const saveTokensToLocalStorage = (accessToken, refreshToken) => {
+    // 받은 액세스 토큰을 로컬 스토리지에 저장
+    localStorage.setItem("accessToken", accessToken);
+    // 받은 리프레시 토큰을 로컬 스토리지에 저장
+    localStorage.setItem("refreshToken", refreshToken);
+  };
+
   const navigate = useNavigate();
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
@@ -28,7 +35,11 @@ function LoginPage() {
         loginPw: inputPw,
       })
       .then((res) => {
+        const { accessToken, refreshToken } = res.data; // 응답 데이터에서 토큰 추출
         console.log(res.data);
+        saveTokensToLocalStorage(accessToken, refreshToken); // 토큰을 로컬 스토리지에 저장
+        console.log(accessToken);
+        console.log(refreshToken);
         alert("로그인에 성공하였습니다.");
         navigate("/");
       })
