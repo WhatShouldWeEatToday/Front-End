@@ -1,39 +1,42 @@
 import Header from "../etc/components/Header";
 import "./css/ReviewPage.css";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "../etc/utils/apis";
 
 function ReviewPage() {
-  const [restaurantId, setRestaurantId] = useState(1);
-  const [writer, setWriter] = useState(20);
-  const [rating, setRating] = useState(0.0);
-  const [tags, setTags] = useState({
-    taste: 0,
-    cost: 0,
-    kind: 0,
-    mood: 0,
-    park: 0,
-  });
-  const [review, setReview] = useState([rating, tags, writer]);
+  const navigate = useNavigate();
 
+  const [restaurantId, setRestaurantId] = useState(25243); // 음식점 ID
+  const [rating, setRating] = useState(5.0); // 별점
+
+  // 태그(맛, 가성비, 친절, 분위기, 주차)
+  const [taste, setTaste] = useState(0);
+  const [cost, setCost] = useState(0);
+  const [kind, setKind] = useState(0);
+  const [mood, setMood] = useState(0);
+  const [park, setPark] = useState(0);
+
+  // 별점 변화 감지
   const handleRatingChange = (e) => {
     setRating(e.target.value);
-    setReview(e.target.value);
-  };
-  const handleTagChange = (e) => {
-    const { id, checked } = e.target;
-    setTags((prevTags) => ({
-      ...prevTags,
-      [id]: checked ? 1 : 0,
-    }));
-    setReview(e.target.value);
   };
 
+  // 태그 체크박스 변화 감지
+  const handleTagChange = (e, setState) => {
+    const isChecked = e.target.checked;
+    setState(isChecked ? 1 : 0);
+  };
+
+  // 리뷰 등록
   const createReview = async () => {
-    console.log("Rating = " + rating);
-    console.log("Tags = " + tags);
-    console.log("Writer = " + writer);
     console.log("RestaurantId = " + restaurantId);
+    console.log("Rating = " + rating);
+    console.log("Taste = " + taste);
+    console.log("Cost = " + cost);
+    console.log("Kind = " + kind);
+    console.log("Mood = " + mood);
+    console.log("Park = " + park);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
@@ -41,7 +44,12 @@ function ReviewPage() {
       .post(
         `http://localhost:8080/api/review/${restaurantId}`,
         {
-          review: review,
+          rating: rating,
+          taste: taste,
+          cost: cost,
+          kind: kind,
+          mood: mood,
+          park: park,
         },
         {
           headers: headers, // 헤더 설정
@@ -49,7 +57,8 @@ function ReviewPage() {
       )
       .then((res) => {
         console.log(res.data);
-        alert(res.data);
+        alert("리뷰가 등록되었습니다.");
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
@@ -60,11 +69,9 @@ function ReviewPage() {
     <div className="ReviewPage">
       <Header></Header>
       <div className="review-form-container">
-        {/* 리뷰 작성 버튼 */}
-
-        <div className="DividingLine1" />
+        {/* <div className="DividingLine1" />
         <div className="restaurant-info">
-          {/* <div className="text-wrapper-2">한솥도시락구미금오공대점</div>
+          <div className="text-wrapper-2">한솥도시락구미금오공대점</div>
           <span className="star-icon">★</span>
           <p className="element">
             <span className="span">5.0</span>
@@ -74,9 +81,9 @@ function ReviewPage() {
           <div className="text-wrapper-4">054-472-0615</div>
           <div className="overlap">
             <div className="text-wrapper-5">즐겨찾기</div>
-          </div> */}
+          </div>
         </div>
-        <div className="DividingLine2" />
+        <div className="DividingLine2" /> */}
         {/* ============================================ */}
         <div className="star-rating-box">
           <span className="star-text">별점</span>
@@ -109,6 +116,7 @@ function ReviewPage() {
             className="star"
             value="5.0"
             onChange={handleRatingChange}
+            checked
           />
         </div>
 
@@ -119,35 +127,35 @@ function ReviewPage() {
             type="checkbox"
             name="review-tags"
             id="taste"
-            onChange={handleTagChange}
+            onChange={(e) => handleTagChange(e, setTaste)}
           />
           <label for="taste">맛</label>
           <input
             type="checkbox"
             name="review-tags"
             id="cost"
-            onChange={handleTagChange}
+            onChange={(e) => handleTagChange(e, setCost)}
           />
           <label for="cost">가성비</label>
           <input
             type="checkbox"
             name="review-tags"
             id="kind"
-            onChange={handleTagChange}
+            onChange={(e) => handleTagChange(e, setKind)}
           />
           <label for="kind">친절</label>
           <input
             type="checkbox"
             name="review-tags"
             id="mood"
-            onChange={handleTagChange}
+            onChange={(e) => handleTagChange(e, setMood)}
           />
           <label for="mood">분위기</label>
           <input
             type="checkbox"
             name="review-tags"
             id="park"
-            onChange={handleTagChange}
+            onChange={(e) => handleTagChange(e, setPark)}
           />
           <label for="park">주차</label>
         </div>
