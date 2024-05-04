@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../css/Map.css";
 const {Tmapv2} = window;
-function Map({restaurant, restLen}) {
+
+function Map({ restaurant, restLen, setLat, setLon }) {
 
     const [mapLoaded, setMapLoaded] = useState(null);
     const [markers, setMarkers] = useState([]);
@@ -20,6 +21,8 @@ function Map({restaurant, restLen}) {
 
     //지도 생성
     var map;  
+    var InfoWindow;
+    var infoMark;
 
     function initMap(){
         const mapDiv = document.getElementById("map_div");
@@ -32,6 +35,38 @@ function Map({restaurant, restLen}) {
             }); 
             setMapLoaded(map);
         }
+
+        // HTML5의 geolocation으로 사용할 수 있는지 확인합니다      
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				function(position) {
+					var lat = position.coords.latitude;
+					var lon = position.coords.longitude;
+
+                    setLat(lat);
+                    setLon(lon);
+					//팝업 생성
+					var content = "<div style=' position: relative; border-bottom: 1px solid #dcdcdc; line-height: 18px; padding: 0 35px 2px 0;'>"
+							+ "<div style='font-size: 12px; line-height: 15px;'>"
+							+ "<span style='display: inline-block; width: 14px; height: 14px; background-image: url(/resources/images/common/icon_blet.png); vertical-align: middle; margin-right: 5px;'></span>현재위치"
+							+ "</div>" + "</div>";
+
+					infoMark = new Tmapv2.Marker({
+						position : new Tmapv2.LatLng(lat,lon),
+						map : map
+					});
+
+					InfoWindow = new Tmapv2.InfoWindow({
+						position : new Tmapv2.LatLng(lat,lon),
+						content : content,
+						type : 2,
+						map : map,
+                        center: new Tmapv2.LatLng(lat,lon)
+					});
+					map.setCenter(new Tmapv2.LatLng(lat,lon));
+					map.setZoom(15);
+				});
+		}
     }
 
     //지도에 마커 생성
@@ -64,6 +99,8 @@ function Map({restaurant, restLen}) {
         });
         mapLoaded.fitBounds(bounds);
     }
+
+
     return (
         <div id="map_div"></div>
     );
