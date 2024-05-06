@@ -3,6 +3,7 @@ import '../css/SearchSession.css';
 import Map from "./Map";
 import axios from "../../etc/utils/apis";
 import Pagination from "./Pagination";
+import { Link } from "react-router-dom";
 
 function SearchSession() {
     //통신데이터(맛집데이터) 저장
@@ -44,25 +45,25 @@ function SearchSession() {
             const response = await axios.get(`${apiURL}page=${page}`);
 
             const { content, totalPages, numberOfElements} = response.data; //데이터 받기
-            setRestaurant(content);
-            setTotalPages(totalPages);
+            setRestaurant(content); 
+            setTotalPages(totalPages - 1);
             setRestLen(numberOfElements);
-
-            console.log("현재데이터", content);
-            console.log("총 페이지 갯수: ", response.data);
 
         } catch (err){
             console.log({error: err});
         }
     }
 
+    //페이지 변경
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
 
+    //데이터 타입 변경
     const handlePaginationTypeChange = (type) => {
         setPaginationType(type);
         setPage(1);
+        setBtnSelected(type);
         fetchData();
     }
      //검색어 상태 업데이트
@@ -78,9 +79,8 @@ function SearchSession() {
             .get(`http://localhost:8080/restaurant/search?word=${search}&page=${page}`);
             const {content, totalPages, numberOfElements } = respone.data; //데이터 받아오기
            setRestaurant(content);
-           setTotalPages(totalPages);
+           setTotalPages(totalPages - 1);
            setRestLen(numberOfElements);
-           console.log("검색결과: ",content);
 
         } catch (err){
             console.log({error: err});
@@ -101,6 +101,14 @@ function SearchSession() {
         setSelectRest(select);
     };
 
+    //즐겨찾기
+    const clickBookmark = () => {
+        alert("등록되었습니다.");
+    }
+
+    //카테고리 선택
+    const [btnSelected, setBtnSelected] = useState(null);
+
     const items = restaurant.map(data =>{
         return(
             <div className="restaurant-list-area"
@@ -109,11 +117,18 @@ function SearchSession() {
                 <div className="restaurant-name">{data.name}</div>
                 <div className="restaurant-address">{data.addressRoad}</div>
                 <div className="restaurant-number">{data.tel}</div>
-                <div className="restaurant-stars">별점 :{data.degree}</div>
-                <div className="restaurant-stars">리뷰 :{data.totalReviews}</div>
+                <div className="restaurant-stars">
+                    <div className="restaurant-star">★</div>
+                    <div className="restaurant-starCount">{data.degree} </div>
+                    <div className="restaurant-review">({data.totalReviews})</div>
+                </div>
                 <div className="restaurant-btn-area">
-                    <button className="restaurant-btn">즐겨찾기</button>
-                    <button className="restaurant-btn">리뷰보기</button>
+                    <button className="restaurant-btn" onClick={clickBookmark}>즐겨찾기</button>
+                    <button className="restaurant-btn" >
+                        <Link to={`http://localhost:8080/restaurant/${data.id}/review`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        >리뷰보기</Link>
+                    </button>
                 </div>
             </div>
         )
@@ -141,13 +156,18 @@ function SearchSession() {
             </div>
            <div className="collect-area">
                 <div className="collect-list">
-                    <button className="list-btn" onClick={() => handlePaginationTypeChange('distance')}>거리순</button>
-                    <button className="list-btn" onClick={() => handlePaginationTypeChange('degree')}>별점순</button>
-                    <button className="list-btn" onClick={() => handlePaginationTypeChange('reviews')}>리뷰순</button>
+                    <button className={`list-btn ${btnSelected === 'distance' ? 'selected' : ''}`}
+                    onClick={() => handlePaginationTypeChange('distance')}>거리순</button>
+                    <button className={`list-btn ${btnSelected === 'degree' ? 'selected' : ''}`}
+                    onClick={() => handlePaginationTypeChange('degree')}>별점순</button>
+                    <button className={`list-btn ${btnSelected === 'reviews' ? 'selected' : ''}`}
+                    onClick={() => handlePaginationTypeChange('reviews')}>리뷰순</button>
                 </div>
                 <div className="collect-categori">
-                    <button className="categori-btn" onClick={() => handlePaginationTypeChange('onlyrest')}>음식점</button>
-                    <button className="categori-btn" onClick={() => handlePaginationTypeChange('onlycafe')}>카페</button>
+                    <button className={`categori-btn ${btnSelected === 'onlyrest' ? 'selected' : ''}`}
+                    onClick={() => handlePaginationTypeChange('onlyrest')}>음식점</button>
+                    <button className={`categori-btn ${btnSelected === 'onlycafe' ? 'selected' : ''}`}
+                    onClick={() => handlePaginationTypeChange('onlycafe')}>카페</button>
                 </div>
            </div>
            {items}
