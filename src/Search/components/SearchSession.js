@@ -14,32 +14,57 @@ function SearchSession() {
     /*Pagination*/
     const [page, setPage] = useState(1); //페이지 숫자
     const [totalPages, setTotalPages] = useState(0); //전체 데이터 수
-    const [restLen, setRestLen] = useState(0); // 검색 데이터 수
+    const [restLen, setRestLen] = useState(0); // 검색 데이터
+    const [paginationType, setPaginationType] = useState();
 
     useEffect(() => {
         if(!search){
-            getRestaurant();
+            fetchData();
         } else{
             ClickSearch();
         }
-    }, [page, search]);
+    }, [page, search, paginationType]);
 
-    //전체 음식점 조회
-    const getRestaurant = async () => {
+    const fetchData = async () => {
         try{
-            const respone = await axios
-            .get(`http://localhost:8080/restaurant/findAll?page=${page}`);
-           const {content, totalPages, numberOfElements } = respone.data; //데이터 받아오기
-           setRestaurant(content);
-           setTotalPages(totalPages);
-           setRestLen(numberOfElements);
+            let apiURL = '';
+            if(paginationType === 'degree'){
+                apiURL = 'http://localhost:8080/restaurant/search/degree?'; //별점순
+            } else if(paginationType === 'reviews'){
+                apiURL = 'http://localhost:8080/restaurant/search/reviews?'; //리뷰순
+            } else if(paginationType === 'distance'){
+                apiURL = `http://localhost:8080/restaurant/search/routes?startX=${lat}&startY=${lon}&`; //거리순
+            } else if(paginationType === 'onlycafe'){
+                apiURL = 'http://localhost:8080/restaurant/search/onlycafes?';
+            } else if(paginationType === 'onlyrest'){
+                apiURL = 'http://localhost:8080/restaurant/search/onlyrestaurants?';
+            } else {
+                apiURL = 'http://localhost:8080/restaurant/findAll?';
+            }
+            const response = await axios.get(`${apiURL}page=${page}`);
 
+            const { content, totalPages, numberOfElements} = response.data; //데이터 받기
+            setRestaurant(content);
+            setTotalPages(totalPages);
+            setRestLen(numberOfElements);
+
+            console.log("현재데이터", content);
+            console.log("총 페이지 갯수: ", response.data);
 
         } catch (err){
             console.log({error: err});
         }
+    }
+
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
     };
 
+    const handlePaginationTypeChange = (type) => {
+        setPaginationType(type);
+        setPage(1);
+        fetchData();
+    }
      //검색어 상태 업데이트
      const getValue = (e) => {
         setSearch(e.target.value.toLowerCase());
@@ -55,113 +80,19 @@ function SearchSession() {
            setRestaurant(content);
            setTotalPages(totalPages);
            setRestLen(numberOfElements);
+           console.log("검색결과: ",content);
 
         } catch (err){
             console.log({error: err});
         }
-    };
-
-    const handlePageChange = (newPage) => {
-        setPage(newPage);
     };
 
     //목록별 조회 - 거리순
     const [lat, setLat] = useState(); // 위도
     const [lon, setLon] = useState(); // 경도
 
-    console.log("현재 위경도: ", lat, lon);
+    console.log("현재 위경도", lat, lon);
     
-     const getDistance = async () =>{
-        try{
-            const response = await axios
-            .get(`http://localhost:8080/restaurant/search/routes?startX=${lat}&startY=${lon}`);
-            const {content, totalPages, numberOfElements } = response.data; //데이터 받아오기
-            setRestaurant(content);
-            setTotalPages(totalPages);
-            setRestLen(numberOfElements);
-
-            console.log("거리순 작동");
-            console.log("거리순:", content);
-
-        } catch (err){
-            console.log({error: err});
-        }
-     }
-
-    //목록별 조회 - 별점순
-    const getDegree = async () => {
-        try{
-            const response = await axios
-            .get(`http://localhost:8080/restaurant/search/degree?page=${page}`);
-            const {content, totalPages, numberOfElements } = response.data; //데이터 받아오기
-            setRestaurant(content);
-            setTotalPages(totalPages);
-            setRestLen(numberOfElements);
-
-            console.log("별점순 작동");
-            console.log(restaurant);
-
-        } catch (err){
-            console.log({error: err});
-        }
-    };
-
-    // const handleStarClick = () => {
-    //     setPage(1); // 버튼 클릭 시 페이지 초기화
-    //     getDegree(); // 별점순 목록 조회 함수 호출
-    // };
-
-    //목록별 조회 - 리뷰순
-    const getReviw = async () => {
-        try{
-            const response = await axios
-            .get(`http://localhost:8080/restaurant/search/reviews?page=${page}`);
-            const {content, totalPages, numberOfElements } = response.data; //데이터 받아오기
-            setRestaurant(content);
-            setTotalPages(totalPages);
-            setRestLen(numberOfElements);
-            setPage(1); // 페이지 초기화
-
-            console.log("리뷰순 작동");
-        } catch (err){
-            console.log({error: err});
-        }
-    };
-
-    //음식점 목록
-    const getOnlyRestuarant = async () => {
-        try{
-            const respone = await axios
-            .get(`http://localhost:8080/restaurant/search/onlyrestaurants`);
-            const {content, totalPages, numberOfElements } = respone.data; //데이터 받아오기
-            setRestaurant(content);
-            setTotalPages(totalPages);
-            setRestLen(numberOfElements);
-            setPage(1);
-
-            console.log("음식점 작동");
-        } catch (err){
-            console.log({error: err});
-        }
-    };
-
-    // 카페 목록
-    const getOnlyCafe = async () => {
-        try{
-            const respone = await axios
-            .get(`http://localhost:8080/restaurant/search/onlycafes`);
-            const {content, totalPages, numberOfElements } = respone.data; //데이터 받아오기
-            setRestaurant(content);
-            setTotalPages(totalPages);
-            setRestLen(numberOfElements);
-            setPage(1);
-
-            console.log("카페 작동");
-        } catch (err){
-            console.log({error: err});
-        }
-    };
-
     //음식점을 클릭했는지
     const [selectRest, setSelectRest] = useState(null);
 
@@ -210,13 +141,13 @@ function SearchSession() {
             </div>
            <div className="collect-area">
                 <div className="collect-list">
-                    <button className="list-btn" onClick={getDistance}>거리순</button>
-                    <button className="list-btn" onClick={getDegree}>별점순</button>
-                    <button className="list-btn" onClick={getReviw}>리뷰순</button>
+                    <button className="list-btn" onClick={() => handlePaginationTypeChange('distance')}>거리순</button>
+                    <button className="list-btn" onClick={() => handlePaginationTypeChange('degree')}>별점순</button>
+                    <button className="list-btn" onClick={() => handlePaginationTypeChange('reviews')}>리뷰순</button>
                 </div>
                 <div className="collect-categori">
-                    <button className="categori-btn" onClick={getOnlyRestuarant}>음식점</button>
-                    <button className="categori-btn" onClick={getOnlyCafe}>카페</button>
+                    <button className="categori-btn" onClick={() => handlePaginationTypeChange('onlyrest')}>음식점</button>
+                    <button className="categori-btn" onClick={() => handlePaginationTypeChange('onlycafe')}>카페</button>
                 </div>
            </div>
            {items}
