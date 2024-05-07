@@ -15,7 +15,7 @@ function ReviewPage() {
 
   useEffect(() => {
     getRestaurants();
-  }, []);
+  }, [reviewList]);
 
   const handleAddressChange = (e) => {
     const selectedAddress = e.target.value;
@@ -45,7 +45,8 @@ function ReviewPage() {
       .then((res) => {
         console.log(res.data);
         alert("리뷰가 삭제되었습니다.");
-        navigate(`/`);
+        // navigate(`/`);
+        // navigate('/', { replace: true }); // 현재 페이지 새로고침
       })
       .catch((error) => {
         console.log(error);
@@ -57,7 +58,7 @@ function ReviewPage() {
     axios
       .get(`http://localhost:8080/review/findAll`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setRestaurantList(res.data);
         setReviewList(restaurantList.reviewList);
         const updatedReviewList = res.data.content.map((restaurant) => ({

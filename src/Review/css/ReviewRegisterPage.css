@@ -18,7 +18,7 @@
   border-bottom: 2px solid black;
 }
 .your-choice {
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Pretendard-Regular';
   font-size: 32px;
   color: #000000;
   font-weight: 600;
@@ -26,7 +26,6 @@
   margin-bottom: 20px;
 }
 .review-tag-name {
-  font-family: "Noto Sans KR-Light", Helvetica;
   font-size: 32px;
   font-weight: 300;
   text-align: center;
@@ -62,7 +61,6 @@ input[type="checkbox"]:checked + label {
   border: 1px solid;
   border-color: #000000;
   border-radius: 5px;
-  font-family: "Inter-Bold", Helvetica;
   font-size: 36px;
   font-weight: 700;
   text-align: center;
