@@ -92,7 +92,7 @@ function SearchSession() {
     const [lat, setLat] = useState(); // 위도
     const [lon, setLon] = useState(); // 경도
 
-    // console.log("현재 위경도", lat, lon);
+    console.log("현재 위경도", lat, lon);
     
     //음식점을 클릭했는지
     const [selectRest, setSelectRest] = useState(null);
