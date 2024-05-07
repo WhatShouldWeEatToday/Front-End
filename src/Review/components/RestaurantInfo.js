@@ -1,4 +1,4 @@
-import "../css/RestaurantInfo.module.css";
+import "../css/RestaurantInfomodule.css";
 import axios from "../../etc/utils/apis";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -24,13 +24,13 @@ function RestaurantInfo({ restaurantId }) {
   useEffect(() => {
     tokenDecode();
     getRestaurantDetails();
-  }, [restaurantId]);
+  }, [restaurantId, reviewList]);
 
   const getRestaurantDetails = async () => {
     axios
       .get(`http://localhost:8080/restaurant/${restaurantId}/details`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setName(res.data.name);
         setAddress(res.data.addressRoad);
         setTel(res.data.tel);
@@ -70,7 +70,8 @@ function RestaurantInfo({ restaurantId }) {
       .then((res) => {
         console.log(res.data);
         alert("리뷰가 삭제되었습니다.");
-        navigate(`/restaurant/${restaurantId}/review`);
+        // navigate('/', { replace: true });
+        // navigate(`/restaurant/${restaurantId}/review`);
       })
       .catch((error) => {
         console.log(error);
@@ -181,7 +182,7 @@ function RestaurantInfo({ restaurantId }) {
                     height="32px"
                   />
                   {review.taste === 1 && <div className="taste-tag">맛</div>}
-                  {review.cost === 1 && <div className="coste-tag">가성비</div>}
+                  {review.cost === 1 && <div className="cost-tag">가성비</div>}
                   {review.kind === 1 && <div className="kind-tag">친절</div>}
                   {review.mood === 1 && <div className="mood-tag">분위기</div>}
                   {review.park === 1 && <div className="park-tag">주차</div>}

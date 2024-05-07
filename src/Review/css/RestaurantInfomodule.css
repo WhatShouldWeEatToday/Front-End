@@ -1,24 +1,20 @@
 .restaurant-details {
   width: 825px;
   border-top: 2px solid black;
-  border-bottom: 2px solid black;
   margin-top: 80px;
   padding: 11px 8px;
 }
 .restaurant-name {
   font-size: 32px;
   font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
   margin-bottom: 8px;
 }
 .restaurant-address {
   font-size: 24px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 8px;
 }
 .restaurant-tel {
   font-size: 20px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 5px;
 }
 
@@ -42,11 +38,9 @@
   color: #000000;
   font-size: 32px;
   font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
 }
 .total-reviews {
   font-size: 32px;
-  font-family: "Inter-Regular", Helvetica;
 }
 
 .star-icon,
@@ -65,9 +59,11 @@
   background-color: #fbe156;
   font-size: 28px;
   margin-left: auto;
+  font-family: 'Pretendard-Regular';
 }
 .review-register-btn {
   margin-left: 15px;
+  
 }
 
 .favorites-btn:hover,
@@ -76,13 +72,6 @@
 }
 
 /* 리뷰 정보 */
-.review-info-container {
-  border: 1px solid black;
-}
-
-.review-info-box {
-  border-bottom: 1px solid black;
-}
 .review-tag-info {
   display: flex;
   margin-top: 10px;
@@ -103,7 +92,6 @@
   font-size: 28px;
   text-align: center;
   color: #ffffff;
-  font-family: "Noto Sans KR-Light", Helvetica;
   background-color: #3b9aff;
   border-radius: 100px;
 }

@@ -85,7 +85,7 @@ function ReviewEditPage() {
       .then((res) => {
         console.log(res.data);
         alert("리뷰가 수정되었습니다.");
-        navigate("/");
+        navigate(`/restaurant/${restaurantId}/review`);
       })
       .catch((error) => {
         console.log(error);

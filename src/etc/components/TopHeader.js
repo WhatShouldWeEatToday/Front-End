@@ -6,8 +6,8 @@ function TopHeader() {
 
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
-        console.log("토큰1: ", accessToken);
-        console.log("토큰2: ", refreshToken);
+        // console.log("토큰1: ", accessToken);
+        // console.log("토큰2: ", refreshToken);
       
     // const [isLogin, setIsLogin] = useState(false);
 

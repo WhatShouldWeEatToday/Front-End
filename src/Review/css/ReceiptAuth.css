@@ -12,17 +12,14 @@
 .receipt-title {
   font-size: 32px;
   font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
   margin-bottom: 20px;
 }
 .receipt-text {
   font-size: 20px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 20px;
 }
 .receipt-caution-text {
   font-size: 16px;
-  font-family: "Inter-Regular", Helvetica;
   margin-top: 20px;
 }
 
@@ -39,7 +36,6 @@
   padding: 0 10px;
   vertical-align: middle;
   border: 1px solid black;
-  font-family: "Inter-Regular", Helvetica;
   font-size: 20px;
   color: black;
 }
@@ -57,7 +53,6 @@ input[type="file"] {
   line-height: 40px;
   border: 1px solid black;
   border-left: 0px;
-  font-family: "Inter-SemiBold", Helvetica;
   font-size: 20px;
   font-weight: 600;
   color: black;
@@ -81,12 +76,12 @@ input[type="file"] {
   border: 1px solid;
   border-color: #000000;
   border-radius: 5px;
-  font-family: "Inter-Bold", Helvetica;
   font-size: 36px;
   font-weight: 700;
   text-align: center;
   margin: 0 auto;
   margin-bottom: 30px;
+  font-family: 'Pretendard-Regular';
 }
 .submit-btn:hover {
   cursor: pointer;
@@ -99,12 +94,12 @@ input[type="file"] {
   border: 1px solid;
   border-color: #000000;
   border-radius: 5px;
-  font-family: "Inter-Bold", Helvetica;
   font-size: 36px;
   font-weight: 700;
   text-align: center;
   margin: 0 auto;
   margin-bottom: 30px;
+  font-family: 'Pretendard-Regular';
 }
 .skip-btn:hover {
   cursor: pointer;

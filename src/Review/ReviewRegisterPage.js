@@ -19,7 +19,7 @@ function ReviewRegisterPage() {
 
   useEffect(() => {
     getRestaurantDetails();
-  }, [restaurantId]);
+  }, [restaurantId, totalReviews]);
 
   // 태그(맛, 가성비, 친절, 분위기, 주차)
   const [taste, setTaste] = useState(0);
@@ -71,7 +71,7 @@ function ReviewRegisterPage() {
       .then((res) => {
         console.log(res.data);
         alert("리뷰가 등록되었습니다.");
-        navigate("/");
+        navigate(`/restaurant/${restaurantId}/review`);
       })
       .catch((error) => {
         console.log(error);
