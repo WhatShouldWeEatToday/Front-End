@@ -1,66 +1,90 @@
 import Header from "../etc/components/Header";
-import StarRating from "./components/StarRating";
 import "./css/ReviewPage.css";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import axios from "../etc/utils/apis";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function ReviewPage() {
   const navigate = useNavigate();
 
-  const [restaurantId, setRestaurantId] = useState(1); // 음식점 ID(테스트용)
-  const [starRating, setStarRating] = useState(5.0); // 별점 상태
+  // 각 식당의 리뷰 목록 표시 상태를 관리하기 위한 상태 변수
+  // 기본값으로 모든 식당의 리뷰 목록은 닫혀있는 상태(false)
+  const [openReviews, setOpenReviews] = useState({});
+  const [restaurantList, setRestaurantList] = useState({});
+  const [reviewList, setReviewList] = useState({});
 
-  // 태그(맛, 가성비, 친절, 분위기, 주차)
-  const [taste, setTaste] = useState(0);
-  const [cost, setCost] = useState(0);
-  const [kind, setKind] = useState(0);
-  const [mood, setMood] = useState(0);
-  const [park, setPark] = useState(0);
+  useEffect(() => {
+    getRestaurants();
+  }, []);
 
-  // 별점 변화 감지
-  const handleRatingChange = (rating) => {
-    setStarRating(rating);
+  const handleAddressChange = (e) => {
+    const selectedAddress = e.target.value;
+    if (selectedAddress) {
+      getRestaurantsByAddress(selectedAddress);
+    } else {
+      getRestaurants(); // 아무것도 선택되지 않은 경우 모든 식당 정보 가져옴
+    }
   };
 
-  // 태그 체크박스 변화 감지
-  const handleTagChange = (e, setState) => {
-    const isChecked = e.target.checked;
-    setState(isChecked ? 1 : 0);
+  // 리뷰 토글
+  const toggleReviews = (id) => {
+    setOpenReviews((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // 리뷰 등록
-  const createReview = async () => {
-    console.log("RestaurantId = " + restaurantId);
-    console.log("StarRating = " + starRating);
-    console.log("Taste = " + taste);
-    console.log("Cost = " + cost);
-    console.log("Kind = " + kind);
-    console.log("Mood = " + mood);
-    console.log("Park = " + park);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
-    };
+  const goEditPage = (restaurantId, reviewId) => {
+    navigate(`/restaurant/${restaurantId}/review/${reviewId}`);
+  };
+
+  const goRestaurantDetailPage = (restaurantId) => {
+    navigate(`/restaurant/${restaurantId}/review`);
+  };
+
+  const deleteReview = async (reviewId) => {
     axios
-      .post(
-        `http://localhost:8080/api/review/${restaurantId}`,
-        {
-          // 컬럼명: 값
-          stars: starRating,
-          taste: taste,
-          cost: cost,
-          kind: kind,
-          mood: mood,
-          park: park,
-        },
-        {
-          headers: headers, // 헤더 설정
-        }
-      )
+      .delete(`http://localhost:8080/api/review/${reviewId}`)
       .then((res) => {
         console.log(res.data);
-        alert("리뷰가 등록되었습니다.");
-        navigate("/");
+        alert("리뷰가 삭제되었습니다.");
+        navigate(`/`);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // findAll
+  const getRestaurants = async () => {
+    axios
+      .get(`http://localhost:8080/review/findAll`)
+      .then((res) => {
+        console.log(res.data);
+        setRestaurantList(res.data);
+        setReviewList(restaurantList.reviewList);
+        const updatedReviewList = res.data.content.map((restaurant) => ({
+          id: restaurant.id,
+          name: restaurant.name,
+          reviewList: restaurant.reviewList,
+        }));
+        setReviewList(updatedReviewList);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // findAllByAddress
+  const getRestaurantsByAddress = async (address) => {
+    axios
+      .get(`http://localhost:8080/review/findAll?address=${address}`)
+      .then((res) => {
+        console.log(res.data);
+        setRestaurantList(res.data);
+        const updatedReviewList = res.data.content.map((restaurant) => ({
+          id: restaurant.id,
+          name: restaurant.name,
+          reviewList: restaurant.reviewList,
+        }));
+        setReviewList(updatedReviewList);
       })
       .catch((error) => {
         console.log(error);
@@ -70,78 +94,206 @@ function ReviewPage() {
   return (
     <div className="ReviewPage">
       <Header />
-      <div className="review-form-container">
-        {/* 음식점 정보 */}
-        <div className="restaurant-info">
-          <div className="restaurant-name">한솥도시락구미금오공대점</div>
-          <div className="restaurant-address">
-            경상북도 구미시 대학로 39 (거의동 외 2필지)
-          </div>
-          <div className="restaurant-tel">054-472-0615</div>
-          <div className="star-rating-info">
-            <span className="star-icon">★</span>
-            <span className="star-degree">5.0</span>
-            <span className="total-reviews">(12)</span>
-            <button className="favorites-btn">즐겨찾기</button>
-          </div>
+      <div className="restaurant-review-container">
+        <div className="restaurant-sort-box">
+          <select name="address" id="address" onChange={handleAddressChange}>
+            <option value="">동/읍/면</option>
+            <option value="선산읍">선산읍</option>
+            <option value="고아읍">고아읍</option>
+            <option value="산동읍">산동읍</option>
+            <option value="무을면">무을면</option>
+            <option value="옥성면">옥성면</option>
+            <option value="도개면">도개면</option>
+            <option value="해평면">해평면</option>
+            <option value="장천면">장천면</option>
+            <option value="송정동">송정동</option>
+            <option value="원평동">원평동</option>
+            <option value="도량동">도량동</option>
+            <option value="선주원남동">선주원남동</option>
+            <option value="형곡동">형곡동</option>
+            <option value="신평동">신평동</option>
+            <option value="비산동">비산동</option>
+            <option value="공단동">공단동</option>
+            <option value="광평동">광평동</option>
+            <option value="상모사곡동">상모사곡동</option>
+            <option value="임오동">임오동</option>
+            <option value="임은동">임은동</option>
+            <option value="인동동">인동동</option>
+            <option value="진미동">진미동</option>
+            <option value="양포동">양포동</option>
+          </select>
         </div>
-        <StarRating onRatingChange={handleRatingChange} />
-        <div className="review-tag-box">
-          <div className="your-choice">어떤 점이 마음에 드셨나요?</div>
-          <div className="review-input-box">
-            <input
-              type="checkbox"
-              name="review-tags"
-              id="taste"
-              onChange={(e) => handleTagChange(e, setTaste)}
-            />
-            <label className="review-tag-name" htmlFor="taste">
-              맛
-            </label>
-            <input
-              type="checkbox"
-              name="review-tags"
-              id="cost"
-              onChange={(e) => handleTagChange(e, setCost)}
-            />
-            <label className="review-tag-name" htmlFor="cost">
-              가성비
-            </label>
-            <input
-              type="checkbox"
-              name="review-tags"
-              id="kind"
-              onChange={(e) => handleTagChange(e, setKind)}
-            />
-            <label className="review-tag-name" htmlFor="kind">
-              친절
-            </label>
-            <input
-              type="checkbox"
-              name="review-tags"
-              id="mood"
-              onChange={(e) => handleTagChange(e, setMood)}
-            />
-            <label className="review-tag-name" htmlFor="mood">
-              분위기
-            </label>
-            <input
-              type="checkbox"
-              name="review-tags"
-              id="park"
-              onChange={(e) => handleTagChange(e, setPark)}
-            />
-            <label className="review-tag-name" htmlFor="park">
-              주차
-            </label>
-          </div>
-        </div>
-        <button className="submit-btn" onClick={createReview}>
-          작성하기
-        </button>
+        {restaurantList &&
+          restaurantList.content &&
+          [...restaurantList.content]
+            .sort((restaurantA, restaurantB) => {
+              // 식당 A와 B의 최신 리뷰 생성일을 찾기
+              const latestReviewA = restaurantA.reviewList?.content?.reduce(
+                (latest, current) =>
+                  new Date(latest.created_Date) > new Date(current.created_Date)
+                    ? latest
+                    : current,
+                // 리뷰가 없는 경우 초기값 = "1900-01-01"
+                { created_Date: "1900-01-01" }
+              );
+              const latestReviewB = restaurantB.reviewList?.content?.reduce(
+                (latest, current) =>
+                  new Date(latest.created_Date) > new Date(current.created_Date)
+                    ? latest
+                    : current,
+                { created_Date: "1900-01-01" }
+              );
+
+              // 최신 리뷰 생성일을 기준으로 내림차순 정렬
+              return (
+                new Date(latestReviewB.created_Date) -
+                new Date(latestReviewA.created_Date)
+              );
+            })
+            .map((restaurant) => (
+              <div className="restaurant-details" key={restaurant.id}>
+                <div
+                  className="restaurant-name"
+                  onClick={() => {
+                    goRestaurantDetailPage(restaurant.id);
+                  }}
+                >
+                  {restaurant.name}
+                </div>
+                <button
+                  className="toggle-reviews-btn"
+                  onClick={() => toggleReviews(restaurant.id)}
+                >
+                  ▼
+                </button>
+                <div className="restaurant-address">
+                  {restaurant.addressRoad}
+                </div>
+                <div className="restaurant-tel">{restaurant.tel}</div>
+                <div className="star-rating-info">
+                  <span className="star-icon">★</span>
+                  <span className="star-degree">{restaurant.degree}</span>
+                  <span className="total-reviews">
+                    ({restaurant.totalReviews})
+                  </span>
+                </div>
+                {/* 식당 리뷰 정보 */}
+                {openReviews[restaurant.id] &&
+                  restaurant.reviewList &&
+                  restaurant.reviewList.content && (
+                    <div className="review-list">
+                      {restaurant.reviewList &&
+                        restaurant.reviewList.content &&
+                        restaurant.reviewList.content
+                          .sort(
+                            (a, b) =>
+                              new Date(b.created_Date) -
+                              new Date(a.created_Date)
+                          )
+                          .map((review) => (
+                            <div className="review-info-box" key={review.id}>
+                              <div className="review-details">
+                                <img
+                                  src={
+                                    process.env.PUBLIC_URL + "/img/account.png"
+                                  }
+                                  width="50px"
+                                  height="50px"
+                                />
+                                <span className="review-writers">
+                                  {review.writers}
+                                </span>
+                                <span className="review-createdDate">
+                                  {review.created_Date}
+                                </span>
+                                <img
+                                  src={process.env.PUBLIC_URL + "/img/like.png"}
+                                  width="23px"
+                                  height="30px"
+                                />
+                                <span className="review-totalLikes">
+                                  {review.totalLikes}
+                                </span>
+                                {/* 임시로 Not Null로 해둠 */}
+                                {review.reviewType !== null && (
+                                  <img
+                                    className="verified-img"
+                                    src={
+                                      process.env.PUBLIC_URL +
+                                      "/img/Verified.png"
+                                    }
+                                    width="27px"
+                                    height="27px"
+                                  />
+                                )}
+                                <button
+                                  className="review-edit-btn"
+                                  title="수정"
+                                  onClick={() => {
+                                    goEditPage(restaurant.id, review.id);
+                                  }}
+                                >
+                                  <img
+                                    src={
+                                      process.env.PUBLIC_URL + "/img/Edit.png"
+                                    }
+                                    width="25px"
+                                    height="25px"
+                                  />
+                                </button>
+                                <button
+                                  className="review-delete-btn"
+                                  title="삭제"
+                                  onClick={() => {
+                                    deleteReview(review.id);
+                                  }}
+                                >
+                                  <img
+                                    src={
+                                      process.env.PUBLIC_URL + "/img/Delete.png"
+                                    }
+                                    width="25px"
+                                    height="25px"
+                                  />
+                                </button>
+                              </div>
+                              <div className="review-star-tags">
+                                <span className="star-icon2">★</span>
+                                <span className="review-star-rating">
+                                  {review.stars}
+                                </span>
+                                <img
+                                  className="thumbUp-img"
+                                  src={
+                                    process.env.PUBLIC_URL + "/img/ThumbUp.png"
+                                  }
+                                  width="32px"
+                                  height="32px"
+                                />
+                                {review.taste === 1 && (
+                                  <div className="taste-tag">맛</div>
+                                )}
+                                {review.cost === 1 && (
+                                  <div className="cost-tag">가성비</div>
+                                )}
+                                {review.kind === 1 && (
+                                  <div className="kind-tag">친절</div>
+                                )}
+                                {review.mood === 1 && (
+                                  <div className="mood-tag">분위기</div>
+                                )}
+                                {review.park === 1 && (
+                                  <div className="park-tag">주차</div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                    </div>
+                  )}
+              </div>
+            ))}
       </div>
     </div>
   );
 }
-
 export default ReviewPage;

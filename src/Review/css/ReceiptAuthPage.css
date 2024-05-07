@@ -1,0 +1,9 @@
+.ReceiptAuthPage {
+  display: flex;
+  flex-direction: column;
+}
+.receipt-auth-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}

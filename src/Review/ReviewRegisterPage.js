@@ -1,15 +1,15 @@
 import Header from "../etc/components/Header";
 import StarRating from "./components/StarRating";
-import "./css/ReviewEditPage.css";
+import "./css/ReviewRegisterPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../etc/utils/apis";
 
-function ReviewEditPage() {
+function ReviewRegisterPage() {
   const navigate = useNavigate();
 
-  const { restaurantId, reviewId } = useParams(); // 음식점 ID
+  const { restaurantId, authStatus } = useParams(); // 음식점 ID
   const [starRating, setStarRating] = useState(5.0); // 별점 상태
   const [name, setName] = useState(""); // 음식점 이름
   const [address, setAddress] = useState(""); // 음식점 주소(도로명)
@@ -20,22 +20,6 @@ function ReviewEditPage() {
   useEffect(() => {
     getRestaurantDetails();
   }, [restaurantId]);
-
-  const getRestaurantDetails = async () => {
-    axios
-      .get(`http://localhost:8080/restaurant/${restaurantId}/details`)
-      .then((res) => {
-        console.log(res.data);
-        setName(res.data.name);
-        setAddress(res.data.addressRoad);
-        setTel(res.data.tel);
-        setDegree(res.data.degree);
-        setTotalReviews(res.data.totalReviews);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   // 태그(맛, 가성비, 친절, 분위기, 주차)
   const [taste, setTaste] = useState(0);
@@ -55,22 +39,24 @@ function ReviewEditPage() {
     setState(isChecked ? 1 : 0);
   };
 
-  // 리뷰 수정
-  const editReview = async () => {
-    console.log("ReviewId = " + reviewId);
+  // 리뷰 등록
+  const createReview = async () => {
+    console.log("RestaurantId = " + restaurantId);
     console.log("StarRating = " + starRating);
     console.log("Taste = " + taste);
     console.log("Cost = " + cost);
     console.log("Kind = " + kind);
     console.log("Mood = " + mood);
     console.log("Park = " + park);
+    console.log("AuthStatus = " + authStatus);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
     axios
-      .patch(
-        `http://localhost:8080/api/review/${reviewId}`,
+      .post(
+        `http://localhost:8080/api/review/${restaurantId}`,
         {
+          // 컬럼명: 값
           stars: starRating,
           taste: taste,
           cost: cost,
@@ -84,7 +70,7 @@ function ReviewEditPage() {
       )
       .then((res) => {
         console.log(res.data);
-        alert("리뷰가 수정되었습니다.");
+        alert("리뷰가 등록되었습니다.");
         navigate("/");
       })
       .catch((error) => {
@@ -92,23 +78,27 @@ function ReviewEditPage() {
       });
   };
 
-  // const deleteReview = async () => {
-  //   axios
-  //     .delete(`http://localhost:8080/api/review/${reviewId}`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       alert("리뷰가 삭제되었습니다.");
-  //       navigate("/");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const getRestaurantDetails = async () => {
+    axios
+      .get(`http://localhost:8080/restaurant/${restaurantId}/details`)
+      .then((res) => {
+        console.log(res.data);
+        setName(res.data.name);
+        setAddress(res.data.addressRoad);
+        setTel(res.data.tel);
+        setDegree(res.data.degree);
+        setTotalReviews(res.data.totalReviews);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
-    <div className="ReviewEditPage">
+    <div className="ReviewRegisterPage">
       <Header />
       <div className="review-form-container">
+        {/* 음식점 정보 */}
         <div className="restaurant-info">
           <div className="restaurant-name">{name}</div>
           <div className="restaurant-address">{address}</div>
@@ -171,12 +161,12 @@ function ReviewEditPage() {
             </label>
           </div>
         </div>
-        <button className="edit-btn" onClick={editReview}>
-          수정하기
+        <button className="submit-btn" onClick={createReview}>
+          작성하기
         </button>
       </div>
     </div>
   );
 }
 
-export default ReviewEditPage;
+export default ReviewRegisterPage;

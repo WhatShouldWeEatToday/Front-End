@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "../../etc/utils/apis";
 
-function ReceiptAuth() {
+function ReceiptAuth({ restaurantId }) {
   const navigate = useNavigate();
 
   const [receipt, setReceipt] = useState(null);
@@ -33,6 +33,7 @@ function ReceiptAuth() {
         .then((res) => {
           console.log(res.data);
           alert("영수증 제출 성공");
+          navigate(`/restaurant/${restaurantId}/review/receiptAuth/true`);
         })
         .catch((error) => {
           console.error(error);
@@ -41,6 +42,10 @@ function ReceiptAuth() {
     } else {
       alert("파일을 선택해주세요.");
     }
+  };
+
+  const skipAuthentication = () => {
+    navigate(`/restaurant/${restaurantId}/review/receiptAuth/false`);
   };
 
   return (
@@ -66,9 +71,14 @@ function ReceiptAuth() {
           사진 상태에 따라 정상적으로 인식이 되지 않을 수도 있으니 주의해주세요
         </div>
       </div>
-      <button className="submit-btn" onClick={submitReceipt}>
-        인증하기
-      </button>
+      <div className="btn-wrapper">
+        <button className="submit-btn" onClick={submitReceipt}>
+          인증하기
+        </button>
+        <button className="skip-btn" onClick={skipAuthentication}>
+          건너뛰기
+        </button>
+      </div>
     </div>
   );
 }

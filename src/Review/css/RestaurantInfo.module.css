@@ -1,0 +1,125 @@
+.restaurant-details {
+  width: 825px;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  margin-top: 80px;
+  padding: 11px 8px;
+}
+.restaurant-name {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: "Inter-Bold", Helvetica;
+  margin-bottom: 8px;
+}
+.restaurant-address {
+  font-size: 24px;
+  font-family: "Inter-Regular", Helvetica;
+  margin-bottom: 8px;
+}
+.restaurant-tel {
+  font-size: 20px;
+  font-family: "Inter-Regular", Helvetica;
+  margin-bottom: 5px;
+}
+
+.review-dropdown-btn:hover {
+  cursor: pointer;
+}
+/* 별점 정보 */
+.star-rating-info {
+  display: flex;
+  align-items: center;
+}
+
+.star-icon {
+  font-size: 36px;
+  text-align: center;
+  color: #fff500;
+  -webkit-text-stroke: 1px black;
+  margin-right: 10px;
+}
+.star-degree {
+  color: #000000;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: "Inter-Bold", Helvetica;
+}
+.total-reviews {
+  font-size: 32px;
+  font-family: "Inter-Regular", Helvetica;
+}
+
+.star-icon,
+.star-degree,
+.total-reviews {
+  display: inline-block;
+}
+
+/* 즐겨찾기, 리뷰 보기 버튼 */
+.favorites-btn,
+.review-register-btn {
+  width: 154px;
+  height: 50px;
+  border: 0px;
+  border-radius: 100px;
+  background-color: #fbe156;
+  font-size: 28px;
+  margin-left: auto;
+}
+.review-register-btn {
+  margin-left: 15px;
+}
+
+.favorites-btn:hover,
+.review-register-btn:hover {
+  cursor: pointer;
+}
+
+/* 리뷰 정보 */
+.review-info-container {
+  border: 1px solid black;
+}
+
+.review-info-box {
+  border-bottom: 1px solid black;
+}
+.review-tag-info {
+  display: flex;
+  margin-top: 10px;
+  margin-left: 80px;
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 10px; /* 요소들 사이의 간격 */
+}
+
+.review-taste-tag,
+.review-cost-tag,
+.review-kind-tag,
+.review-mood-tag,
+.review-park-tag {
+  width: 100px;
+  height: 50px;
+  margin-right: 8px;
+  line-height: 50px;
+  font-size: 28px;
+  text-align: center;
+  color: #ffffff;
+  font-family: "Noto Sans KR-Light", Helvetica;
+  background-color: #3b9aff;
+  border-radius: 100px;
+}
+.review-taste-tag {
+  margin-left: 25px;
+  background-color: #3b9aff;
+}
+.review-cost-tag {
+  background-color: #32b2c4;
+}
+.review-kind-tag {
+  background-color: #8cc966;
+}
+.review-mood-tag {
+  background-color: #fbe156;
+}
+.review-park-tag {
+  background-color: #fbe156;
+}

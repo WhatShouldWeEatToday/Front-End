@@ -1,80 +1,13 @@
-.ReviewEditPage {
+.ReviewRegisterPage {
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
+  align-content: center;
 }
 .review-form-container {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-}
-
-/* 음식점 정보 */
-.restaurant-info {
-  width: 825px;
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
-  margin-top: 80px;
-  padding: 11px 8px;
-}
-.restaurant-name {
-  font-size: 32px;
-  font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
-  margin-bottom: 8px;
-}
-.restaurant-address {
-  font-size: 24px;
-  font-family: "Inter-Regular", Helvetica;
-  margin-bottom: 8px;
-}
-.restaurant-tel {
-  font-size: 20px;
-  font-family: "Inter-Regular", Helvetica;
-  margin-bottom: 5px;
-}
-
-/* 별점 정보 */
-.star-rating-info {
-  display: flex;
-  align-items: center;
-}
-
-.star-icon {
-  font-size: 36px;
-  text-align: center;
-  color: #fff500;
-  -webkit-text-stroke: 1px black;
-  margin-right: 10px;
-}
-.star-degree {
-  color: #000000;
-  font-size: 32px;
-  font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
-}
-.total-reviews {
-  font-size: 32px;
-  font-family: "Inter-Regular", Helvetica;
-}
-
-.star-icon,
-.star-degree,
-.total-reviews {
-  display: inline-block;
-}
-
-.favorites-btn {
-  width: 154px;
-  height: 50px;
-  border: 0px;
-  border-radius: 100px;
-  background-color: #fbe156;
-  font-size: 28px;
-  margin-left: auto;
-}
-.favorites-btn:hover {
-  cursor: pointer;
 }
 
 /* 리뷰 태그 */
@@ -121,10 +54,8 @@ input[type="checkbox"]:checked + label {
   background-color: #fbe156; /* 체크 시 배경색 변경 */
 }
 
-/* 수정하기 버튼 */
-.edit-btn,
-.delete-btn,
-.read-btn {
+/* 제출하기 버튼 */
+.submit-btn {
   width: 450px;
   height: 80px;
   background-color: #fbe156;
@@ -138,8 +69,6 @@ input[type="checkbox"]:checked + label {
   margin: 0 auto;
   margin-bottom: 30px;
 }
-.edit-btn:hover,
-.delete-btn:hover,
-.read-btn:hover {
+.submit-btn:hover {
   cursor: pointer;
 }
