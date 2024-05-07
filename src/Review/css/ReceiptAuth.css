@@ -68,8 +68,14 @@ input[type="file"] {
 }
 
 /* 인증하기 버튼 */
+.btn-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 .submit-btn {
-  width: 450px;
+  width: 400px;
   height: 80px;
   background-color: #fbe156;
   border: 1px solid;
@@ -83,5 +89,23 @@ input[type="file"] {
   margin-bottom: 30px;
 }
 .submit-btn:hover {
+  cursor: pointer;
+}
+
+.skip-btn {
+  width: 400px;
+  height: 80px;
+  background-color: #d9d9d9;
+  border: 1px solid;
+  border-color: #000000;
+  border-radius: 5px;
+  font-family: "Inter-Bold", Helvetica;
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+.skip-btn:hover {
   cursor: pointer;
 }

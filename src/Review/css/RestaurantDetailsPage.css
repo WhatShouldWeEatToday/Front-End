@@ -1,0 +1,13 @@
+.RestaurantDetails {
+  display: flex;
+  flex-direction: column;
+}
+.restaurant-details-container {
+  display: flex;
+  flex-direction: column;
+  margin: 80px auto;
+}
+
+.tag-count {
+  margin-left: 10px;
+}
