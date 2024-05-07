@@ -3,7 +3,6 @@ import '../css/SearchSession.css';
 import Map from "./Map";
 import axios from "../../etc/utils/apis";
 import Pagination from "./Pagination";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function SearchSession() {

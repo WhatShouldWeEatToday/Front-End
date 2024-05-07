@@ -20,17 +20,14 @@
 .restaurant-name {
   font-size: 32px;
   font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
   margin-bottom: 8px;
 }
 .restaurant-address {
   font-size: 24px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 8px;
 }
 .restaurant-tel {
   font-size: 20px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 5px;
 }
 
