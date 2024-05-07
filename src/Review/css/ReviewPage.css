@@ -19,7 +19,6 @@
 .restaurant-name {
   font-size: 32px;
   font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
   margin-bottom: 8px;
 }
 .restaurant-name:hover {
@@ -27,12 +26,10 @@
 }
 .restaurant-address {
   font-size: 24px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 8px;
 }
 .restaurant-tel {
   font-size: 20px;
-  font-family: "Inter-Regular", Helvetica;
   margin-bottom: 5px;
 }
 
@@ -54,11 +51,9 @@
   color: #000000;
   font-size: 32px;
   font-weight: 700;
-  font-family: "Inter-Bold", Helvetica;
 }
 .total-reviews {
   font-size: 32px;
-  font-family: "Inter-Regular", Helvetica;
 }
 .star-icon,
 .star-degree,
@@ -97,17 +92,14 @@
 .review-writers {
   font-size: 24px;
   font-weight: 600;
-  font-family: "Inter-SemiBold", Helvetica;
 }
 .review-createdDate {
   font-size: 20px;
-  font-family: "Inter-Regular", Helvetica;
   margin: 0px 10px;
 }
 .review-totalLikes {
   font-size: 20px;
   color: #e76464;
-  font-family: "Inter-Regular", Helvetica;
 }
 
 /* 인증 마크 */
@@ -131,7 +123,6 @@
 .review-star-rating {
   font-size: 28px;
   font-weight: 600;
-  font-family: "Inter-SemiBold", Helvetica;
 }
 
 .thumbUp-img {
@@ -149,7 +140,6 @@
   font-size: 28px;
   text-align: center;
   color: #ffffff;
-  font-family: "Noto Sans KR-Light", Helvetica;
   background-color: #3b9aff;
   border-radius: 100px;
 }
