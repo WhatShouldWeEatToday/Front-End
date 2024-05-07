@@ -4,6 +4,7 @@ import Map from "./Map";
 import axios from "../../etc/utils/apis";
 import Pagination from "./Pagination";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SearchSession() {
     //통신데이터(맛집데이터) 저장
@@ -92,7 +93,7 @@ function SearchSession() {
     const [lat, setLat] = useState(); // 위도
     const [lon, setLon] = useState(); // 경도
 
-    console.log("현재 위경도", lat, lon);
+    // console.log("현재 위경도", lat, lon);
     
     //음식점을 클릭했는지
     const [selectRest, setSelectRest] = useState(null);
@@ -106,6 +107,12 @@ function SearchSession() {
     const clickBookmark = () => {
         alert("등록되었습니다.");
     }
+
+    //리뷰 페이지 이동
+    const navigate = useNavigate();
+    const goRestaurantDetailPage = (restaurantId) => {
+        navigate(`/restaurant/${restaurantId}/review`);
+      };
 
     //카테고리 선택
     const [btnSelected, setBtnSelected] = useState(null);
@@ -125,10 +132,10 @@ function SearchSession() {
                 </div>
                 <div className="restaurant-btn-area">
                     <button className="restaurant-btn" onClick={clickBookmark}>즐겨찾기</button>
-                    <button className="restaurant-btn" >
-                        <Link to={`http://localhost:8080/restaurant/${data.id}/review`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        >리뷰보기</Link>
+                    <button className="restaurant-btn"
+                            onClick={() => {goRestaurantDetailPage(data.id)}}
+                            style={{ textDecoration: 'none', color: 'inherit' }}>
+                        리뷰보기
                     </button>
                 </div>
             </div>
