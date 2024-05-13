@@ -31,37 +31,50 @@ const Friends = [
 ];
 
 
-function GroupList() {
+function GroupList() { //사용자의 아이디값? 불러와서 친구데이터 연결
 
     //나의 친구 데이터 통신
-    const [myFriends, setMyFriends] = useState([]);
+    // const [myFriends, setMyFriends] = useState([]);
 
-    const getMyFriends = async () => {
-        try{
-            const respone = await axios
-            .get("http://localhost:8080/chat/friend-list");
-            setMyFriends(respone.data);
-        } catch(err){
-            console.log({error: err});
-        }
-    };
+    // const getMyFriends = async () => {
+    //     try{
+    //         const respone = await axios
+    //         .get("http://localhost:8080/chat/friend-list");
+    //         setMyFriends(respone.data);
+    //     } catch(err){
+    //         console.log({error: err});
+    //     }
+    // };
 
     useEffect(() => {
-        getMyFriends();
+        // getMyFriends();
     }, []);
 
 
-    const FriendsList = Friends.map(data => {
+    //검색 데이터 저장
+    const [search, setSearch] = useState('');
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value.toLowerCase());
+    }
+
+    const searchFriends = Friends.filter(friends => 
+        friends.name.toLocaleLowerCase().includes(search)
+    );
+    
+
+    const FriendsList = searchFriends.map(data => {
         return(
-            <div className="friends-list">
+            <div className="friends-list" key={data.name}>
                 <img src={process.env.PUBLIC_URL + '/img/account.png'}
                     className="friends-profile" alt='profile'/>    
                 <div className="friends-name">{data.name}</div>
                 <img src={process.env.PUBLIC_URL + '/img/invitation.png'}
-                    className="friends-invite" alt='profile'/>    
-            </div>
-        );
+            className="friends-invite" alt='profile'/>    
+        </div>
+        )
     })
+
     
     return ( 
         <div className="GroupList">
@@ -70,11 +83,14 @@ function GroupList() {
             </div>
             <div className="Friends-search">
                 <input
-                type="serach"
-                className="freinds-serach-bar"/>
+                type="search"
+                className="freinds-serach-bar"
+                onChange={handleSearch}
+                value={search}/>
                 <img src={process.env.PUBLIC_URL + '/img/yellow_search.png'}
-                        className="search_icon"
-                        alt='search'/>
+                    className="search_icon"
+                    alt='search'
+                    onChange={handleSearch}/>
             </div>
             <div className="FriendsList-body">{FriendsList}</div>
             <div className="Group">
