@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../css/GroupSession.css'
 import Modal from './Modal';
 import GroupList from './GroupList';
+import Chat from './Chat';
 
 function GroupSession(props) {
     const [group, setGroup] = useState(false);
@@ -16,7 +17,8 @@ function GroupSession(props) {
                     onClick={() => setGroup(!group)}/>
                 {group && (
                     <Modal closeModal={()=>setGroup(!group)}>
-                        <GroupList/>
+                        {/* <GroupList/> */}
+                        <Chat/>
                     </Modal>
                 )}
                 <div className='group-text'>
