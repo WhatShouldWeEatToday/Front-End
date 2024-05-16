@@ -1,0 +1,71 @@
+.Departure-area{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.depature-chat{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.depature-setting{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: 100%;
+    background-color: #FBE156;
+    border-radius: 30px;
+}
+
+.address-area{
+    display: flex;
+    flex-direction: row;
+    margin: 30px;
+    align-items: center;
+}
+
+.address-name{
+    margin-right: 20px;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.search-address{
+    font-size: larger;
+    border: none;
+    background-color: white;
+    border-radius: 30px;
+    width: 150px;
+    height: 30px;
+    font-family: 'Pretendard-Regular';
+}
+
+.postcode{
+    width: 80%;
+    height: 80%;
+}
+
+.mem-address{
+    
+    align-items: center;
+}
+
+.mem-add{
+    font-size: larger;
+    margin: 30px;
+}
+
+.addressClick{
+    font-size: larger;
+    border: none;
+    background-color: white;
+    border-radius: 30px;
+    width: 150px;
+    height: 40px;
+    font-family: 'Pretendard-Regular';
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
