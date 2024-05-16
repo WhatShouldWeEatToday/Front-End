@@ -33,11 +33,11 @@ function Notification({ onClose }) {
       }
     }
 
-    // 문서 전체에 클릭 이벤트 리스너를 추가합니다.
-    document.addEventListener("mousedown", handleClickOutside);
+    // 문서 전체에 클릭 이벤트 리스너 추가
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
-      document.removeEventListener("mousedown", handleClickOutside);
+      // 컴포넌트 언마운트될 때 이벤트 리스너 제거
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [onClose]);
 
