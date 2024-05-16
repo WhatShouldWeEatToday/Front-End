@@ -13,6 +13,7 @@ import RestaurantDetailsPage from "./Review/RestaurantDetailsPage";
 import ReviewRegisterPage from "./Review/ReviewRegisterPage";
 import ReviewEditPage from "./Review/ReviewEditPage";
 import ReceiptAuthPage from "./Review/ReceiptAuthPage";
+import Course from "./Search/components/Course";
 
 function App() {
   const links = [
@@ -35,6 +36,10 @@ function App() {
     {
       path: "/restaurant/search",
       element: <SearchPage />,
+    },
+    {
+      path: "/restaurant/course",
+      element: <Course />,
     },
     {
       path: "/restaurant/:restaurantId/review",
