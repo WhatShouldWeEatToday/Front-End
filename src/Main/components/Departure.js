@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "../css/Departure.css";
+import axios from "../../etc/utils/apis";
 import PostCode from 'react-daum-postcode';
 
-function Departure () {
-    const [address, setAddress] = useState('');
+function Departure ({address, setAddress}) {
+    // const [address, setAddress] = useState('');
     const [isOpen, setIsOpen] = useState(false);
-    // const [detailAddress, setDetailAddress] = useState('');
 
 
     const handleComplete = (data) => {
@@ -23,13 +23,22 @@ function Departure () {
         setIsOpen((prevOpenState) => !prevOpenState);
     };
 
-    // const handleInputChange = (e) => {
-    //     setDetailAddress(e.target.value);
-    // };
-
     const handleDepature = () => {
+        // sendAddress();
         alert("출발지가 등록되었습니다.");
+        console.log(address);
     }
+
+    // const sendAddress = async () => {
+    //     console.log("보내기")
+    //     try{
+    //         const respone = await axios
+    //         .post("api주소");
+        
+    //     } catch (err){
+    //         console.log({error: err});
+    //     }
+    // };
 
 
     return (

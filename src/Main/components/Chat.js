@@ -1,6 +1,7 @@
 import "../css/Chat.css";
 import * as React from 'react';
 import { useState } from "react";
+import axios from "../../etc/utils/apis";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,15 +10,42 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import Departure from "./Departure";
 import dayjs from "dayjs";
 
-function Chat() {
+function Chat(props) {
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
     const [place, setPlace] = useState('');
-    const dateFormat = dayjs(date).format("YYYY-MM-DD");
-    const timeFormat = dayjs(time).format('HH시 mm분');
-    console.log(dateFormat);
-    console.log(timeFormat);
+    const [course, setCourse] = useState();
 
+    const promieTime = dayjs(date).format("YYYYMMDD") + dayjs(time).format('HHmm'); //약속시간
+    const [address, setAddress] = useState('');
+
+    const sendAddress = async () => {
+
+        if(address){
+            try{
+                const response = await axios
+                .post("http://localhost:8080/restaurant/search/totalPath",
+                {
+                    departure: address,
+                    destination: "경북 구미시 산호대로29길 14-16",
+                    searchDttm: promieTime
+                });
+    
+                console.log("response 파일", response);
+                console.log("data 파일", response.data.metaData);
+                setCourse(response.data.metaData);
+                console.log("경로 데이터 파일",course);
+                localStorage.setItem('courseData', JSON.stringify({course})); //경로데이터 로컬스토리지에 저장
+                onPopup();
+            
+            } catch (err){
+                console.log({error: err});
+            }
+        } else{
+            alert("주소를 입력해주세요");
+        }
+        
+    };
     const promises = (
         <div className="promise-area">
                     <div className="promise-content">
@@ -69,7 +97,13 @@ function Chat() {
                     </div>
                 </div>
     );
+    
+    const {param} = props;
 
+    const onPopup = () => {
+        const url = 'restaurant/course';
+        window.open(url, "_blank", "noopener, noreferrrer");
+    }
 
     return (
         <div className="ChatSession">
@@ -83,10 +117,10 @@ function Chat() {
             <div className="chat-area">
                 
                 {/* 출발지 설정 */}
-                {/* <Departure/> */}
+                <Departure address={address} setAddress={setAddress}/>
 
                 {/* 투표 */}
-                <div className="chat-and-vote">
+                {/* <div className="chat-and-vote">
                     <div className="chat-vote-area">
                         <div className="promise-header">오늘 뭐 먹지?</div>
                         <div className="menu-scrpit">
@@ -105,13 +139,15 @@ function Chat() {
                         className="chat-mem" alt='profile'/>
                         <div className="chat-mem-name">임수연</div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* 투표 종료 */}
-                <div className="vote-finish">투표가 종료되었습니다.</div>
+                {/* <div className="vote-finish">투표가 종료되었습니다.</div> */}
 
+                {/* 임시 */}
+                    <button onClick={sendAddress}>경로조회</button>
                 {/* 약속 설정 */}
-                {promises}
+                {/* {promises} */}
             </div>
         </div>
     );
