@@ -98,7 +98,6 @@ function RestaurantInfo({ restaurantId }) {
           </button>
         </div>
       </div>
-      {/* 왜 css 안먹냐고 이녀석아 */}
       <div className="review-star-tags">
         <div className="taste-tag">맛 {totalTaste}</div>
         <div className="cost-tag">가성비 {totalCost}</div>
