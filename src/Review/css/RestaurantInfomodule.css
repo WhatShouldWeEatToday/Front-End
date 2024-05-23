@@ -59,11 +59,10 @@
   background-color: #fbe156;
   font-size: 28px;
   margin-left: auto;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 }
 .review-register-btn {
   margin-left: 15px;
-  
 }
 
 .favorites-btn:hover,
@@ -106,8 +105,8 @@
   background-color: #8cc966;
 }
 .review-mood-tag {
-  background-color: #fbe156;
+  background-color: #47abe8;
 }
 .review-park-tag {
-  background-color: #fbe156;
+  background-color: #69cccc;
 }

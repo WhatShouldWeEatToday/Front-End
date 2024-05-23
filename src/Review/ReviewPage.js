@@ -3,6 +3,7 @@ import "./css/ReviewPage.css";
 import axios from "../etc/utils/apis";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import ReviewPagination from "./components/ReviewPagination";
 
 function ReviewPage() {
   const navigate = useNavigate();
@@ -10,15 +11,28 @@ function ReviewPage() {
   // 각 식당의 리뷰 목록 표시 상태를 관리하기 위한 상태 변수
   // 기본값으로 모든 식당의 리뷰 목록은 닫혀있는 상태(false)
   const [openReviews, setOpenReviews] = useState({});
+
+  // 식당, 리뷰리스트 저장 변수
   const [restaurantList, setRestaurantList] = useState({});
   const [reviewList, setReviewList] = useState({});
 
-  useEffect(() => {
-    getRestaurants();
-  }, [reviewList]);
+  /* Pagination */
+  const [page, setPage] = useState(1); // 페이지 숫자
+  const [totalPages, setTotalPages] = useState(0); // 전체 데이터 수
+  const maxContent = 10; // 한 페이지에 보여줄 식당의 최대 개수
+
+  // 주소 변수
+  const [address, setAddress] = useState("");
+
+  // 페이지 변경
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   const handleAddressChange = (e) => {
     const selectedAddress = e.target.value;
+    setAddress(selectedAddress);
+    setPage(1);
     if (selectedAddress) {
       getRestaurantsByAddress(selectedAddress);
     } else {
@@ -26,13 +40,13 @@ function ReviewPage() {
     }
   };
 
-  // 리뷰 토글
+  // 리뷰리스트 토글
   const toggleReviews = (id) => {
     setOpenReviews((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const goEditPage = (restaurantId, reviewId) => {
-    navigate(`/restaurant/${restaurantId}/review/${reviewId}`);
+    navigate(`/restaurant/${restaurantId}/review/edit/${reviewId}`);
   };
 
   const goRestaurantDetailPage = (restaurantId) => {
@@ -56,11 +70,17 @@ function ReviewPage() {
   // findAll
   const getRestaurants = async () => {
     axios
-      .get(`http://localhost:8080/review/findAll`)
+      // size(한 페이지에 보여줄 식당의 최대 개수)
+      .get(
+        `http://localhost:8080/review/findAll?page=${
+          page - 1
+        }&size=${maxContent}`
+      )
       .then((res) => {
         // console.log(res.data);
+        const { totalPages } = res.data;
+        setTotalPages(totalPages);
         setRestaurantList(res.data);
-        setReviewList(restaurantList.reviewList);
         const updatedReviewList = res.data.content.map((restaurant) => ({
           id: restaurant.id,
           name: restaurant.name,
@@ -76,9 +96,15 @@ function ReviewPage() {
   // findAllByAddress
   const getRestaurantsByAddress = async (address) => {
     axios
-      .get(`http://localhost:8080/review/findAll?address=${address}`)
+      .get(
+        `http://localhost:8080/review/findAll?address=${address}&page=${
+          page - 1
+        }&size=${maxContent}`
+      )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
+        const { totalPages } = res.data;
+        setTotalPages(totalPages);
         setRestaurantList(res.data);
         const updatedReviewList = res.data.content.map((restaurant) => ({
           id: restaurant.id,
@@ -92,12 +118,25 @@ function ReviewPage() {
       });
   };
 
+  useEffect(() => {
+    if (address) {
+      getRestaurantsByAddress(address);
+    } else {
+      getRestaurants();
+    }
+  }, [page, address]); // 페이지 또는 주소가 변경될 때마다 실행
+
   return (
     <div className="ReviewPage">
       <Header />
       <div className="restaurant-review-container">
         <div className="restaurant-sort-box">
-          <select name="address" id="address" onChange={handleAddressChange}>
+          <select
+            className="address-select-box"
+            name="address"
+            id="address"
+            onChange={handleAddressChange}
+          >
             <option value="">동/읍/면</option>
             <option value="선산읍">선산읍</option>
             <option value="고아읍">고아읍</option>
@@ -119,6 +158,7 @@ function ReviewPage() {
             <option value="상모사곡동">상모사곡동</option>
             <option value="임오동">임오동</option>
             <option value="임은동">임은동</option>
+            <option value="오태동">오태동</option>
             <option value="인동동">인동동</option>
             <option value="진미동">진미동</option>
             <option value="양포동">양포동</option>
@@ -200,6 +240,7 @@ function ReviewPage() {
                                   }
                                   width="50px"
                                   height="50px"
+                                  alt="account-img"
                                 />
                                 <span className="review-writers">
                                   {review.writers}
@@ -211,6 +252,7 @@ function ReviewPage() {
                                   src={process.env.PUBLIC_URL + "/img/like.png"}
                                   width="23px"
                                   height="30px"
+                                  alt="like-img"
                                 />
                                 <span className="review-totalLikes">
                                   {review.totalLikes}
@@ -225,6 +267,7 @@ function ReviewPage() {
                                     }
                                     width="27px"
                                     height="27px"
+                                    alt="verified-img"
                                   />
                                 )}
                                 <button
@@ -240,6 +283,7 @@ function ReviewPage() {
                                     }
                                     width="25px"
                                     height="25px"
+                                    alt="edit-img"
                                   />
                                 </button>
                                 <button
@@ -255,6 +299,7 @@ function ReviewPage() {
                                     }
                                     width="25px"
                                     height="25px"
+                                    alt="delete-img"
                                   />
                                 </button>
                               </div>
@@ -270,6 +315,7 @@ function ReviewPage() {
                                   }
                                   width="32px"
                                   height="32px"
+                                  alt="thumbUp-img"
                                 />
                                 {review.taste === 1 && (
                                   <div className="taste-tag">맛</div>
@@ -293,6 +339,11 @@ function ReviewPage() {
                   )}
               </div>
             ))}
+        <ReviewPagination
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );

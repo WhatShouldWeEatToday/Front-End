@@ -153,10 +153,10 @@
   background-color: #8cc966;
 }
 .mood-tag {
-  background-color: #fbe156;
+  background-color: #47abe8;
 }
 .park-tag {
-  background-color: #fbe156;
+  background-color: #69cccc;
 }
 
 /* 수정, 삭제 버튼 */
@@ -169,4 +169,22 @@
 }
 .review-delete-btn {
   margin-left: 20px;
+}
+
+/* select 박스 */
+.address-select-box {
+  width: 195px;
+  height: 52px;
+  border: 0;
+  border-radius: 30px;
+  background-color: #fbe156;
+  text-align: center;
+  font-size: 28px;
+}
+.address-select-box option {
+  background-color: #ffffff;
+  border: 1px solid black;
+}
+.address-select-box:hover {
+  cursor: pointer;
 }
