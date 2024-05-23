@@ -22,7 +22,7 @@
     margin: auto;
 }
 
-#result{
+.totalTime-result{
     width: 50%;
     height: 50px;
     text-align: center;
