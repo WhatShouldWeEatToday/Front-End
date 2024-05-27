@@ -1,48 +1,26 @@
 import React, { useEffect, useState } from "react";
-import '../css/GroupList.css';
+import '../css/FriendsList.css';
 import axios from "axios";
 
-//임시데이터
-const Friends = [
-    {
-        name: "이소림"
-    },
-    {
-        name: "이준현"
-    },
-    {
-        name: "이지현"
-    },
-    {
-        name: "임수연"
-    },
-    {
-        name: "이민형"
-    },
-    {
-        name: "이우석"
-    },
-    {
-        name: "유기상"
-    },
-    {
-        name: "오재현"
-    }
-];
-
-
-function GroupList() { 
-    
-    //사용자의 아이디값? 불러와서 친구데이터 연결
-
+function FriendsList() { 
     //나의 친구 데이터 통신
     const [myFriends, setMyFriends] = useState([]);
+    //검색 데이터 저장
+    const [search, setSearch] = useState('');
+
+    const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+      };
 
     const getMyFriends = async () => {
         try{
             const respone = await axios
-            .get("http://localhost:8080/chat/friend-list");
+            .get("http://localhost:8080/chat/friend-list",
+            {
+                headers: headers, // 헤더 설정
+            });
             setMyFriends(respone.data);
+            console.log(respone.data);
         } catch(err){
             console.log({error: err});
         }
@@ -52,46 +30,52 @@ function GroupList() {
         getMyFriends();
     }, []);
 
-
-    //검색 데이터 저장
-    const [search, setSearch] = useState('');
-
     const handleSearch = (e) => {
         setSearch(e.target.value.toLowerCase());
     }
 
-    const searchFriends = Friends.filter(friends => 
-        friends.name.toLocaleLowerCase().includes(search)
+    const searchFriends = myFriends.filter(friends => 
+        friends.friendNickname.toLocaleLowerCase().includes(search)
     );
-    
 
-    const FriendsList = searchFriends.map(data => {
+    const myFriendslist = searchFriends.map(friend => {
         return(
-            <div className="friends-list" key={data.name}>
+            <div className="friends-list" key={friend.friendshipId}>
                 <img src={process.env.PUBLIC_URL + '/img/account.png'}
                     className="friends-profile" alt='profile'/>    
-                <div className="friends-name">{data.name}</div>
+                <div className="friends-name">{friend.friendNickname}</div>
                 <img src={process.env.PUBLIC_URL + '/img/invitation.png'}
-            className="friends-invite" alt='profile'/>    
-        </div>
+                 className="friends-invite" alt='profile'/>    
+            </div>
         )
     })
 
-    
+    const ClickSearch = async () => {
+        try{
+            const respone = await axios
+            .get('http://localhost:8080/chat/friend/search/');
+            const content = respone.data;
+            setSearch(content);
+        } catch (err){
+            console.log({error : err});
+        }
+    }
+
     return ( 
-        <div className="GroupList">
+        <div className="FriendsList">
             <div className="Friends-search">
                 <input
                 type="search"
-                className="freinds-serach-bar"
+                className="friends-serach-bar"
                 onChange={handleSearch}
                 value={search}/>
                 <img src={process.env.PUBLIC_URL + '/img/yellow_search.png'}
                     className="search_icon"
                     alt='search'
-                    onChange={handleSearch}/>
+                    onChange={handleSearch}
+                    onClick={ClickSearch}/>
             </div>
-            <div className="FriendsList-body">{FriendsList}</div>
+            <div className="FriendsList-body">{myFriendslist}</div>
             <div className="Group">
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
                     className="make-group"
@@ -99,9 +83,8 @@ function GroupList() {
                 />
                 <div className="group-text">그룹만들기</div>
             </div>
-            
         </div>
     );
 }
 
-export default GroupList;
+export default FriendsList;
