@@ -9,6 +9,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import Departure from "./Departure";
 import dayjs from "dayjs";
+import FriendsTab from "./FriendsTab";
 
 function Chat(props) {
     const [date, setDate] = useState(new Date());
@@ -107,17 +108,19 @@ function Chat(props) {
 
     return (
         <div className="ChatSession">
-            <div className="chat-header">
+            {/* <div className="chat-header">
                 <img src={process.env.PUBLIC_URL + '/img/attention_red.png'}
                     className="chat-notice" alt='notice'/>
                 <div className="chat-name">그룹1</div>
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
                     className="chat-group" alt='member'/>
-            </div>
+            </div> */}
+
+            <FriendsTab/>
             <div className="chat-area">
                 
                 {/* 출발지 설정 */}
-                <Departure address={address} setAddress={setAddress}/>
+                {/* <Departure address={address} setAddress={setAddress}/> */}
 
                 {/* 투표 */}
                 {/* <div className="chat-and-vote">
@@ -145,7 +148,8 @@ function Chat(props) {
                 {/* <div className="vote-finish">투표가 종료되었습니다.</div> */}
 
                 {/* 임시 */}
-                    <button onClick={sendAddress}>경로조회</button>
+                    {/* <button
+                     className="course-btn" onClick={sendAddress}>경로조회</button> */}
                 {/* 약속 설정 */}
                 {/* {promises} */}
             </div>
