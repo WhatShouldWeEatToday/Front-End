@@ -172,3 +172,15 @@
     background-color: white;
     margin: 10px;
 }
+
+.course-btn{
+    margin: auto;
+    width: 90%;
+    height: 50px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Pretendard-Regular';
+    background-color: #FBE156;
+    font-size: larger;
+    margin: 10px;
+}

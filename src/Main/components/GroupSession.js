@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../css/GroupSession.css'
 import Modal from './Modal';
-import GroupList from './GroupList';
+import GroupList from './FriendsList';
 import Chat from './Chat';
 
 function GroupSession(props) {

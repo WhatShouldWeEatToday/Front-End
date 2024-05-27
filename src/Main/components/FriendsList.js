@@ -31,23 +31,25 @@ const Friends = [
 ];
 
 
-function GroupList() { //사용자의 아이디값? 불러와서 친구데이터 연결
+function GroupList() { 
+    
+    //사용자의 아이디값? 불러와서 친구데이터 연결
 
     //나의 친구 데이터 통신
-    // const [myFriends, setMyFriends] = useState([]);
+    const [myFriends, setMyFriends] = useState([]);
 
-    // const getMyFriends = async () => {
-    //     try{
-    //         const respone = await axios
-    //         .get("http://localhost:8080/chat/friend-list");
-    //         setMyFriends(respone.data);
-    //     } catch(err){
-    //         console.log({error: err});
-    //     }
-    // };
+    const getMyFriends = async () => {
+        try{
+            const respone = await axios
+            .get("http://localhost:8080/chat/friend-list");
+            setMyFriends(respone.data);
+        } catch(err){
+            console.log({error: err});
+        }
+    };
 
     useEffect(() => {
-        // getMyFriends();
+        getMyFriends();
     }, []);
 
 
@@ -78,9 +80,6 @@ function GroupList() { //사용자의 아이디값? 불러와서 친구데이터
     
     return ( 
         <div className="GroupList">
-            <div className="FriendsList-title">
-                친구목록
-            </div>
             <div className="Friends-search">
                 <input
                 type="search"
