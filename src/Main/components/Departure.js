@@ -9,8 +9,12 @@ function Departure ({address, setAddress}) {
 
 
     const handleComplete = (data) => {
-        const {address} = data;
-        setAddress(address);
+        const { address } = data;
+        if(address.includes("구미")) {
+            setAddress(address);
+        } else{
+            alert("출발지를 구미 내로 설정해주세요.");
+        }
     };
 
     const handleCloser = (state) => {
@@ -28,18 +32,6 @@ function Departure ({address, setAddress}) {
         alert("출발지가 등록되었습니다.");
         console.log(address);
     }
-
-    // const sendAddress = async () => {
-    //     console.log("보내기")
-    //     try{
-    //         const respone = await axios
-    //         .post("api주소");
-        
-    //     } catch (err){
-    //         console.log({error: err});
-    //     }
-    // };
-
 
     return (
         <div className="Departure-area">

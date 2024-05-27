@@ -27,15 +27,15 @@ function Chat(props) {
                 .post("http://localhost:8080/restaurant/search/totalPath",
                 {
                     departure: address,
-                    destination: "경북 구미시 산호대로29길 14-16",
+                    destination: "경북 구미시 상림로 67",
+                    //경북 구미시 산호대로29길 14-16, 경북 구미시 상림로 67
                     searchDttm: promieTime
                 });
-    
+
                 console.log("response 파일", response);
-                console.log("data 파일", response.data.metaData);
-                setCourse(response.data.metaData);
-                console.log("경로 데이터 파일",course);
+                setCourse(response.data);
                 localStorage.setItem('courseData', JSON.stringify({course})); //경로데이터 로컬스토리지에 저장
+                console.log("경로 데이터 파일",course);
                 onPopup();
             
             } catch (err){
