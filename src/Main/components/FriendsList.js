@@ -52,7 +52,7 @@ function FriendsList({onShowCreateChat}) {
         }
     }
 
-    //채팅방 초대 친구
+    //채팅방 초대할 친구 선택
     const [invite, setInvite] = useState({});
     const [selectedFriends , setSelectedFriends] = useState([]);
 
