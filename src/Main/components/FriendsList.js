@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import '../css/FriendsList.css';
 import axios from "axios";
 
-function FriendsList() { 
+function FriendsList({onShowCreateChat}) { 
     //나의 친구 데이터 통신
     const [myFriends, setMyFriends] = useState([]);
     //검색 데이터 저장
     const [search, setSearch] = useState('');
 
+    //토큰
     const headers = {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
       };
 
+    //친구목록 불러오기
     const getMyFriends = async () => {
         try{
             const respone = await axios
@@ -30,6 +32,7 @@ function FriendsList() {
         getMyFriends();
     }, []);
 
+    //친구 검색
     const handleSearch = (e) => {
         setSearch(e.target.value.toLowerCase());
     }
@@ -37,18 +40,6 @@ function FriendsList() {
     const searchFriends = myFriends.filter(friends => 
         friends.friendNickname.toLocaleLowerCase().includes(search)
     );
-
-    const myFriendslist = searchFriends.map(friend => {
-        return(
-            <div className="friends-list" key={friend.friendshipId}>
-                <img src={process.env.PUBLIC_URL + '/img/account.png'}
-                    className="friends-profile" alt='profile'/>    
-                <div className="friends-name">{friend.friendNickname}</div>
-                <img src={process.env.PUBLIC_URL + '/img/invitation.png'}
-                 className="friends-invite" alt='profile'/>    
-            </div>
-        )
-    })
 
     const ClickSearch = async () => {
         try{
@@ -60,6 +51,51 @@ function FriendsList() {
             console.log({error : err});
         }
     }
+
+    //채팅방 초대 친구
+    const [invite, setInvite] = useState({});
+    const [selectedFriends , setSelectedFriends] = useState([]);
+
+    const handleInvite = (friend) => {
+        setInvite(prevStatus => ({
+            ...prevStatus,
+            [friend.friendloginId] : !prevStatus[friend.friendloginId],
+        }));
+        console.log("선택된 친구",friend);
+
+        setSelectedFriends(prevSelectedFriends => {
+            if(prevSelectedFriends.some(selectedFriends => selectedFriends.friendloginId === friend.friendloginId)) {
+                return prevSelectedFriends.filter(selectedFriends => selectedFriends.friendloginId !== friend.friendloginId);
+            } else{
+                return [...prevSelectedFriends, friend];
+            }
+        });
+    };
+
+
+    const myFriendslist = searchFriends.map(friend => {
+        const isInvited = invite[friend.friendloginId] || false;
+        return(
+            <div className="friends-list" key={friend.friendloginId}>
+                <img src={process.env.PUBLIC_URL + '/img/account.png'}
+                    className="friends-profile" alt='profile'/>    
+                <div className="friends-name">{friend.friendNickname}</div>
+                <div className="friends-invite"
+                    onClick={() => handleInvite(friend)}
+                >
+                    {isInvited ? (
+                        <img src={process.env.PUBLIC_URL + '/img/invitation_y.png'}
+                            className="invite-icon" alt='profile'/>
+                        ) : (
+                        <img src={process.env.PUBLIC_URL + '/img/invitation.png'}
+                            className="invite-icon" alt='profile'/>
+                    )}
+                </div>
+            </div>
+        )
+    })
+
+
 
     return ( 
         <div className="FriendsList">
@@ -73,10 +109,11 @@ function FriendsList() {
                     className="search_icon"
                     alt='search'
                     onChange={handleSearch}
-                    onClick={ClickSearch}/>
+                    onClick={ClickSearch}
+                    />
             </div>
             <div className="FriendsList-body">{myFriendslist}</div>
-            <div className="Group">
+            <div className="Group" onClick={() => onShowCreateChat(selectedFriends)}>
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
                     className="make-group"
                     alt='group'

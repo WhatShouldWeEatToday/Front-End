@@ -57,6 +57,11 @@
     margin-left: auto;
 }
 
+.invite-icon{
+    width: 100%;
+    height: 100%;
+}
+
 .Group{
     display: flex;
     flex-direction: column;
