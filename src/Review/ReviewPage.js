@@ -1,6 +1,7 @@
 import Header from "../etc/components/Header";
 import "./css/ReviewPage.css";
 import axios from "../etc/utils/apis";
+import { getMemberInfo } from "../etc/utils/MemberInfo";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ReviewPagination from "./components/ReviewPagination";
@@ -23,6 +24,9 @@ function ReviewPage() {
 
   // 주소 변수
   const [address, setAddress] = useState("");
+
+  // 현재 로그인된 유저 이름
+  const [nickname, setNickname] = useState(null);
 
   // 페이지 변경
   const handlePageChange = (newPage) => {
@@ -59,8 +63,7 @@ function ReviewPage() {
       .then((res) => {
         console.log(res.data);
         alert("리뷰가 삭제되었습니다.");
-        // navigate(`/`);
-        // navigate('/', { replace: true }); // 현재 페이지 새로고침
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error);
@@ -70,14 +73,14 @@ function ReviewPage() {
   // findAll
   const getRestaurants = async () => {
     axios
-      // size(한 페이지에 보여줄 식당의 최대 개수)
+      // maxContent(한 페이지에 보여줄 식당의 최대 개수)
       .get(
         `http://localhost:8080/review/findAll?page=${
           page - 1
         }&size=${maxContent}`
       )
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         const { totalPages } = res.data;
         setTotalPages(totalPages);
         setRestaurantList(res.data);
@@ -97,12 +100,12 @@ function ReviewPage() {
   const getRestaurantsByAddress = async (address) => {
     axios
       .get(
-        `http://localhost:8080/review/findAll?address=${address}&page=${
+        `http://localhost:8080/review/findbyAddress/${address}?page=${
           page - 1
         }&size=${maxContent}`
       )
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         const { totalPages } = res.data;
         setTotalPages(totalPages);
         setRestaurantList(res.data);
@@ -118,12 +121,23 @@ function ReviewPage() {
       });
   };
 
+  // 로그인된 사용자 정보 가져오기
+  const fetchMemberInfo = async () => {
+    try {
+      const res = await getMemberInfo();
+      setNickname(res.data.nickname);
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패 : ", error);
+    }
+  };
+
   useEffect(() => {
     if (address) {
       getRestaurantsByAddress(address);
     } else {
       getRestaurants();
     }
+    fetchMemberInfo();
   }, [page, address]); // 페이지 또는 주소가 변경될 때마다 실행
 
   return (
@@ -246,8 +260,9 @@ function ReviewPage() {
                                   {review.writers}
                                 </span>
                                 <span className="review-createdDate">
-                                  {review.created_Date}
+                                  {review.createdDate}
                                 </span>
+                                {/* 좋아요 버튼 */}
                                 <img
                                   src={process.env.PUBLIC_URL + "/img/like.png"}
                                   width="23px"
@@ -257,8 +272,8 @@ function ReviewPage() {
                                 <span className="review-totalLikes">
                                   {review.totalLikes}
                                 </span>
-                                {/* 임시로 Not Null로 해둠 */}
-                                {review.reviewType !== null && (
+                                {/* 영수증 인증 뱃지 */}
+                                {review.reviewType !== "NOT_CERTIFY" && (
                                   <img
                                     className="verified-img"
                                     src={
@@ -270,38 +285,44 @@ function ReviewPage() {
                                     alt="verified-img"
                                   />
                                 )}
-                                <button
-                                  className="review-edit-btn"
-                                  title="수정"
-                                  onClick={() => {
-                                    goEditPage(restaurant.id, review.id);
-                                  }}
-                                >
-                                  <img
-                                    src={
-                                      process.env.PUBLIC_URL + "/img/Edit.png"
-                                    }
-                                    width="25px"
-                                    height="25px"
-                                    alt="edit-img"
-                                  />
-                                </button>
-                                <button
-                                  className="review-delete-btn"
-                                  title="삭제"
-                                  onClick={() => {
-                                    deleteReview(review.id);
-                                  }}
-                                >
-                                  <img
-                                    src={
-                                      process.env.PUBLIC_URL + "/img/Delete.png"
-                                    }
-                                    width="25px"
-                                    height="25px"
-                                    alt="delete-img"
-                                  />
-                                </button>
+                                {review.writers === nickname && (
+                                  <div className="review-edit-delete-box">
+                                    <button
+                                      className="review-edit-btn"
+                                      title="수정"
+                                      onClick={() => {
+                                        goEditPage(restaurant.id, review.id);
+                                      }}
+                                    >
+                                      <img
+                                        src={
+                                          process.env.PUBLIC_URL +
+                                          "/img/Edit.png"
+                                        }
+                                        width="25px"
+                                        height="25px"
+                                        alt="edit-img"
+                                      />
+                                    </button>
+                                    <button
+                                      className="review-delete-btn"
+                                      title="삭제"
+                                      onClick={() => {
+                                        deleteReview(review.id);
+                                      }}
+                                    >
+                                      <img
+                                        src={
+                                          process.env.PUBLIC_URL +
+                                          "/img/Delete.png"
+                                        }
+                                        width="25px"
+                                        height="25px"
+                                        alt="delete-img"
+                                      />
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                               <div className="review-star-tags">
                                 <span className="star-icon2">★</span>

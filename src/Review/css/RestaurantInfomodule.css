@@ -1,8 +1,10 @@
 .restaurant-details {
   width: 825px;
   border-top: 2px solid black;
-  margin-top: 80px;
   padding: 11px 8px;
+}
+.restaurant-details:nth-child(2) {
+  margin-top: 60px;
 }
 .restaurant-name {
   font-size: 32px;

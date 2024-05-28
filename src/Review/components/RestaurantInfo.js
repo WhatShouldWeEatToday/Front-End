@@ -2,7 +2,6 @@ import "../css/RestaurantInfomodule.css";
 import axios from "../../etc/utils/apis";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import base64 from "base-64";
 
 function RestaurantInfo({ restaurantId }) {
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ function RestaurantInfo({ restaurantId }) {
   const [reviewList, setReviewList] = useState({}); // 리뷰 Object
 
   useEffect(() => {
-    tokenDecode();
     getRestaurantDetails();
   }, [restaurantId, reviewList]);
 
@@ -46,18 +44,6 @@ function RestaurantInfo({ restaurantId }) {
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  // 토큰 디코딩
-  const tokenDecode = () => {
-    // const accessToken = localStorage.accessToken;
-    // let payload = accessToken.substring(
-    //   accessToken.indexOf(".") + 1,
-    //   accessToken.lastIndexOf(".")
-    // );
-    // let decodingInfo = base64.decode(payload);
-    // console.log(decodingInfo);
-    // return decodingInfo;
   };
 
   const goEditPage = (reviewId) => {
@@ -121,7 +107,7 @@ function RestaurantInfo({ restaurantId }) {
                   />
                   <span className="review-writers">{review.writers}</span>
                   <span className="review-createdDate">
-                    {review.created_Date}
+                    {review.createdDate}
                   </span>
                   <img
                     alt="like-img"
