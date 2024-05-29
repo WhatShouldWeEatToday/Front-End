@@ -9,9 +9,10 @@ function FriendsList({onShowCreateChat}) {
     const [search, setSearch] = useState('');
 
     //토큰
-    const headers = {
+    const headers =
+    {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
-      };
+    };
 
     //친구목록 불러오기
     const getMyFriends = async () => {
@@ -22,7 +23,7 @@ function FriendsList({onShowCreateChat}) {
                 headers: headers, // 헤더 설정
             });
             setMyFriends(respone.data);
-            console.log(respone.data);
+            console.log("받아온 친구 데이터", respone.data);
         } catch(err){
             console.log({error: err});
         }
@@ -59,13 +60,13 @@ function FriendsList({onShowCreateChat}) {
     const handleInvite = (friend) => {
         setInvite(prevStatus => ({
             ...prevStatus,
-            [friend.friendloginId] : !prevStatus[friend.friendloginId],
+            [friend.friendLoginId] : !prevStatus[friend.friendLoginId],
         }));
         console.log("선택된 친구",friend);
 
         setSelectedFriends(prevSelectedFriends => {
-            if(prevSelectedFriends.some(selectedFriends => selectedFriends.friendloginId === friend.friendloginId)) {
-                return prevSelectedFriends.filter(selectedFriends => selectedFriends.friendloginId !== friend.friendloginId);
+            if(prevSelectedFriends.some(selectedFriends => selectedFriends.friendLoginId === friend.friendLoginId)) {
+                return prevSelectedFriends.filter(selectedFriends => selectedFriends.friendLoginId !== friend.friendLoginId);
             } else{
                 return [...prevSelectedFriends, friend];
             }
@@ -74,9 +75,9 @@ function FriendsList({onShowCreateChat}) {
 
 
     const myFriendslist = searchFriends.map(friend => {
-        const isInvited = invite[friend.friendloginId] || false;
+        const isInvited = invite[friend.friendLoginId] || false;
         return(
-            <div className="friends-list" key={friend.friendloginId}>
+            <div className="friends-list" key={friend.friendLoginId}>
                 <img src={process.env.PUBLIC_URL + '/img/account.png'}
                     className="friends-profile" alt='profile'/>    
                 <div className="friends-name">{friend.friendNickname}</div>
