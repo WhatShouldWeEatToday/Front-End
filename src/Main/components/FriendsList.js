@@ -62,7 +62,7 @@ function FriendsList({onShowCreateChat}) {
             ...prevStatus,
             [friend.friendLoginId] : !prevStatus[friend.friendLoginId],
         }));
-        console.log("선택된 친구",friend);
+        console.log("선택된 친구",invite);
 
         setSelectedFriends(prevSelectedFriends => {
             if(prevSelectedFriends.some(selectedFriends => selectedFriends.friendLoginId === friend.friendLoginId)) {
