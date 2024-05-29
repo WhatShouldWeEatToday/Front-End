@@ -1,0 +1,34 @@
+.CreateChat{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.chat-room-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notice-btn{
+    width: 60px;
+    height: 60px;
+}
+
+.vote-btn{
+    width: 60px;
+    height: 60px;
+}
+
+.friend-list-btn{
+    width: 100px;
+    height: 30px;
+    background-color: white;
+    border-radius: 30px;
+    border: solid 5px ;
+    border: solid #FBE156 3px;
+    font-size: large;
+    font-family: 'Pretendard-Regular';
+}
