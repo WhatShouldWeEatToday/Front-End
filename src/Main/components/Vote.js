@@ -1,19 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../css/Vote.css';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
-function Vote({ onClose }) {
-    const [inputValue1, setInputValue1] = useState('');
-    const [inputValue2, setInputValue2] = useState('');
-    const [showChatAndVote, setShowChatAndVote] = useState(false);
-    const [voteCount1, setVoteCount1] = useState(0);
-    const [voteCount2, setVoteCount2] = useState(0);
+function Vote({ onClose, currentUser, roomId }) {
+    const [inputValue1, setInputValue1] = useState(''); //메뉴1
+    const [inputValue2, setInputValue2] = useState(''); //메뉴2
+    const [showChatAndVote, setShowChatAndVote] = useState(false); 
+    const [voteCount1, setVoteCount1] = useState(0); //메뉴1
+    const [voteCount2, setVoteCount2] = useState(0); //메뉴2
     const [voted, setVoted] = useState(false); // 이미 투표했는지 여부를 나타내는 상태
+    const [selectedMenu, setSelectedMenu] = useState(null); // 클릭된 버튼 상태를 관리
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('메뉴 1:', inputValue1);
         console.log('메뉴 2:', inputValue2);
-        setShowChatAndVote(true); // 입력을 제출하면 chat-and-vote 영역을 표시합니다.
+        setShowChatAndVote(true); // 입력을 제출하면 chat-and-vote 영역을 표시
+        submitVote();
     };
 
     // 입력값이 모두 채워졌는지 확인하는 함수
@@ -29,11 +33,58 @@ function Vote({ onClose }) {
                 console.log(voteCount1);
             } else if (menuNumber === 2) {
                 setVoteCount2(voteCount2 + 1);
-                console.log(voteCount2)
+                console.log(voteCount2);
             }
             setVoted(true); // 투표 완료 표시
+            setSelectedMenu(menuNumber); // 클릭된 버튼 상태를 업데이트
         }
     };
+
+    useEffect(() => {
+        console.log("Vote Count 1: ", voteCount1);
+    }, [voteCount1]);
+
+    useEffect(() => {
+        console.log("Vote Count 2: ", voteCount2);
+    }, [voteCount2]);
+
+    //채팅방 생성
+    const [stompClient, setStompClient] = useState(null);
+    const submitVote = () => {
+        const socket = new SockJS('http://localhost:8080/ws-stomp');
+        const client = Stomp.over(socket);
+
+        const headers =
+        {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+        };  
+
+        client.connect(headers, () => {
+            setStompClient(client);
+            handleSubmitVote(client);
+            
+            client.subscribe(`/topic/${roomId}`, (message) => {
+                console.log('Received message:', message.body);
+            })
+        }, (error) => {
+            console.error('Error connecting to Websocket', error);
+        });
+
+        return () => {
+            if(stompClient){
+                stompClient.disconnect();
+            }
+        }
+    }
+
+    const handleSubmitVote = (client) => {
+        const requestDTO = {
+            menu: [inputValue1, inputValue2],
+        };
+
+        client.send(`/app/vote/register/${roomId}`, {}, JSON.stringify(requestDTO));
+        console.log("투표 생성!");
+    }
 
     return (
         <div>
@@ -42,14 +93,22 @@ function Vote({ onClose }) {
                     <div className="chat-vote-area">
                         <div className="promise-header">오늘 뭐 먹지?</div>
                         <div className="menu-scrpit">
-                            000님이
+                            {/* {currentUser.userId}님이 */}
                             <br />오늘 {inputValue1} 와 {inputValue2} 중에
                             <br />먹고 싶어합니다.
                             <br />투표해주세요 !
                         </div>
                         <div className="vote-menu">
-                            <button className="vote-menu-btn" onClick={() => handleVote(1)}>{inputValue1}</button>
-                            <button className="vote-menu-btn" onClick={() => handleVote(2)}>{inputValue2}</button>
+                            <button
+                                className={`vote-menu-btn ${selectedMenu === 1 ? 'selected' : ''}`}
+                                onClick={() => handleVote(1)}>
+                                {inputValue1}
+                            </button>
+                            <button
+                                className={`vote-menu-btn ${selectedMenu === 2 ? 'selected' : ''}`}
+                                onClick={() => handleVote(2)}>
+                                {inputValue2}
+                            </button>
                         </div>
                     </div>
                     {/* <div className="chat-member">
