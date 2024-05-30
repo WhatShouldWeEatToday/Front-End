@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { getMemberInfo } from "../utils/MemberInfo";
+import React, { useEffect, useState } from "react";
 import "../css/TopHeader.css";
 import { NavLink } from "react-router-dom";
 import Notification from "./Notification";
@@ -7,6 +8,7 @@ function TopHeader() {
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const [showNotification, setShowNotification] = useState(false);
+  const [nickname, setNickname] = useState(null); // 현재 로그인된 유저 이름
   // console.log("토큰1: ", accessToken);
   // console.log("토큰2: ", refreshToken);
 
@@ -22,10 +24,24 @@ function TopHeader() {
     setShowNotification(!showNotification);
   };
 
+  // 로그인된 사용자 정보 가져오기
+  const fetchMemberInfo = async () => {
+    try {
+      const res = await getMemberInfo();
+      setNickname(res.data.nickname);
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패 : ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMemberInfo();
+  }, []);
+
   if (accessToken && refreshToken) {
     return (
       <div className="TopHeader">
-        <div className="TopHeader_Box">님</div>
+        <div className="TopHeader_Box">{nickname} 님</div>
         <div className="TopHeader_Box" onClick={handleLogout}>
           로그아웃
         </div>
