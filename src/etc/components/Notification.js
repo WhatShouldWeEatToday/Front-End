@@ -1,4 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import axios from "../utils/apis";
+import { getMemberInfo } from "../utils/MemberInfo";
+import React, { useRef, useEffect, useState } from "react";
 import "../css/Notification.css";
 
 // 임시데이터
@@ -22,6 +24,34 @@ const Notifications = [
 
 function Notification({ onClose }) {
   const notificationRef = useRef();
+  const [loginId, setLoginId] = useState("");
+
+  const getNotice = async (userId) => {
+    if (!userId) return;
+    axios
+      .get(`http://localhost:8080/notices/${userId}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // 로그인된 사용자 정보 가져오기
+  const fetchMemberInfo = async () => {
+    try {
+      const res = await getMemberInfo();
+      // console.log(res.data);
+      setLoginId(res.data.loginId);
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패 : ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMemberInfo();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -33,13 +63,15 @@ function Notification({ onClose }) {
       }
     }
 
+    getNotice(loginId);
+
     // 문서 전체에 클릭 이벤트 리스너 추가
     document.addEventListener("click", handleClickOutside);
     return () => {
       // 컴포넌트 언마운트될 때 이벤트 리스너 제거
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [onClose]);
+  }, [loginId, onClose]);
 
   const NotificationList = Notifications.map((data) => {
     return (
@@ -53,7 +85,7 @@ function Notification({ onClose }) {
   return (
     <div className="Notification" ref={notificationRef}>
       <div className="notification-container">
-        <span className="notification-title">알림</span>
+        <span className="notification-title">{loginId} 알림</span>
         <div className="notification-list-box">{NotificationList}</div>
       </div>
     </div>
