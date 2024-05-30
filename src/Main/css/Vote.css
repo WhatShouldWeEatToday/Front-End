@@ -60,10 +60,14 @@
     margin: 10px;
 }
 
-.vote-submit-btn{
+.vote-submit-btn {
     margin-top: 30px;
     width: 100px;
     height: 30px;
     background-color: #FBE156;
     border-radius: 30px;
+}
+
+.vote-menu-btn.selected {
+    background-color: #D4AF37; /* 클릭된 버튼의 배경색을 변경 */
 }

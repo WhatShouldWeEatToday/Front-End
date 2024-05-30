@@ -12,32 +12,31 @@ function CreateChat({ selectedFriends, onClose }) {
     console.log("ID 값", chatMemberID);
     const [stompClient, setStompClient] = useState(null);
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
+    const [roomId, setRoomId] = useState(null); // 방 ID 저장 상태 추가
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
         const client = Stomp.over(socket);
-    
+
         const headers =
         {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
         };  
-    
+
         client.connect(headers, () => {
             setStompClient(client);
             handleCreateRoom(client); //바로 실행
-    
-            // 각 friendLoginId에 대해 구독 설정
-            chatMemberID.forEach(friendLoginId => {
-                client.subscribe(`/topic/public/${friendLoginId}`, (message => {
-                    console.log('받은 메세지: ', message.body);
-                    let roomId = JSON.parse(message.body);
-                    console.log("Room created with ID: " + roomId);
-                }));
-            });
+            
+            client.subscribe(`/topic/public/${chatMemberID}`, (message => {
+                console.log('받은 메세지: ', message.body);
+                const roomId = JSON.parse(message.body);
+                setRoomId(roomId);
+                console.log("Room created with ID: " + roomId);
+            }))
         }, (error) => {
             console.error('Error connecting to Websocket', error);
         });
-    
+
         return () => {
             if(stompClient) {
                 stompClient.disconnect();
@@ -52,7 +51,7 @@ function CreateChat({ selectedFriends, onClose }) {
         };
 
         client.send('/app//chat.createRoomAndInviteFriends', {}, JSON.stringify(requestDTO));
-        console.log("채팅방 생성 !")
+        console.log("채팅방 생성 !");
         // onclose();
     }
 
@@ -70,14 +69,14 @@ function CreateChat({ selectedFriends, onClose }) {
             </div>
             
             <div>
-                {/* 참여 멤버 :
+                참여 멤버 :
                 {selectedFriends.map(friend => (
                     <div key={friend.friendLoginId}>
                         {friend.friendNickname} ({friend.friendLoginId})
                     </div>
-                ))} */}
+                ))}
             </div>
-            {showVoteComponent && <Vote onClose={() => setShowVoteComponent(false)}/>}
+            {showVoteComponent && <Vote roomId={roomId} onClose={() => setShowVoteComponent(false)}/>}
         </div>
     );
 }
