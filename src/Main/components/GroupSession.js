@@ -10,8 +10,13 @@ function GroupSession(props) {
     const [showCreateChat, setShowCreateChat] = useState(false);
 
     const handleShowCreateChat = (selectedFriends) => {
-        setSelectedFriends(selectedFriends);
-        setShowCreateChat(true);
+        if(selectedFriends.length > 0){
+            setSelectedFriends(selectedFriends);
+            setShowCreateChat(true);
+        } else{
+            alert('한 명 이상의 친구를 선택해주세요.');
+            setShowCreateChat(false);
+        }
     };
 
     const handleHideCreateChat = () => {
