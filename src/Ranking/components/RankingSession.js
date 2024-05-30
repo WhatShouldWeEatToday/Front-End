@@ -26,8 +26,8 @@ const SelectBox = ({ options, defaultValue, onChange }) => {
 
 function RankingSession() {
   const [selectedCategory, setSelectedCategory] = useState(CATEGORY[0].id);
-  const [rankingList, setRankingList] = useState([]); // 카테고리별
-  const [rankingFoodList, setRankingFoodList] = useState([]); // 음식별
+  const [rankingFoodTypeList, setRankingFoodTypeList] = useState([]); // 카테고리별 랭킹 리스트
+  const [rankingFoodList, setRankingFoodList] = useState([]); // 음식별 랭킹 리스트
 
   useEffect(() => {
     if (selectedCategory === 1) {
@@ -42,9 +42,8 @@ function RankingSession() {
     axios
       .get(`http://localhost:8080/rank/foodType`)
       .then((res) => {
-        console.log(res.data);
-        const topFive = res.data.topRestaurants.slice(0, 5); // 상위 5개만 추출
-        setRankingList(topFive);
+        // console.log(res.data);
+        setRankingFoodTypeList(res.data.topFoodTypes);
       })
       .catch((error) => {
         console.log(error);
@@ -56,7 +55,7 @@ function RankingSession() {
     axios
       .get(`http://localhost:8080/rank/food`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setRankingFoodList(res.data.topFoods);
       })
       .catch((error) => {
@@ -82,8 +81,8 @@ function RankingSession() {
         </div>
         <div className="Ranking">
           {selectedCategory === 1
-            ? rankingList &&
-              rankingList.map((rankingList, index) => (
+            ? rankingFoodTypeList &&
+              rankingFoodTypeList.map((rankingList, index) => (
                 <div className="Ranks" key={rankingList.id}>
                   {index < 3 ? (
                     <img
@@ -96,12 +95,12 @@ function RankingSession() {
                   ) : (
                     <span className="ranks-number">{`${index + 1}위`}</span>
                   )}
-                  <div className="ranks-name">{rankingList.restaurantType}</div>
+                  <div className="ranks-name">{rankingList.foodTypeName}</div>
                 </div>
               ))
             : rankingFoodList &&
-              rankingFoodList.map((foodList, index) => (
-                <div className="Ranks" key={foodList.id}>
+              rankingFoodList.map((rankingList, index) => (
+                <div className="Ranks" key={rankingList.id}>
                   {index < 3 ? (
                     <img
                       src={
@@ -113,7 +112,7 @@ function RankingSession() {
                   ) : (
                     <span className="ranks-number">{`${index + 1}위`}</span>
                   )}
-                  <div className="ranks-name">{foodList.foodName}</div>
+                  <div className="ranks-name">{rankingList.foodName}</div>
                 </div>
               ))}
         </div>
