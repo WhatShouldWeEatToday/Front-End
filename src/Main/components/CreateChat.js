@@ -12,6 +12,7 @@ function CreateChat({ selectedFriends, onClose }) {
     console.log("ID 값", chatMemberID);
     const [stompClient, setStompClient] = useState(null);
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
+    const [roomId, setRoomId] = useState(null);
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
@@ -31,7 +32,8 @@ function CreateChat({ selectedFriends, onClose }) {
                 client.subscribe(`/topic/public/${friendLoginId}`, (message => {
                     console.log('받은 메세지: ', message.body);
                     let roomId = JSON.parse(message.body);
-                    console.log("Room created with ID: " + roomId);
+                    setRoomId(roomId);
+                    console.log("Room ID: " + roomId);
                 }));
             });
         }, (error) => {
@@ -77,7 +79,7 @@ function CreateChat({ selectedFriends, onClose }) {
                     </div>
                 ))}
             </div>
-            {showVoteComponent && <Vote onClose={() => setShowVoteComponent(false)}/>}
+            {showVoteComponent && <Vote roomId={roomId} onClose={() => setShowVoteComponent(false)}/>}
         </div>
     );
 }
