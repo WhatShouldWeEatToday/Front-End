@@ -51,40 +51,51 @@ function Vote({ onClose, currentUser, roomId }) {
     //채팅방 생성
     const [stompClient, setStompClient] = useState(null);
     const submitVote = () => {
+        console.log("채팅방 아이디",roomId);
+        if (stompClient && stompClient.connected) {
+            handleSubmitVote(stompClient);
+            return;
+        }
+    
         const socket = new SockJS('http://localhost:8080/ws-stomp');
         const client = Stomp.over(socket);
-
-        const headers =
-        {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
-        };  
-
+    
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        };
+    
         client.connect(headers, () => {
             setStompClient(client);
             handleSubmitVote(client);
-            
-            client.subscribe(`/topic/${roomId}`, (message) => {
+    
+            client.subscribe(`/topic/votes/${roomId}`, (message) => {
                 console.log('Received message:', message.body);
-            })
+            });
         }, (error) => {
             console.error('Error connecting to Websocket', error);
         });
-
+    
         return () => {
-            if(stompClient){
+            if (stompClient) {
                 stompClient.disconnect();
             }
-        }
-    }
-
-    const handleSubmitVote = (client) => {
-        const requestDTO = {
-            menu: [inputValue1, inputValue2],
         };
-
-        client.send(`/app/vote/register/${roomId}`, {}, JSON.stringify(requestDTO));
-        console.log("투표 생성!");
-    }
+    };
+    const handleSubmitVote = (client) => {
+        const voteData = {
+            menu1: inputValue1,
+            menu2: inputValue2
+        };
+    
+        console.log("보내는 데이터:", voteData);
+    
+        if (client && client.connected) {
+            client.send(`/app/vote/register/${roomId}`, {}, JSON.stringify(voteData));
+            console.log("투표 생성!");
+        } else {
+            console.error("WebSocket 연결이 되어 있지 않습니다.");
+        }
+    };
 
     return (
         <div>

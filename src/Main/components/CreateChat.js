@@ -31,7 +31,7 @@ function CreateChat({ selectedFriends, onClose }) {
                 console.log('받은 메세지: ', message.body);
                 const roomId = JSON.parse(message.body);
                 setRoomId(roomId);
-                console.log("Room created with ID: " + roomId);
+                console.log("채팅방 ID: " + roomId);
             }))
         }, (error) => {
             console.error('Error connecting to Websocket', error);

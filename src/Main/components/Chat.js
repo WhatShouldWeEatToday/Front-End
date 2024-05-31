@@ -20,7 +20,6 @@ function Chat(props) {
     const [address, setAddress] = useState('');
 
     const sendAddress = async () => {
-
         if(address){
             try{
                 const response = await axios
@@ -97,8 +96,6 @@ function Chat(props) {
                     </div>
                 </div>
     );
-    
-    const {param} = props;
 
     const onPopup = () => {
         const url = 'restaurant/course';
@@ -120,28 +117,6 @@ function Chat(props) {
                 {/* 출발지 설정 */}
                 {/* <Departure address={address} setAddress={setAddress}/> */}
 
-                {/* 투표 */}
-                {/* <div className="chat-and-vote">
-                    <div className="chat-vote-area">
-                        <div className="promise-header">오늘 뭐 먹지?</div>
-                        <div className="menu-scrpit">
-                            임수연님이
-                            <br/>오늘 돈까스 와 떡볶이 중에
-                            <br/>먹고 싶어합니다.
-                            <br/>투표해주세요 !
-                        </div>
-                        <div className="vote-menu">
-                            <button className="vote-menu-btn">돈까스</button>
-                            <button className="vote-menu-btn">떡볶이</button>
-                        </div>
-                    </div>
-                    <div className="chat-member">
-                        <img src={process.env.PUBLIC_URL + '/img/account.png'}
-                        className="chat-mem" alt='profile'/>
-                        <div className="chat-mem-name">임수연</div>
-                    </div>
-                </div> */}
-
                 {/* 투표 종료 */}
                 {/* <div className="vote-finish">투표가 종료되었습니다.</div> */}
 
@@ -149,7 +124,7 @@ function Chat(props) {
                     {/* <button
                      className="course-btn" onClick={sendAddress}>경로조회</button> */}
                 {/* 약속 설정 */}
-                {/* {promises} */}
+                {promises}
             </div>
         </div>
     );
