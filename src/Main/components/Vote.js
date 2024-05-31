@@ -83,6 +83,8 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
             }
         };
     };
+
+    //채팅 투표 등록록
     const handleSubmitVote = (client) => {
         const voteData = {
             menu1: inputValue1,
@@ -97,6 +99,19 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
             console.log("투표 생성!");
         } else {
             console.error("WebSocket 연결이 되어 있지 않습니다.");
+        }
+    };
+
+    //멤버 투표 결과 전송
+    const handleVoted = () => {
+        if (selectedMenu !== null) {
+            const userSelected = selectedMenu === 1 ? inputValue1 : inputValue2;
+            console.log("선택한 메뉴: ", userSelected);
+            if (window.confirm(`${userSelected}로 투표되었습니다.`)) {
+                onClose();
+            }
+        } else {
+            alert("메뉴를 선택해주세요.");
         }
     };
 
@@ -125,12 +140,13 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
                             </button>
                         </div>
                     </div>
+                    
                     {/* <div className="chat-member">
                         <img src={process.env.PUBLIC_URL + '/img/account.png'}
                             className="chat-mem" alt='profile' />
                         <div className="chat-mem-name">임수연</div>
                     </div> */}
-                    <button className="close-btn" onClick={onClose}>닫기</button>
+                    <button className="close-btn" onClick={handleVoted}>투표하기</button>
                 </div>
             ) : (
                 <InputVote
