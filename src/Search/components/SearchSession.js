@@ -126,7 +126,7 @@ function SearchSession() {
                 <div className="restaurant-btn-area">
                     <button className="restaurant-btn" onClick={clickBookmark}>즐겨찾기</button>
                     <button className="restaurant-btn" >
-                        <Link to={`http://localhost:8080/restaurant/${data.id}/review`}
+                        <Link to={`/restaurant/${data.id}/review`}
                         style={{ textDecoration: 'none', color: 'inherit' }}
                         >리뷰보기</Link>
                     </button>

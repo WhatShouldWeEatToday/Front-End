@@ -68,10 +68,11 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
             setStompClient(client);
             handleSubmitVote(client);
     
-            client.subscribe(`/topic/votes/${roomId}`, (message) => {
-                console.log('Received message:', message.body);
+            // client.subscribe(`/topic/votes/${roomId}`, (message) => {
+            //     console.log('Received message:', message.body);
 
-            });
+            // });
+            
         }, (error) => {
             console.error('Error connecting to Websocket', error);
         });

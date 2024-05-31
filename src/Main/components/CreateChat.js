@@ -8,6 +8,7 @@ function CreateChat({ selectedFriends, onClose }) {
     const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
     const chatMemberID = selectedFriends.map(friend => friend.friendLoginId);
 
+    console.log("멤버 ID", chatMemberID);
 
     console.log("ID 값", chatMemberID);
     const [stompClient, setStompClient] = useState(null);
