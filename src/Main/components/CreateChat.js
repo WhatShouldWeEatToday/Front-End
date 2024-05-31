@@ -13,6 +13,7 @@ function CreateChat({ selectedFriends, onClose }) {
     const [stompClient, setStompClient] = useState(null);
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
     const [roomId, setRoomId] = useState(null);
+    const [enterMsg, setEnterMsg] = useState('');
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
@@ -32,6 +33,7 @@ function CreateChat({ selectedFriends, onClose }) {
                 client.subscribe(`/topic/public/${friendLoginId}`, (message => {
                     console.log('받은 메세지: ', message.body);
                     let roomId = JSON.parse(message.body);
+                    setEnterMsg(JSON.parse(message.body).content)
                     setRoomId(roomId);
                     console.log("Room ID: " + roomId);
                 }));
@@ -71,15 +73,15 @@ function CreateChat({ selectedFriends, onClose }) {
                 <button className="friend-list-btn" onClick={onClose}>친구목록</button>
             </div>
 
-            <div>
+            {/* <div>
                 참여 멤버 :
                 {selectedFriends.map(friend => (
                     <div key={friend.friendLoginId}>
                         {friend.friendNickname} ({friend.friendLoginId})
                     </div>
                 ))}
-            </div>
-            {showVoteComponent && <Vote roomId={roomId} onClose={() => setShowVoteComponent(false)}/>}
+            </div> */}
+            {showVoteComponent && <Vote roomId={roomId} selectedFriends={selectedFriends} onClose={() => setShowVoteComponent(false)}/>}
         </div>
     );
 }

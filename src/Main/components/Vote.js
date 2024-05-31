@@ -3,7 +3,7 @@ import '../css/Vote.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 
-function Vote({ onClose, currentUser, roomId }) {
+function Vote({ onClose, currentUser, roomId, selectedFriends}) {
     const [inputValue1, setInputValue1] = useState(''); //메뉴1
     const [inputValue2, setInputValue2] = useState(''); //메뉴2
     const [showChatAndVote, setShowChatAndVote] = useState(false); 
@@ -70,6 +70,7 @@ function Vote({ onClose, currentUser, roomId }) {
     
             client.subscribe(`/topic/votes/${roomId}`, (message) => {
                 console.log('Received message:', message.body);
+
             });
         }, (error) => {
             console.error('Error connecting to Websocket', error);
@@ -84,7 +85,8 @@ function Vote({ onClose, currentUser, roomId }) {
     const handleSubmitVote = (client) => {
         const voteData = {
             menu1: inputValue1,
-            menu2: inputValue2
+            menu2: inputValue2,
+            friendLoginId : selectedFriends.map(friend => friend.friendLoginId),
         };
     
         console.log("보내는 데이터:", voteData);
@@ -127,7 +129,7 @@ function Vote({ onClose, currentUser, roomId }) {
                             className="chat-mem" alt='profile' />
                         <div className="chat-mem-name">임수연</div>
                     </div> */}
-                    <button onClick={onClose}>닫기</button>
+                    <button className="close-btn" onClick={onClose}>닫기</button>
                 </div>
             ) : (
                 <InputVote
