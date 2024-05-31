@@ -102,9 +102,20 @@ function SearchSession() {
         setSelectRest(select);
     };
 
-    //즐겨찾기
-    const clickBookmark = () => {
+    //즐겨찾기 - axios api 수정중
+    const clickBookmark = async (restaurant_id) => {
         alert("등록되었습니다.");
+        try{
+            const response = await axios
+            .post(`http://localhost:8080/api/restaurant/bookmark/${restaurant_id}`,
+                {
+                    bookmark_id : restaurant_id //즐겨찾기 할 맛집 아이디 전달
+                }
+            );
+            console.log("response data : ", response.data);
+        }catch(err){
+            console.log({error: err});
+        }
     }
 
     //카테고리 선택
@@ -124,7 +135,7 @@ function SearchSession() {
                     <div className="restaurant-review">({data.totalReviews})</div>
                 </div>
                 <div className="restaurant-btn-area">
-                    <button className="restaurant-btn" onClick={clickBookmark}>즐겨찾기</button>
+                    <button className="restaurant-btn" onClick={() => clickBookmark(data.id)}>즐겨찾기</button>
                     <button className="restaurant-btn" >
                         <Link to={`/restaurant/${data.id}/review`}
                         style={{ textDecoration: 'none', color: 'inherit' }}
