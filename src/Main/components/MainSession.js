@@ -11,7 +11,7 @@ function MainSession() {
         setFoodName(e.target.value);
     };
 
-    //투표 결과로 선정된 메뉴를 이 함수로 넘겨와야함
+    //투표 결과로 선정된 메뉴를 이 함수로
     const handleSearch = async () => {
         try {
             console.log(foodName);
