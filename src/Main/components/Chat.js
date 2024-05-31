@@ -16,6 +16,34 @@ function Chat(props) {
 
     const promieTime = dayjs(date).format("YYYYMMDD") + dayjs(time).format('HHmm'); //약속시간
     const [address, setAddress] = useState('');
+    const [course, setCourse] = useState();
+    
+    const sendAddress = async () => {
+        if(address){
+            try{
+                const response = await axios
+                .post("http://localhost:8080/restaurant/search/totalPath",
+                {
+                    departure: address,
+                    destination: "경북 구미시 상림로 67",
+                    //경북 구미시 산호대로29길 14-16, 경북 구미시 상림로 67
+                    searchDttm: promieTime
+                });
+
+                console.log("response 파일", response);
+                setCourse(response.data);
+                localStorage.setItem('courseData', JSON.stringify({course})); //경로데이터 로컬스토리지에 저장
+                console.log("경로 데이터 파일",course);
+                onPopup();
+
+            } catch (err){
+                console.log({error: err});
+            }
+        } else{
+            alert("주소를 입력해주세요");
+        }
+
+    };
 
     const onPopup = () => {
         const url = 'restaurant/course';
