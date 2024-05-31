@@ -2,13 +2,9 @@ import "../css/Chat.css";
 import * as React from 'react';
 import { useState } from "react";
 import axios from "../../etc/utils/apis";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import Departure from "./Departure";
 import dayjs from "dayjs";
+import Departure from "../components/Departure.js";
+import Notice from "./Notice.js";
 
 function Chat(props) {
     const [date, setDate] = useState(new Date());
@@ -65,12 +61,11 @@ function Chat(props) {
                 {/* 출발지 설정 */}
                 {/* <Departure address={address} setAddress={setAddress}/> */}
 
-                {/* 투표 종료 */}
-                {/* <div className="vote-finish">투표가 종료되었습니다.</div> */}
+                {/* 공지 */}
+                {/* <Notice/> */}
 
                 {/* 임시 */}
-                    {/* <button
-                     className="course-btn" onClick={sendAddress}>경로조회</button> */}
+                {/* <button className="course-btn" onClick={sendAddress}>경로조회</button> */}
                 
             </div>
         </div>

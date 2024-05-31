@@ -3,6 +3,9 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import '../css/CreateChat.css';
 import Vote from './Vote';
+import Notice from './Notice';
+import ChatModal from './ChatModal';
+import FriendsList from './FriendsList';
 
 function CreateChat({ selectedFriends, onClose }) {
     const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
@@ -15,6 +18,11 @@ function CreateChat({ selectedFriends, onClose }) {
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
     const [roomId, setRoomId] = useState(null);
     const [enterMsg, setEnterMsg] = useState('');
+
+    const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
+    const [showNoticeComponent, setNoticeComponent] = useState(false); //공지 컴포넌트
+    // 채팅 내 모달
+    const [showChatModal, setShowChatModal] = useState(false); 
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
@@ -61,28 +69,80 @@ function CreateChat({ selectedFriends, onClose }) {
         // onclose();
     }
 
-    const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
+    const [showFriendsList, setShowFriendsList] = useState(false);
+
+    const handleLeaveChat = () => {
+        setShowFriendsList(true);
+        onClose();
+    };
+
+    if(showFriendsList){
+        return <FriendsList/>;
+    }
+
+    
+    // const [voteCreated, setVoteCreated] = useState(false);
+
+    //투표가 생성 되면 공지 띄우기
+    // const handleVoteCreated = () => {
+    //     setVoteCreated(true);
+    //     setShowVoteComponent(false);
+    //     setNoticeComponent(true);
+    // }
+
+    
+
+    const toggleModal = () => {
+        setShowChatModal(!showChatModal);
+    };
+
     return (
         <div className='CreateChat'>
             <div className='chat-room-header'>
                 <img src={process.env.PUBLIC_URL + '/img/attention_red.png'}
-                    className="notice-btn" alt='notice'/>
+                    className="notice-btn" alt='notice'
+                    // onClick={() => {
+                    //     if(voteCreated) {
+                    //         setShowVoteComponent(false);
+                    //         setNoticeComponent(true);
+                    //     }
+                    // }}
+                    />
                 <img src={process.env.PUBLIC_URL + '/img/vote.png'}
                     className="vote-btn" alt='vote'
-                    onClick={() => setShowVoteComponent(true)}/>
+                    // onClick={() => {
+                    //     if(voteCreated) {
+                    //         setShowVoteComponent(true);
+                    //         setNoticeComponent(false);
+                    //     }
+                    // }}
+                    onClick={() => setShowVoteComponent(true)}
+                    />
                 <div className='chat-room-name'><h2>{chatRoomName}</h2></div>
-                <button className="friend-list-btn" onClick={onClose}>친구목록</button>
+                {/* <button className="friend-list-btn" onClick={onClose}>친구목록</button> */}
+                <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
+                    className="modal-btn" alt='chatModal'
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleModal();
+                    }}/>
+                {showChatModal &&
+                    <ChatModal
+                        onClose={toggleModal}
+                        selectedFriends={selectedFriends}
+                        handleLeaveChat={handleLeaveChat}
+                    />}
             </div>
-
-            {/* <div>
-                참여 멤버 :
-                {selectedFriends.map(friend => (
-                    <div key={friend.friendLoginId}>
-                        {friend.friendNickname} ({friend.friendLoginId})
-                    </div>
-                ))}
-            </div> */}
-            {showVoteComponent && <Vote roomId={roomId} selectedFriends={selectedFriends} onClose={() => setShowVoteComponent(false)}/>}
+            {showVoteComponent && 
+                <Vote roomId={roomId}
+                      selectedFriends={selectedFriends}
+                      onClose={() => setShowVoteComponent(false)}
+                    //   onVoteCreated={handleVoteCreated}
+                />}
+            {/* {showNoticeComponent &&
+                <Notice roomId={roomId}
+                    onClose={() => setNoticeComponent(false)}
+                />} */}
         </div>
     );
 }

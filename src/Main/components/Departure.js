@@ -4,7 +4,6 @@ import axios from "../../etc/utils/apis";
 import PostCode from 'react-daum-postcode';
 
 function Departure ({address, setAddress}) {
-    // const [address, setAddress] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
 
@@ -29,8 +28,13 @@ function Departure ({address, setAddress}) {
 
     const handleDepature = () => {
         // sendAddress();
-        alert("출발지가 등록되었습니다.");
-        console.log(address);
+        if(address){
+            alert("출발지가 등록되었습니다.");
+            console.log(address);
+        } else{
+            alert("출발지를 등록해주세요.");
+        }
+        
     }
 
     return (
