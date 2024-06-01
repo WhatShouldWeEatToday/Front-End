@@ -1,0 +1,62 @@
+.restaurant-details {
+  width: 825px;
+  border-top: 2px solid black;
+  padding: 11px 8px;
+}
+.restaurant-details:nth-child(2) {
+  margin-top: 60px;
+}
+.restaurant-name {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.restaurant-name:hover {
+  cursor: pointer;
+}
+.restaurant-address {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+.restaurant-tel {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+/* 별점 정보 */
+.star-rating-info {
+  display: flex;
+  align-items: center;
+}
+
+.star-icon {
+  font-size: 36px;
+  text-align: center;
+  color: #fff500;
+  -webkit-text-stroke: 1px black;
+  margin-right: 10px;
+}
+.star-degree {
+  color: #000000;
+  font-size: 32px;
+  font-weight: 700;
+}
+.total-reviews {
+  font-size: 32px;
+}
+
+/* 즐겨찾기 버튼 */
+.favorites-delete-btn {
+  width: 154px;
+  height: 50px;
+  border: 0px;
+  border-radius: 100px;
+  background-color: #fbe156;
+  font-size: 28px;
+  margin-left: auto;
+  font-family: "Pretendard-Regular";
+}
+
+.favorites-delete-btn:hover {
+  cursor: pointer;
+}
