@@ -121,6 +121,30 @@ function ReviewPage() {
       });
   };
 
+  // 리뷰 좋아요 등록/삭제
+  const addorDeleteLikes = async (reviewId) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+    };
+    axios
+      .post(
+        `http://localhost:8080/api/review/${reviewId}/likes`,
+        {
+          reviewId: reviewId,
+        },
+        {
+          headers: headers, // 헤더 설정
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        console.log("좋아요 클릭");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 로그인된 사용자 정보 가져오기
   const fetchMemberInfo = async () => {
     try {
@@ -263,7 +287,12 @@ function ReviewPage() {
                                   {review.createdDate}
                                 </span>
                                 {/* 좋아요 버튼 */}
-                                <div className="like-box">
+                                <div
+                                  className="like-box"
+                                  onClick={() => {
+                                    addorDeleteLikes(review.id);
+                                  }}
+                                >
                                   <img
                                     src={
                                       process.env.PUBLIC_URL + "/img/like.png"
