@@ -94,7 +94,7 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
             console.log("투표 등록!");
 
             client.subscribe(`/topic/votes/${roomId}`, (message) => {
-                console.log("투표 등록 후 받은 메시지 (투표 아이디): ", message.body);
+                console.log("투표 등록 후 받은 메시지 (투표 아이디): ", JSON.parse(message.body).voteId);
                 let voteId = JSON.parse(message.body).voteId;
                 setVoteId(voteId);
                 console.log("VoteID: ", voteId);
@@ -124,7 +124,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
                 stompClient.subscribe(`/topic/votes/${roomId}`, (message) => {
                     console.log("투표 한 뒤에 결과값: ", message.body);
                 })
-                // onClose();
             }
         } else {
             alert("메뉴를 선택해주세요.");

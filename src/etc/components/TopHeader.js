@@ -35,8 +35,10 @@ function TopHeader() {
   };
 
   useEffect(() => {
-    fetchMemberInfo();
-  }, []);
+    if (accessToken && refreshToken) {
+      fetchMemberInfo();
+    }
+  }, [accessToken, refreshToken]);
 
   if (accessToken && refreshToken) {
     return (

@@ -10,9 +10,6 @@ import FriendsList from './FriendsList';
 function CreateChat({ selectedFriends, onClose }) {
     const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
     const chatMemberID = selectedFriends.map(friend => friend.friendLoginId);
-
-    // console.log("멤버 ID", chatMemberID);
-    // console.log("ID 값", chatMemberID);
     
     const [stompClient, setStompClient] = useState(null);
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
@@ -22,6 +19,7 @@ function CreateChat({ selectedFriends, onClose }) {
     const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
     const [showNoticeComponent, setNoticeComponent] = useState(false); //공지 컴포넌트
     const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
+    const [voteCreated, setVoteCreated] = useState(false); //투표의 생성 여부 확인
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
@@ -46,6 +44,7 @@ function CreateChat({ selectedFriends, onClose }) {
                     console.log("Room ID: " + roomId);
                 }));
             });
+            
         }, (error) => {
             console.error('Error connecting to Websocket', error);
         });
@@ -69,9 +68,9 @@ function CreateChat({ selectedFriends, onClose }) {
         // onclose();
     }
 
-    const [showFriendsList, setShowFriendsList] = useState(false);
+    const [showFriendsList, setShowFriendsList] = useState(false); // 뒤로가기 => 채팅목록/친구목록
 
-    const handleLeaveChat = () => {
+    const handleBackChat = () => {
         setShowFriendsList(true);
         onClose();
     };
@@ -80,15 +79,12 @@ function CreateChat({ selectedFriends, onClose }) {
         return <FriendsList/>;
     }
 
-    
-    // const [voteCreated, setVoteCreated] = useState(false);
-
     //투표가 생성 되면 공지 띄우기
-    // const handleVoteCreated = () => {
-    //     setVoteCreated(true);
-    //     setShowVoteComponent(false);
-    //     setNoticeComponent(true);
-    // }
+    const handleVoteCreated = () => {
+        setVoteCreated(true); // 투표 생성시
+        setShowVoteComponent(false); // 투표 컴포넌트 종료
+        setNoticeComponent(true); // 공지 컴포넌트 실행
+    }
 
 
     const toggleModal = () => {
@@ -101,18 +97,18 @@ function CreateChat({ selectedFriends, onClose }) {
                 <img src={process.env.PUBLIC_URL + '/img/attention_red.png'}
                     className="notice-btn" alt='notice'
                     // onClick={() => {
-                    //     if(voteCreated) {
-                    //         setShowVoteComponent(false);
-                    //         setNoticeComponent(true);
+                    //     if(voteCreated) { //투표 생성이 되면 공지 컴포넌트 실행
+                    //         setShowVoteComponent(false); //투표 컴포넌트 종료
+                    //         setNoticeComponent(true); // 공지 컴포넌트 실행
                     //     }
                     // }}
                     />
                 <img src={process.env.PUBLIC_URL + '/img/vote.png'}
                     className="vote-btn" alt='vote'
                     // onClick={() => {
-                    //     if(voteCreated) {
-                    //         setShowVoteComponent(true);
-                    //         setNoticeComponent(false);
+                    //     if(!voteCreated) { //투표 생성이 되지않으면 투표 컴포넌트 실행
+                    //         setShowVoteComponent(true); // 투표 컴포넌트 실행
+                    //         setNoticeComponent(false); // 공지 컴포넌트 종료
                     //     }
                     // }}
                     onClick={() => setShowVoteComponent(true)}
@@ -129,7 +125,8 @@ function CreateChat({ selectedFriends, onClose }) {
                     <ChatModal
                         onClose={toggleModal}
                         selectedFriends={selectedFriends}
-                        handleLeaveChat={handleLeaveChat}
+                        handleBackChat={handleBackChat}
+                        roomId={roomId}
                     />}
             </div>
             {showVoteComponent && 
