@@ -263,15 +263,19 @@ function ReviewPage() {
                                   {review.createdDate}
                                 </span>
                                 {/* 좋아요 버튼 */}
-                                <img
-                                  src={process.env.PUBLIC_URL + "/img/like.png"}
-                                  width="23px"
-                                  height="30px"
-                                  alt="like-img"
-                                />
-                                <span className="review-totalLikes">
-                                  {review.totalLikes}
-                                </span>
+                                <div className="like-box">
+                                  <img
+                                    src={
+                                      process.env.PUBLIC_URL + "/img/like.png"
+                                    }
+                                    width="23px"
+                                    height="30px"
+                                    alt="like-img"
+                                  />
+                                  <span className="review-totalLikes">
+                                    {review.totalLikes}
+                                  </span>
+                                </div>
                                 {/* 영수증 인증 뱃지 */}
                                 {review.reviewType !== "NOT_CERTIFY" && (
                                   <img
