@@ -45,6 +45,8 @@
   margin-bottom: 10px;
 }
 .notification-content {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   font-size: 16px;
   color: #b0afaf;
 }
