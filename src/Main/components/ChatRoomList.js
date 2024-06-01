@@ -11,17 +11,18 @@ function ChatRoomList() {
     //토큰
     const headers =
     {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
 
     //나의 채팅방 데이터 불러오기
     const getMyChatRoom = async () => {
         try{
             const respone = await axios
-            .get("http://localhost:8080//chat/rooms",
+            .get("http://localhost:8080/chat/rooms",
             {
                 headers: headers, // 헤더 설정
             });
+            console.log(respone);
             setMyChatRoom(respone.data);
             console.log("받아온 채팅방 데이터", respone.data);
         } catch(err){

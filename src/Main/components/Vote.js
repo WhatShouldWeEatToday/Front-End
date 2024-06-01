@@ -51,7 +51,7 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
         const client = Stomp.over(socket);
 
         const headers = {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         };
 
         client.connect(headers, () => {

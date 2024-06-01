@@ -11,7 +11,7 @@ function Course(){
 	const [steps, setSteps] = useState();
 
     useEffect(() => {
-        const storedCourseData = localStorage.getItem('courseData');
+        const storedCourseData = sessionStorage.getItem('courseData');
         if (storedCourseData) {
             const parsedData = JSON.parse(storedCourseData);
             setCourseData(parsedData);

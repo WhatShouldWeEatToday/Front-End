@@ -106,7 +106,7 @@ function SearchSession() {
   //즐겨찾기 등록
   const clickBookmark = async (restaurantId) => {
     const headers = {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+      Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
     try {
       const response = await axios.post(

@@ -5,8 +5,8 @@ import { NavLink } from "react-router-dom";
 import Notification from "./Notification";
 
 function TopHeader() {
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  const accessToken = sessionStorage.getItem("accessToken");
+  const refreshToken = sessionStorage.getItem("refreshToken");
   const [showNotification, setShowNotification] = useState(false);
   const [nickname, setNickname] = useState(null); // 현재 로그인된 유저 이름
   // console.log("토큰1: ", accessToken);
@@ -15,8 +15,8 @@ function TopHeader() {
   // const [isLogin, setIsLogin] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
     window.location.reload(); // 페이지 새로고침
   };
 

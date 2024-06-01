@@ -11,7 +11,7 @@ export const signUp = (userData) => api.post("/signup", userData);
 export const signIn = (userData) => api.post("/signin", userData);
 
 export const getMemberInfo = () => {
-  const token = localStorage.getItem("accessToken");
+  const token = sessionStorage.getItem("accessToken");
   return api.get("/memberInfo", {
     headers: {
       Authorization: `Bearer ${token}`,
