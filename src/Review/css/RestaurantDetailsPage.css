@@ -1,7 +1,14 @@
-.RestaurantDetails {
+.RestaurantDetailsPage {
   display: flex;
   flex-direction: column;
 }
+
+.RestaurantDetails {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid black;
+}
+
 .restaurant-details-container {
   display: flex;
   flex-direction: column;
