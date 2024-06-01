@@ -11,9 +11,9 @@ function CreateChat({ selectedFriends, onClose }) {
     const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
     const chatMemberID = selectedFriends.map(friend => friend.friendLoginId);
 
-    console.log("멤버 ID", chatMemberID);
-
-    console.log("ID 값", chatMemberID);
+    // console.log("멤버 ID", chatMemberID);
+    // console.log("ID 값", chatMemberID);
+    
     const [stompClient, setStompClient] = useState(null);
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
     const [roomId, setRoomId] = useState(null);
@@ -21,8 +21,7 @@ function CreateChat({ selectedFriends, onClose }) {
 
     const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
     const [showNoticeComponent, setNoticeComponent] = useState(false); //공지 컴포넌트
-    // 채팅 내 모달
-    const [showChatModal, setShowChatModal] = useState(false); 
+    const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
@@ -58,6 +57,7 @@ function CreateChat({ selectedFriends, onClose }) {
         }
     }, []);
     
+    //채팅방 등록
     const handleCreateRoom = (client) => {
         const requestDTO = {
             name : chatRoomName,
@@ -90,7 +90,6 @@ function CreateChat({ selectedFriends, onClose }) {
     //     setNoticeComponent(true);
     // }
 
-    
 
     const toggleModal = () => {
         setShowChatModal(!showChatModal);

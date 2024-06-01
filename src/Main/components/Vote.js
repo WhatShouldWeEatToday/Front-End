@@ -3,14 +3,15 @@ import '../css/Vote.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 
-function Vote({ onClose, currentUser, roomId, selectedFriends}) {
-    const [inputValue1, setInputValue1] = useState(''); //메뉴1
-    const [inputValue2, setInputValue2] = useState(''); //메뉴2
+function Vote({ onClose, currentUser, roomId, selectedFriends }) {
+    const [inputValue1, setInputValue1] = useState(''); // 메뉴1 이름
+    const [inputValue2, setInputValue2] = useState(''); // 메뉴2 이름
     const [showChatAndVote, setShowChatAndVote] = useState(false); 
-    const [voteCount1, setVoteCount1] = useState(0); //메뉴1
-    const [voteCount2, setVoteCount2] = useState(0); //메뉴2
+    const [voteCount1, setVoteCount1] = useState(0); // 메뉴1 카운트
+    const [voteCount2, setVoteCount2] = useState(0); // 메뉴2 카운트
     const [voted, setVoted] = useState(false); // 이미 투표했는지 여부를 나타내는 상태
     const [selectedMenu, setSelectedMenu] = useState(null); // 클릭된 버튼 상태를 관리
+    const [voteId, setVoteId] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,10 +31,8 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
         if (!voted) { // 투표하지 않았을 경우에만 투표 기능 작동
             if (menuNumber === 1) {
                 setVoteCount1(voteCount1 + 1);
-                console.log(voteCount1);
             } else if (menuNumber === 2) {
                 setVoteCount2(voteCount2 + 1);
-                console.log(voteCount2);
             }
             setVoted(true); // 투표 완료 표시
             setSelectedMenu(menuNumber); // 클릭된 버튼 상태를 업데이트
@@ -41,74 +40,91 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
     };
 
     useEffect(() => {
-        console.log("Vote Count 1: ", voteCount1);
-    }, [voteCount1]);
+        console.log("voteCount1값: ", voteCount1, "voteCount2값: ", voteCount2)
+    }, [voteCount1, voteCount2]);
+
+    const [stompClient, setStompClient] = useState(null);
 
     useEffect(() => {
-        console.log("Vote Count 2: ", voteCount2);
-    }, [voteCount2]);
-
-    //채팅방 생성
-    const [stompClient, setStompClient] = useState(null);
-    const submitVote = () => {
-        console.log("채팅방 아이디",roomId);
-        if (stompClient && stompClient.connected) {
-            handleSubmitVote(stompClient);
-            return;
-        }
-    
+        // WebSocket 연결 설정
         const socket = new SockJS('http://localhost:8080/ws-stomp');
         const client = Stomp.over(socket);
-    
+
         const headers = {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         };
-    
+
         client.connect(headers, () => {
             setStompClient(client);
-            handleSubmitVote(client);
-    
-            // client.subscribe(`/topic/votes/${roomId}`, (message) => {
-            //     console.log('Received message:', message.body);
-
-            // });
-            
+            console.log('WebSocket 연결 성공');
         }, (error) => {
-            console.error('Error connecting to Websocket', error);
+            console.error('WebSocket 연결 오류', error);
         });
-    
+
         return () => {
-            if (stompClient) {
-                stompClient.disconnect();
+            if (client) {
+                client.disconnect(() => {
+                    console.log('WebSocket 연결 해제');
+                });
             }
         };
+    }, []);
+
+    // 투표 생성
+    const submitVote = () => {
+        if (stompClient && stompClient.connected) {
+            handleSubmitVote(stompClient);
+        } else {
+            console.error("WebSocket이 연결되지 않았습니다.");
+        }
     };
 
-    //채팅 투표 등록록
+    // 채팅 생성 보내고 투표 아이디 받아오기
     const handleSubmitVote = (client) => {
         const voteData = {
             menu1: inputValue1,
             menu2: inputValue2,
-            friendLoginId : selectedFriends.map(friend => friend.friendLoginId),
+            friendLoginId: selectedFriends.map(friend => friend.friendLoginId),
         };
     
-        console.log("보내는 데이터:", voteData);
+        console.log("투표 등록 데이터:", voteData);
     
         if (client && client.connected) {
             client.send(`/app/vote/register/${roomId}`, {}, JSON.stringify(voteData));
-            console.log("투표 생성!");
+            console.log("투표 등록!");
+
+            client.subscribe(`/topic/votes/${roomId}`, (message) => {
+                console.log("투표 등록 후 받은 메시지 (투표 아이디): ", message.body);
+                let voteId = JSON.parse(message.body).voteId;
+                setVoteId(voteId);
+                console.log("VoteID: ", voteId);
+            });
         } else {
-            console.error("WebSocket 연결이 되어 있지 않습니다.");
+            console.error("WebSocket이 연결되지 않았습니다.");
         }
     };
 
-    //멤버 투표 결과 전송
+    // 멤버 투표 결과 전송
     const handleVoted = () => {
         if (selectedMenu !== null) {
             const userSelected = selectedMenu === 1 ? inputValue1 : inputValue2;
             console.log("선택한 메뉴: ", userSelected);
-            if (window.confirm(`${userSelected}로 투표되었습니다.`)) {
-                onClose();
+            const votedData = {
+                voteId: voteId,
+                menu1: inputValue1,
+                menu2: inputValue2,
+                voteCount1 : voteCount1,
+                voteCount2 : voteCount2,
+            };
+            console.log("votedData의 결과값", votedData);
+
+            if (stompClient && stompClient.connected && window.confirm(`${userSelected}로 투표되었습니다.`)) {
+                stompClient.send(`/app/vote/increment/${roomId}/${voteId}`, {}, JSON.stringify(votedData));
+
+                stompClient.subscribe(`/topic/votes/${roomId}`, (message) => {
+                    console.log("투표 한 뒤에 결과값: ", message.body);
+                })
+                // onClose();
             }
         } else {
             alert("메뉴를 선택해주세요.");
@@ -125,7 +141,7 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
                             {/* {currentUser.userId}님이 */}
                             <br />오늘 {inputValue1} 와 {inputValue2} 중에
                             <br />먹고 싶어합니다.
-                            <br />투표해주세요 !
+                            <br />투표해주세요!
                         </div>
                         <div className="vote-menu">
                             <button
@@ -140,12 +156,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends}) {
                             </button>
                         </div>
                     </div>
-                    
-                    {/* <div className="chat-member">
-                        <img src={process.env.PUBLIC_URL + '/img/account.png'}
-                            className="chat-mem" alt='profile' />
-                        <div className="chat-mem-name">임수연</div>
-                    </div> */}
                     <button className="close-btn" onClick={handleVoted}>투표하기</button>
                 </div>
             ) : (
@@ -173,7 +183,7 @@ function InputVote({ inputValue1, inputValue2, setInputValue1, setInputValue2, h
 
     return (
         <div className='InputVote'>
-            <div className='today-title'>오늘 뭐 먹지 ?</div>
+            <div className='today-title'>오늘 뭐 먹지?</div>
             <div className='vote-title'>투표할 메뉴를 입력해주세요.</div>
             <form onSubmit={handleSubmit} className='menu-form'>
                 <label className='menu-input'>
