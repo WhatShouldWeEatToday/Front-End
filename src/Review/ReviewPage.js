@@ -124,7 +124,7 @@ function ReviewPage() {
   // 리뷰 좋아요 등록/삭제
   const addorDeleteLikes = async (reviewId) => {
     const headers = {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+      Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
     axios
       .post(

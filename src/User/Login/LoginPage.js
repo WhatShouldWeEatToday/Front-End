@@ -6,9 +6,9 @@ import axios from "../../etc/utils/apis";
 function LoginPage() {
   const saveTokensToLocalStorage = (accessToken, refreshToken) => {
     // 받은 액세스 토큰을 로컬 스토리지에 저장
-    localStorage.setItem("accessToken", accessToken);
+    sessionStorage.setItem("accessToken", accessToken);
     // 받은 리프레시 토큰을 로컬 스토리지에 저장
-    localStorage.setItem("refreshToken", refreshToken);
+    sessionStorage.setItem("refreshToken", refreshToken);
   };
 
   const navigate = useNavigate();

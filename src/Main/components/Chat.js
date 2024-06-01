@@ -28,7 +28,7 @@ function Chat(props) {
 
                 console.log("response 파일", response);
                 setCourse(response.data);
-                localStorage.setItem('courseData', JSON.stringify({course})); //경로데이터 로컬스토리지에 저장
+                sessionStorage.setItem('courseData', JSON.stringify({course})); //경로데이터 로컬스토리지에 저장
                 console.log("경로 데이터 파일",course);
                 onPopup();
 

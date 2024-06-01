@@ -26,7 +26,7 @@ function ChatModal({ onClose, selectedFriends, handleBackChat, roomId }) {
         const client = Stomp.over(socket);
 
         const headers = {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
         };
 
         client.connect(headers, () => {
