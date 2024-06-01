@@ -84,7 +84,7 @@ function RestaurantInfo({ restaurantId }) {
         }
       );
       alert("즐겨찾기에 등록되었습니다.");
-      console.log("response data : ", response.data);
+      console.log("response data = ", response.data);
       navigate("/restaurant/bookmark");
     } catch (err) {
       console.log({ error: err });
@@ -92,18 +92,24 @@ function RestaurantInfo({ restaurantId }) {
     }
   };
 
-  // 리뷰 좋아요 등록
-  const addLikes = async (reviewId) => {
+  // 리뷰 좋아요 등록/삭제
+  const addorDeleteLikes = async (reviewId) => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
     axios
-      .post(`http://localhost:8080/api/review/${reviewId}/likes`, {
-        headers: headers, // 헤더 설정
-      })
+      .post(
+        `http://localhost:8080/api/review/${reviewId}/likes`,
+        {
+          reviewId: reviewId,
+        },
+        {
+          headers: headers, // 헤더 설정
+        }
+      )
       .then((res) => {
         console.log(res.data);
-        console.log("좋아요 등록");
+        console.log("좋아요 클릭");
       })
       .catch((error) => {
         console.log(error);
@@ -162,7 +168,7 @@ function RestaurantInfo({ restaurantId }) {
                   <div
                     className="like-box"
                     onClick={() => {
-                      addLikes(review.id);
+                      addorDeleteLikes(review.id);
                     }}
                   >
                     <img
