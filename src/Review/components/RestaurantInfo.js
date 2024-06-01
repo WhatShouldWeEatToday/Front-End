@@ -68,6 +68,30 @@ function RestaurantInfo({ restaurantId }) {
       });
   };
 
+  //즐겨찾기 등록
+  const clickBookmark = async (restaurantId) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+    };
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/restaurant/${restaurantId}/bookmark`,
+        {
+          bookmarkId: restaurantId, //즐겨찾기 할 맛집 아이디 전달
+        },
+        {
+          headers: headers, // 헤더 설정
+        }
+      );
+      alert("즐겨찾기에 등록되었습니다.");
+      console.log("response data : ", response.data);
+      navigate("/restaurant/bookmark");
+    } catch (err) {
+      console.log({ error: err });
+      alert("이미 등록되어 있습니다.");
+    }
+  };
+
   // 리뷰 좋아요 등록
   const addLikes = async (reviewId) => {
     const headers = {
@@ -96,7 +120,14 @@ function RestaurantInfo({ restaurantId }) {
           <span className="star-icon">★</span>
           <span className="star-degree">{degree}</span>
           <span className="total-reviews">({totalReviews})</span>
-          <button className="favorites-btn">즐겨찾기</button>
+          <button
+            className="favorites-btn"
+            onClick={() => {
+              clickBookmark(restaurantId);
+            }}
+          >
+            즐겨찾기
+          </button>
           <button className="review-register-btn" onClick={goReviewAuthPage}>
             리뷰 쓰기
           </button>

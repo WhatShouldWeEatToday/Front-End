@@ -6,7 +6,7 @@ import axios from "../../../etc/utils/apis";
 function BookMark() {
   const navigate = useNavigate();
 
-  const [bookmarkList, setBookmarkList] = useState({});
+  const [bookmarkList, setBookmarkList] = useState([]);
 
   // 해당 식당 정보 페이지 이동
   const goRestaurantDetailPage = (restaurantId) => {
@@ -15,8 +15,13 @@ function BookMark() {
 
   // 즐겨찾기 조회
   const getBookmarkList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+    };
     axios
-      .get(`http://localhost:8080/restaurant/bookmark`)
+      .get(`http://localhost:8080/restaurant/bookmark`, {
+        headers: headers, // 헤더 설정
+      })
       .then((res) => {
         console.log(res.data);
         setBookmarkList(res.data);
@@ -26,7 +31,7 @@ function BookMark() {
       });
   };
 
-  // 즐겨찾기 삭제(수정 필요)
+  // 즐겨찾기 삭제
   const deleteBookmark = async (restaurantId, bookmarkId) => {
     axios
       .delete(
@@ -34,7 +39,7 @@ function BookMark() {
       )
       .then((res) => {
         console.log(res.data);
-        alert("즐겨찾기가 삭제되었습니다.");
+        alert("즐겨찾기에서 삭제되었습니다.");
         window.location.reload();
       })
       .catch((error) => {
@@ -44,31 +49,33 @@ function BookMark() {
 
   useEffect(() => {
     getBookmarkList();
-  });
+  }, []);
 
   return (
     <div className="BookMark">
       {bookmarkList &&
         bookmarkList.content &&
-        [...bookmarkList.content].map((restaurant, bookmark) => (
-          <div className="restaurant-details" key={restaurant.id}>
+        [...bookmarkList.content].map((bookmark) => (
+          <div className="restaurant-details" key={bookmark.id}>
             <div
               className="restaurant-name"
               onClick={() => {
-                goRestaurantDetailPage(restaurant.id);
+                goRestaurantDetailPage(bookmark.restaurantId);
               }}
             >
-              {restaurant.name}
+              {bookmark.restaurantName}
             </div>
-            <div className="restaurant-address">{restaurant.addressRoad}</div>
-            <div className="restaurant-tel">{restaurant.tel}</div>
+            <div className="restaurant-address">{bookmark.addressRoad}</div>
+            <div className="restaurant-tel">{bookmark.restaurantTel}</div>
             <div className="star-rating-info">
               <span className="star-icon">★</span>
-              <span className="star-degree">{restaurant.degree}</span>
-              <span className="total-reviews">({restaurant.totalReviews})</span>
+              <span className="star-degree">{bookmark.degrees}</span>
+              <span className="total-reviews">({bookmark.reviews})</span>
               <button
                 className="favorites-delete-btn"
-                onClick={() => deleteBookmark(restaurant.id, bookmark.id)}
+                onClick={() =>
+                  deleteBookmark(bookmark.restaurantId, bookmark.id)
+                }
               >
                 삭제
               </button>

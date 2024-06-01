@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 function RestaurantDetailsPage() {
   const { restaurantId } = useParams(); // 음식점 ID
   return (
-    <div className="RestaurantDetails">
+    <div className="RestaurantDetailsPage">
       <Header />
       <div className="restaurant-details-container">
         <RestaurantInfo restaurantId={restaurantId} />
