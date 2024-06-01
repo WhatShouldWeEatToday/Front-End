@@ -22,7 +22,15 @@ function RestaurantInfo({ restaurantId }) {
 
   useEffect(() => {
     getRestaurantDetails();
-  }, [restaurantId, reviewList]);
+  }, [restaurantId]);
+
+  const goEditPage = (reviewId) => {
+    navigate(`/restaurant/${restaurantId}/review/edit/${reviewId}`);
+  };
+
+  const goReviewAuthPage = () => {
+    navigate(`/restaurant/${restaurantId}/review/receiptAuth`);
+  };
 
   const getRestaurantDetails = async () => {
     axios
@@ -46,10 +54,6 @@ function RestaurantInfo({ restaurantId }) {
       });
   };
 
-  const goEditPage = (reviewId) => {
-    navigate(`/restaurant/${restaurantId}/review/edit/${reviewId}`);
-  };
-
   const deleteReview = async (reviewId) => {
     axios
       .delete(`http://localhost:8080/api/review/${reviewId}`)
@@ -64,8 +68,22 @@ function RestaurantInfo({ restaurantId }) {
       });
   };
 
-  const goReviewAuthPage = () => {
-    navigate(`/restaurant/${restaurantId}/review/receiptAuth`);
+  // 리뷰 좋아요 등록
+  const addLikes = async (reviewId) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+    };
+    axios
+      .post(`http://localhost:8080/api/review/${reviewId}/likes`, {
+        headers: headers, // 헤더 설정
+      })
+      .then((res) => {
+        console.log(res.data);
+        console.log("좋아요 등록");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -109,15 +127,25 @@ function RestaurantInfo({ restaurantId }) {
                   <span className="review-createdDate">
                     {review.createdDate}
                   </span>
-                  <img
-                    alt="like-img"
-                    src={process.env.PUBLIC_URL + "/img/like.png"}
-                    width="23px"
-                    height="30px"
-                  />
-                  <span className="review-totalLikes">{review.totalLikes}</span>
-                  {/* 임시로 Not Null로 해둠 */}
-                  {review.reviewType !== null && (
+                  {/* 좋아요 버튼 */}
+                  <div
+                    className="like-box"
+                    onClick={() => {
+                      addLikes(review.id);
+                    }}
+                  >
+                    <img
+                      alt="like-img"
+                      src={process.env.PUBLIC_URL + "/img/like.png"}
+                      width="23px"
+                      height="30px"
+                    />
+                    <span className="review-totalLikes">
+                      {review.totalLikes}
+                    </span>
+                  </div>
+                  {/* 영수증 인증 뱃지 */}
+                  {review.reviewType !== "NOT_CERTIFY" && (
                     <img
                       alt="verified-img"
                       className="verified-img"

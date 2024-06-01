@@ -82,6 +82,9 @@
   border-top: 2px solid #b0afaf;
   padding: 15px;
 }
+.review-info-container > .review-info-box:last-child {
+  border-bottom: 2px solid #000000;
+}
 .review-details {
   display: flex;
   align-items: center; /* 세로 중앙 정렬 */
@@ -95,9 +98,20 @@
   font-size: 20px;
   margin: 0px 10px;
 }
+
+/* 좋아요 버튼 */
+.like-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 .review-totalLikes {
+  margin-left: 15px;
   font-size: 20px;
   color: #e76464;
+}
+.like-box:hover {
+  cursor: pointer;
 }
 
 /* 인증 마크 */
@@ -110,6 +124,9 @@
   margin-left: 80px;
   align-items: center; /* 세로 중앙 정렬 */
   gap: 3px; /* 요소들 사이의 간격 */
+}
+.RestaurantDetails > .review-star-tags {
+  margin: 10px auto;
 }
 .star-icon2 {
   font-size: 34px;
