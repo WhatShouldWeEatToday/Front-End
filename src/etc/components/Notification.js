@@ -4,27 +4,28 @@ import React, { useRef, useEffect, useState } from "react";
 import "../css/Notification.css";
 
 // 임시데이터
-const Notifications = [
-  {
-    id: 1,
-    type: "좋아요가 달렸습니다.",
-    content: "한솥도시락 리뷰에 이소림님이 좋아요를 눌렀습니다.",
-  },
-  {
-    id: 2,
-    type: "친구추가 되었습니다.",
-    content: "이지현님과 친구가 되었습니다.",
-  },
-  {
-    id: 3,
-    type: "채팅방에 초대되었습니다.",
-    content: "이지현님이 채팅방에 당신을 초대하였습니다.",
-  },
-];
+// const Notifications = [
+// {
+//   id: 1,
+//   type: "좋아요가 달렸습니다.",
+//   content: "한솥도시락 리뷰에 이소림님이 좋아요를 눌렀습니다.",
+// },
+// {
+//   id: 2,
+//   type: "친구추가 되었습니다.",
+//   content: "이지현님과 친구가 되었습니다.",
+// },
+// {
+//   id: 3,
+//   type: "채팅방에 초대되었습니다.",
+//   content: "이지현님이 채팅방에 당신을 초대하였습니다.",
+// },
+// ];
 
 function Notification({ onClose }) {
   const notificationRef = useRef();
   const [loginId, setLoginId] = useState("");
+  const [Notifications, setNotifications] = useState([]);
 
   const getNotice = async (userId) => {
     if (!userId) return;
@@ -32,6 +33,7 @@ function Notification({ onClose }) {
       .get(`http://localhost:8080/notices/${userId}`)
       .then((res) => {
         console.log(res.data);
+        setNotifications(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -73,11 +75,11 @@ function Notification({ onClose }) {
     };
   }, [loginId, onClose]);
 
-  const NotificationList = Notifications.map((data) => {
+  const NotificationList = Notifications.map((notification) => {
     return (
-      <div className="notification-list" key={data.id}>
-        <div className="notification-type">{data.type}</div>
-        <div className="notification-content">{data.content}</div>
+      <div className="notification-list" key={notification.id}>
+        <div className="notification-type">{notification.noticeType}</div>
+        <div className="notification-content">{notification.content}</div>
       </div>
     );
   });
@@ -85,7 +87,7 @@ function Notification({ onClose }) {
   return (
     <div className="Notification" ref={notificationRef}>
       <div className="notification-container">
-        <span className="notification-title">{loginId} 알림</span>
+        <span className="notification-title">알림</span>
         <div className="notification-list-box">{NotificationList}</div>
       </div>
     </div>
