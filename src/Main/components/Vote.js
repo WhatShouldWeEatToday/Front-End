@@ -3,7 +3,7 @@ import '../css/Vote.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 
-function Vote({ onClose, currentUser, roomId, selectedFriends }) {
+function Vote({ onClose, currentUser, roomId, selectedFriends, voteData, setVoteData }) {
     const [inputValue1, setInputValue1] = useState(''); // 메뉴1 이름
     const [inputValue2, setInputValue2] = useState(''); // 메뉴2 이름
     const [showChatAndVote, setShowChatAndVote] = useState(false); 
@@ -12,12 +12,11 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
     const [voted, setVoted] = useState(false); // 이미 투표했는지 여부를 나타내는 상태
     const [selectedMenu, setSelectedMenu] = useState(null); // 클릭된 버튼 상태를 관리
     const [voteId, setVoteId] = useState(null);
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('메뉴 1:', inputValue1);
         console.log('메뉴 2:', inputValue2);
-        setShowChatAndVote(true); // 입력을 제출하면 chat-and-vote 영역을 표시
         submitVote();
     };
 
@@ -50,10 +49,15 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
             Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         };
 
-
         client.connect(headers, () => {
             setStompClient(client);
             console.log('WebSocket 연결 성공');
+
+            client.subscribe(`/topic/room/${roomId}`, (message) => {
+                const newVote = JSON.parse(message.body);
+                setVoteData((prevVoteData) => [...prevVoteData, newVote]);
+                console.log("Received vote data: ", newVote);
+            });
         }, (error) => {
             console.error('WebSocket 연결 오류', error);
         });
@@ -65,7 +69,7 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
                 });
             }
         };
-    }, []);
+    }, [roomId]);
 
     // 투표 생성
     const submitVote = () => {
@@ -87,20 +91,19 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
         console.log("투표 등록 데이터:", voteData);
     
         if (client && client.connected) {
-            client.subscribe(`/topic/room/${roomId}`, (message) => {
-                let voteId = JSON.parse(message.body).voteId;
-                setVoteId(voteId);
-                console.log("VoteID: ", voteId);
-            });
-
-            // 여기서 헤더를 포함하여 메시지 전송
             const headers = {
                 Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
             };
 
+            client.subscribe(`/topic/room/${roomId}`, (message) => {
+                const newVote = JSON.parse(message.body);
+                setVoteData((prevVoteData) => [...prevVoteData, newVote]);
+                console.log("Received vote data: ", newVote);
+                setVoteId(newVote.voteId); // 투표 ID 저장
+            });
+
             client.send(`/app/vote/register/${roomId}`, headers, JSON.stringify(voteData));
             console.log("투표 등록!");
-
         } else {
             console.error("WebSocket이 연결되지 않았습니다.");
         }
@@ -121,7 +124,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
             console.log("votedData의 결과값", votedData);
 
             if (stompClient && stompClient.connected && window.confirm(`${userSelected}로 투표되었습니다.`)) {
-                // 여기서도 헤더를 포함하여 메시지 전송
                 const headers = {
                     Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
                 };
@@ -136,6 +138,13 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
         }
     };
 
+    useEffect(() => {
+        if (voteData.length > 0) {
+            console.log("투표 데이터", voteData.length);
+            setShowChatAndVote(true);
+        }
+    }, [voteData]);
+
     return (
         <div>
             {showChatAndVote ? (
@@ -143,7 +152,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
                     <div className="chat-vote-area">
                         <div className="promise-header">오늘 뭐 먹지?</div>
                         <div className="menu-scrpit">
-                            {/* {currentUser.userId}님이 */}
                             <br />오늘 {inputValue1} 와 {inputValue2} 중에
                             <br />먹고 싶어합니다.
                             <br />투표해주세요!
