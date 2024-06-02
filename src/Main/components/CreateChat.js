@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import '../css/CreateChat.css';
 import Vote from './Vote';
@@ -8,12 +8,12 @@ import FriendsList from './FriendsList';
 function CreateChat({ selectedFriends, onClose }) {
     const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
     const chatMemberID = selectedFriends.map(friend => friend.friendLoginId);
-    
+
     const [chatRoomName] = useState(chatMember + "과의 채팅방");
     const [roomId, setRoomId] = useState(null);
     const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
     const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
-    
+
     const headers = {
         Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
     };
@@ -33,9 +33,12 @@ function CreateChat({ selectedFriends, onClose }) {
         }
     };
 
+    //두번 보내기 방지
+    const hasCreatedRoom = useRef(false);
     useEffect(() => {
-        if (selectedFriends.length > 0) {
+        if (!hasCreatedRoom.current && selectedFriends.length > 0) {
             CreateChatRoom(selectedFriends);
+            hasCreatedRoom.current = true;
         }
     }, [selectedFriends]);
 
@@ -52,7 +55,7 @@ function CreateChat({ selectedFriends, onClose }) {
     const toggleModal = () => {
         setShowChatModal(!showChatModal);
     };
-    
+
     return (
         <div className='CreateChat'>
             <div className='chat-room-header'>
