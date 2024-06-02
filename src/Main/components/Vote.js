@@ -39,10 +39,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
         }
     };
 
-    useEffect(() => {
-        console.log("voteCount1값: ", voteCount1, "voteCount2값: ", voteCount2)
-    }, [voteCount1, voteCount2]);
-
     const [stompClient, setStompClient] = useState(null);
 
     useEffect(() => {
@@ -53,6 +49,8 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
         const headers = {
             Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         };
+
+        console.log("Connecting with headers:", headers);
 
         client.connect(headers, () => {
             setStompClient(client);
@@ -90,15 +88,20 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
         console.log("투표 등록 데이터:", voteData);
     
         if (client && client.connected) {
-            client.send(`/app/vote/register/${roomId}`, {}, JSON.stringify(voteData));
-            console.log("투표 등록!");
-
-            client.subscribe(`/topic/votes/${roomId}`, (message) => {
-                console.log("투표 등록 후 받은 메시지 (투표 아이디): ", JSON.parse(message.body).voteId);
+            client.subscribe(`/topic/room/${roomId}`, (message) => {
                 let voteId = JSON.parse(message.body).voteId;
                 setVoteId(voteId);
                 console.log("VoteID: ", voteId);
             });
+
+            // 여기서 헤더를 포함하여 메시지 전송
+            const headers = {
+                Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+            };
+
+            client.send(`/app/vote/register/${roomId}`, headers, JSON.stringify(voteData));
+            console.log("투표 등록!");
+
         } else {
             console.error("WebSocket이 연결되지 않았습니다.");
         }
@@ -113,17 +116,21 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
                 voteId: voteId,
                 menu1: inputValue1,
                 menu2: inputValue2,
-                voteCount1 : voteCount1,
-                voteCount2 : voteCount2,
+                voteCount1: voteCount1,
+                voteCount2: voteCount2,
             };
             console.log("votedData의 결과값", votedData);
 
             if (stompClient && stompClient.connected && window.confirm(`${userSelected}로 투표되었습니다.`)) {
-                stompClient.send(`/app/vote/increment/${roomId}/${voteId}`, {}, JSON.stringify(votedData));
-
-                stompClient.subscribe(`/topic/votes/${roomId}`, (message) => {
+                // 여기서도 헤더를 포함하여 메시지 전송
+                const headers = {
+                    Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+                };
+                stompClient.subscribe(`/topic/room/${roomId}`, (message) => {
                     console.log("투표 한 뒤에 결과값: ", message.body);
-                })
+                });
+
+                stompClient.send(`/vote/increment/${roomId}/${voteId}`, headers, JSON.stringify(votedData));
             }
         } else {
             alert("메뉴를 선택해주세요.");
