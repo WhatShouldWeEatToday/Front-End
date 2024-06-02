@@ -25,6 +25,7 @@
     width: 100%;
     height: 700px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .rooms-list{
