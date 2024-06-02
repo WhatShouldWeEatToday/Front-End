@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ChatModal from './ChatModal';
 import FriendsList from './FriendsList';
 import Vote from './Vote';
-import "../css/ChatRoom.css"
+import "../css/ChatRoom.css";
 import SockJS from "sockjs-client";
 import { Stomp } from '@stomp/stompjs';
 
@@ -10,6 +10,7 @@ function ChatRoom({ roomId, roomName, onClose, selectedFriends }) {
     const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
     const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
     const [stompClient, setStompClient] = useState(null);
+    const [voteData, setVoteData] = useState([]); // 투표 데이터 상태 추가
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
@@ -46,6 +47,7 @@ function ChatRoom({ roomId, roomName, onClose, selectedFriends }) {
             client.subscribe(`/topic/room/${roomId}`, (message) => {
                 const voteData = JSON.parse(message.body);
                 console.log("voteData: ", voteData);
+                setVoteData(voteData);
             });
 
             console.log("구독 시작");
@@ -77,6 +79,10 @@ function ChatRoom({ roomId, roomName, onClose, selectedFriends }) {
         setShowChatModal(!showChatModal);
     };
 
+    const toggleVoteComponent = () => {
+        setShowVoteComponent(!showVoteComponent);
+    };
+
     return (
         <div className='CreateChat'>
             <div className='chat-room-header'>
@@ -85,7 +91,7 @@ function ChatRoom({ roomId, roomName, onClose, selectedFriends }) {
                 />
                 <img src={process.env.PUBLIC_URL + '/img/vote.png'}
                     className="vote-btn" alt='vote'
-                    onClick={() => setShowVoteComponent(true)}
+                    onClick={toggleVoteComponent}
                 />
                 <div className='chat-room-name'><h2>{roomName}</h2></div>
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
@@ -105,7 +111,9 @@ function ChatRoom({ roomId, roomName, onClose, selectedFriends }) {
             {showVoteComponent &&
                 <Vote roomId={roomId}
                     selectedFriends={selectedFriends}
-                    onClose={() => setShowVoteComponent(false)}
+                    onClose={toggleVoteComponent}
+                    voteData={voteData} // 투표 데이터를 전달
+                    setVoteData={setVoteData} // 투표 데이터를 업데이트하는 함수 전달
                 />}
         </div>
     );
