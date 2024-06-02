@@ -10,7 +10,7 @@ function ChatRoom({ roomId, roomName, onClose, selectedFriends }) {
     const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
     const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
     const [stompClient, setStompClient] = useState(null);
-    const [voteData, setVoteData] = useState([]); // 투표 데이터 상태 추가
+    const [voteData, setVoteData] = useState({}); // 투표 데이터 상태 추가
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws-stomp');
