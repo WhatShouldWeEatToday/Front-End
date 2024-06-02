@@ -1,50 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../css/CreateChat.css';
-import Vote from './Vote';
+import React, {useEffect, useState } from "react";
 import ChatModal from './ChatModal';
 import FriendsList from './FriendsList';
+import Vote from './Vote';
+import axios from "axios";
 
-function CreateChat({ selectedFriends, onClose }) {
-    const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
-    const chatMemberID = selectedFriends.map(friend => friend.friendLoginId);
-    
-    const [chatRoomName] = useState(chatMember + "과의 채팅방");
-    const [roomId, setRoomId] = useState(null);
-    const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
+function ChatRoom({ roomId, onClose }) {
+    const [message, setMessage] = useState([]);
     const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
-    
-    const headers = {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+    const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
+
+    const headers =
+    {
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
 
-    // 채팅방 생성 및 친구초대 post.ver
-    const CreateChatRoom = async (selectedFriends) => {
-        const requestDTO = {
-            name: chatRoomName,
-            friendLoginIds: selectedFriends.map(friend => friend.friendLoginId),
-        };
-        try {
-            const response = await axios.post("http://localhost:8080/room/create", requestDTO, { headers });
-            console.log("채팅방 생성 데이터", response.data);
-            setRoomId(response.data.id); // 채팅방 ID 저장
-        } catch (err) {
-            console.log({ error: err });
+    //채팅방 기존 투표나 공지 메세지 불러오기
+    const fetchMessages = async () => {
+        try{
+            const response = await axios.get(`/chat/rooms/${roomId}`, {headers});
+            setMessage(response.data);
+        }catch(err){
+            console.error({error: err});
         }
-    };
+    }
 
     useEffect(() => {
-        if (selectedFriends.length > 0) {
-            CreateChatRoom(selectedFriends);
-        }
-    }, [selectedFriends]);
+        fetchMessages();
+    }, [roomId]);
 
     // 뒤로가기 => 채팅목록/친구목록
     const [showFriendsList, setShowFriendsList] = useState(false); 
+    
     const handleBackChat = () => {
         setShowFriendsList(true);
         onClose();
     };
+
     if (showFriendsList) {
         return <FriendsList />;
     }
@@ -52,7 +43,8 @@ function CreateChat({ selectedFriends, onClose }) {
     const toggleModal = () => {
         setShowChatModal(!showChatModal);
     };
-    
+
+
     return (
         <div className='CreateChat'>
             <div className='chat-room-header'>
@@ -63,7 +55,7 @@ function CreateChat({ selectedFriends, onClose }) {
                     className="vote-btn" alt='vote'
                     onClick={() => setShowVoteComponent(true)}
                     />
-                <div className='chat-room-name'><h2>{chatRoomName}</h2></div>
+                {/* <div className='chat-room-name'><h2>{chatRoomName}</h2></div> */}
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
                     className="modal-btn" alt='chatModal'
                     onClick={(e) => {
@@ -73,18 +65,18 @@ function CreateChat({ selectedFriends, onClose }) {
                 {showChatModal &&
                     <ChatModal
                         onClose={toggleModal}
-                        selectedFriends={selectedFriends}
+                        // selectedFriends={selectedFriends}
                         handleBackChat={handleBackChat}
                         roomId={roomId}
                     />}
             </div>
             {showVoteComponent && 
                 <Vote roomId={roomId}
-                      selectedFriends={selectedFriends}
+                    //   selectedFriends={selectedFriends}
                       onClose={() => setShowVoteComponent(false)}
                 />}
         </div>
     );
 }
 
-export default CreateChat;
+export default ChatRoom;
