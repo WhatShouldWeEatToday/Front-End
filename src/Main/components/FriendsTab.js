@@ -2,7 +2,7 @@ import { useState } from "react";
 import Tabs from "./Tabs";
 import TabContent from "./TabContent";
 
-function FriendsTab({onShowCreateChat, onRoomClick}) {
+function FriendsTab({ onRoomClick }) {
     const [activeTab, setActiveTab] = useState(0);
 
     const handleTabClick = (index) => {
@@ -12,7 +12,7 @@ function FriendsTab({onShowCreateChat, onRoomClick}) {
     return (
         <div className="FriendsTab">
             <Tabs activeTab={activeTab} onTabClick={handleTabClick}/>
-            <TabContent activeTab={activeTab} onShowCreateChat={onShowCreateChat} onRoomClick={onRoomClick}/>
+            <TabContent activeTab={activeTab} onRoomClick={onRoomClick}/>
         </div>
     );
 }

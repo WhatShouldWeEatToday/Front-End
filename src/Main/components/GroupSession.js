@@ -2,28 +2,11 @@ import { useState } from 'react';
 import '../css/GroupSession.css';
 import Modal from './Modal';
 import FriendsTab from './FriendsTab';
-import CreateChat from './CreateChat';
 import ChatRoom from './ChatRoom';
 
 function GroupSession(props) {
     const [group, setGroup] = useState(false);
-    const [selectedFriends, setSelectedFriends] = useState([]);
-    const [showCreateChat, setShowCreateChat] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
-
-    const handleShowCreateChat = (selectedFriends) => {
-        if(selectedFriends.length > 0){
-            setSelectedFriends(selectedFriends);
-            setShowCreateChat(true);
-        } else{
-            alert('한 명 이상의 친구를 선택해주세요.');
-            setShowCreateChat(false);
-        }
-    };
-
-    const handleHideCreateChat = () => {
-        setShowCreateChat(false);
-    };
 
     const handleRoomClick = (room) => {
         const selectedFriends = room.participants.map(participant => ({
@@ -54,11 +37,7 @@ function GroupSession(props) {
                         selectedFriends={selectedRoom.selectedFriends}
                         />
                     ) : (
-                        showCreateChat ? (
-                            <CreateChat selectedFriends={selectedFriends} onClose={handleHideCreateChat} />
-                        ) : (
-                            <FriendsTab onShowCreateChat={handleShowCreateChat} onRoomClick={handleRoomClick}/>
-                        )
+                        <FriendsTab onRoomClick={handleRoomClick}/>
                     )}
                 </Modal>
             )}

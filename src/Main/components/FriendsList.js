@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import '../css/FriendsList.css';
 import axios from "axios";
 
-function FriendsList({ onShowCreateChat }) { 
-    // 나의 친구 데이터 통신
+function FriendsList() { 
     const [myFriends, setMyFriends] = useState([]);
-    // 검색 데이터 저장
     const [search, setSearch] = useState('');
+    const [invite, setInvite] = useState({});
+    const [selectedFriends, setSelectedFriends] = useState([]);
+    const [chatRoomName, setChatRoomName] = useState('');
+    const [roomId, setRoomId] = useState(null);
 
-    // 토큰
     const headers = {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
     };
 
-    // 친구목록 불러오기
     const getMyFriends = async () => {
         try {
             const response = await axios.get("http://localhost:8080/chat/friend-list", { headers });
@@ -28,7 +28,11 @@ function FriendsList({ onShowCreateChat }) {
         getMyFriends();
     }, []);
 
-    // 친구 검색
+    useEffect(() => {
+        const chatMember = selectedFriends.map(friend => friend.friendNickname).join(',');
+        setChatRoomName(`${chatMember}과의 채팅방`);
+    }, [selectedFriends]);
+
     const handleSearch = (e) => {
         setSearch(e.target.value.toLowerCase());
     };
@@ -47,16 +51,11 @@ function FriendsList({ onShowCreateChat }) {
         }
     };
 
-    // 채팅방 초대할 친구 선택
-    const [invite, setInvite] = useState({});
-    const [selectedFriends, setSelectedFriends] = useState([]);
-
     const handleInvite = (friend) => {
         setInvite(prevStatus => ({
             ...prevStatus,
             [friend.friendLoginId]: !prevStatus[friend.friendLoginId],
         }));
-        console.log("선택된 친구", invite);
 
         setSelectedFriends(prevSelectedFriends => {
             if (prevSelectedFriends.some(selectedFriend => selectedFriend.friendLoginId === friend.friendLoginId)) {
@@ -89,6 +88,25 @@ function FriendsList({ onShowCreateChat }) {
         );
     });
 
+    const CreateChatRoom = async (selectedFriends) => {
+        if(selectedFriends.length > 0){
+            const requestDTO = {
+                name: chatRoomName,
+                friendLoginIds: selectedFriends.map(friend => friend.friendLoginId),
+            };
+            try {
+                const response = await axios.post("http://localhost:8080/room/create", requestDTO, { headers });
+                console.log("채팅방 생성 데이터", response.data);
+                setRoomId(response.data.id);
+                alert(`${chatRoomName} 생성되었습니다.`);
+            } catch (err) {
+                console.log({ error: err });
+            }
+        } else {
+            alert('한 명 이상의 친구를 선택해주세요.')
+        }
+    };
+
     return ( 
         <div className="FriendsList">
             <div className="Friends-search">
@@ -105,7 +123,7 @@ function FriendsList({ onShowCreateChat }) {
                 />
             </div>
             <div className="FriendsList-body">{myFriendsList}</div>
-            <div className="Group" onClick={() => onShowCreateChat(selectedFriends)}>
+            <div className="Group" onClick={() => CreateChatRoom(selectedFriends)}>
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
                     className="make-group"
                     alt='group'

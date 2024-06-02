@@ -3,14 +3,14 @@ import FriendsList from './FriendsList';
 import FriendsRequestTab from './FriendsRequestTab';
 import ChatRoomList from './ChatRoomList';
 
-function TabContent({ activeTab, onShowCreateChat, onRoomClick}) {
+function TabContent({ activeTab, onRoomClick}) {
   return (
     <div className="TabContent">
       {activeTab === 0 &&
         <ChatRoomList onRoomClick={onRoomClick}/>
       }
       {activeTab === 1 &&
-        <FriendsList onShowCreateChat={onShowCreateChat}/>
+        <FriendsList/>
       }
       {activeTab === 2 &&
         <FriendsRequestTab/>
