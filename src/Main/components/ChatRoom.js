@@ -3,8 +3,9 @@ import ChatModal from './ChatModal';
 import FriendsList from './FriendsList';
 import Vote from './Vote';
 import axios from "axios";
+import "../css/ChatRoom.css"
 
-function ChatRoom({ roomId, onClose }) {
+function ChatRoom({ roomId, roomName, onClose, selectedFriends}) {
     const [message, setMessage] = useState([]);
     const [showChatModal, setShowChatModal] = useState(false);  // 채팅 내 모달
     const [showVoteComponent, setShowVoteComponent] = useState(false); // 투표 컴포넌트
@@ -44,7 +45,6 @@ function ChatRoom({ roomId, onClose }) {
         setShowChatModal(!showChatModal);
     };
 
-
     return (
         <div className='CreateChat'>
             <div className='chat-room-header'>
@@ -55,7 +55,7 @@ function ChatRoom({ roomId, onClose }) {
                     className="vote-btn" alt='vote'
                     onClick={() => setShowVoteComponent(true)}
                     />
-                {/* <div className='chat-room-name'><h2>{chatRoomName}</h2></div> */}
+                <div className='chat-room-name'><h2>{roomName}</h2></div>
                 <img src={process.env.PUBLIC_URL + '/img/users-group.png'}
                     className="modal-btn" alt='chatModal'
                     onClick={(e) => {
@@ -65,14 +65,14 @@ function ChatRoom({ roomId, onClose }) {
                 {showChatModal &&
                     <ChatModal
                         onClose={toggleModal}
-                        // selectedFriends={selectedFriends}
+                        selectedFriends={selectedFriends}
                         handleBackChat={handleBackChat}
                         roomId={roomId}
                     />}
             </div>
             {showVoteComponent && 
                 <Vote roomId={roomId}
-                    //   selectedFriends={selectedFriends}
+                      selectedFriends={selectedFriends}
                       onClose={() => setShowVoteComponent(false)}
                 />}
         </div>

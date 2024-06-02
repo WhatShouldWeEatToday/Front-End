@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "../css/ChatRoomList.css";
-import ChatRoom from "./ChatRoom";
 
-function ChatRoomList() {
+function ChatRoomList({ onRoomClick }) {
     const [myChatRoom, setMyChatRoom] = useState([]);
     const [search, setSearch] = useState('');
-    const [selectedRoomId, setSelectedRoomId] = useState(null);
 
     const headers = {
         Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
     };
+
+    const hasFetchedChatRooms = useRef(false);
 
     const getMyChatRoom = async () => {
         try {
@@ -23,7 +23,10 @@ function ChatRoomList() {
     };
 
     useEffect(() => {
-        getMyChatRoom();
+        if (!hasFetchedChatRooms.current) {
+            getMyChatRoom();
+            hasFetchedChatRooms.current = true;
+        }
     }, []);
 
     const handleSearch = (e) => {
@@ -34,22 +37,9 @@ function ChatRoomList() {
         room.roomName.toLowerCase().includes(search)
     );
 
-    const handleRoomClick = (roomId) => {
-        setSelectedRoomId(roomId);
-    };
-
-    const handleCloseChat = () => {
-        setSelectedRoomId(null);
-    };
-
-    if (selectedRoomId) {
-        return <ChatRoom roomId={selectedRoomId} onClose={handleCloseChat} />;
-    }
-
     const myRoomList = searchChatRoom.map(room => (
-        <div className="rooms-list" key={room.id} onClick={() => handleRoomClick(room.id)}>
+        <div className="rooms-list" key={room.id} onClick={() => onRoomClick(room)}>
             <div className="rooms-name">{room.roomName}</div>
-            <div className="rooms-invite"></div>
         </div>
     ));
 
