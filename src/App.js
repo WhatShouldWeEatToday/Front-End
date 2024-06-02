@@ -14,7 +14,6 @@ import ReviewRegisterPage from "./Review/ReviewRegisterPage";
 import ReviewEditPage from "./Review/ReviewEditPage";
 import ReceiptAuthPage from "./Review/ReceiptAuthPage";
 import Course from "./Search/components/Course";
-import CreateChat from "./Main/components/CreateChat";
 
 function App() {
   const links = [
@@ -25,10 +24,6 @@ function App() {
     {
       path: "/",
       element: <MainPage />,
-    },
-    {
-      path: "/createChat",
-      element: <CreateChat />,
     },
     {
       path: "/signup",

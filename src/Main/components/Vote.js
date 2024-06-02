@@ -50,7 +50,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
             Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         };
 
-        console.log("Connecting with headers:", headers);
 
         client.connect(headers, () => {
             setStompClient(client);
@@ -130,7 +129,7 @@ function Vote({ onClose, currentUser, roomId, selectedFriends }) {
                     console.log("투표 한 뒤에 결과값: ", message.body);
                 });
 
-                stompClient.send(`/vote/increment/${roomId}/${voteId}`, headers, JSON.stringify(votedData));
+                stompClient.send(`app/vote/increment/${roomId}/${voteId}`, headers, JSON.stringify(votedData));
             }
         } else {
             alert("메뉴를 선택해주세요.");
