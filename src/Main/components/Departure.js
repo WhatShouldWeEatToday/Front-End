@@ -1,23 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/Departure.css";
-import axios from "../../etc/utils/apis";
 import PostCode from 'react-daum-postcode';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
-function Departure ({address, setAddress}) {
+function Departure ({ roomId }) {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [stompClient, setStompClient] = useState(null);
+    const [address, setAddress] = useState('');
 
     const handleComplete = (data) => {
         const { address } = data;
-        if(address.includes("구미")) {
+        if (address.includes("구미")) {
             setAddress(address);
-        } else{
+        } else {
             alert("출발지를 구미 내로 설정해주세요.");
         }
     };
 
     const handleCloser = (state) => {
-        if(state === 'FORSE_CLOSE' || state === 'COMPLETE_CLOSE') {
+        if (state === 'FORSE_CLOSE' || state === 'COMPLETE_CLOSE') {
             setIsOpen(false);
         }
     };
@@ -27,15 +29,55 @@ function Departure ({address, setAddress}) {
     };
 
     const handleDepature = () => {
-        // sendAddress();
-        if(address){
-            alert("출발지가 등록되었습니다.");
+        if (address) {
             console.log(address);
-        } else{
+            handleSubmitAddress(stompClient);
+            alert("출발지가 등록되었습니다.");
+        } else {
             alert("출발지를 등록해주세요.");
         }
-        
     }
+
+    useEffect(() => {
+        const socket = new SockJS('http://localhost:8080/ws-stomp');
+        const client = Stomp.over(socket);
+
+        const headers = {
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+        };
+
+        client.connect(headers, () => {
+            setStompClient(client);
+            console.log('WebSocket 연결 성공');
+
+            client.subscribe(`/topic/room/${roomId}`, (message) => {
+                const response = JSON.parse(message.body);
+                console.log("출발지 반환 !!!!!!!!!!", response);
+            });
+        }, (error) => {
+            console.error('WebSocket 연결 오류', error);
+        });
+
+        return () => {
+            if (client) {
+                client.disconnect(() => {
+                    console.log('WebSocket 연결 해제');
+                });
+            }
+        };
+    }, [roomId]);
+
+    const handleSubmitAddress = (client) => {
+        if (client && client.connected) {
+            const headers = {
+                Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+            };
+
+            client.send(`/app/departure/register/${roomId}`, headers, address); // 주소를 문자열로 보냄
+        } else {
+            console.error("WebSocket이 연결되지 않았습니다.");
+        }
+    };
 
     return (
         <div className="Departure-area">
@@ -63,10 +105,6 @@ function Departure ({address, setAddress}) {
                     )}
                     <div className="mem-address">
                         <div className="mem-add">{address}</div>
-                        {/* <input
-                        value={detailAddress}
-                        onChange={handleInputChange}
-                        /> */}
                     </div>
                     <button
                         className="addressClick"
@@ -76,14 +114,9 @@ function Departure ({address, setAddress}) {
                     </button>
                     
                 </div>
-                <div className="chat-member">
-                    <img src={process.env.PUBLIC_URL + '/img/account.png'}
-                        className="chat-mem" alt='profile'/>
-                    <div className="chat-mem-name">임수연</div>
-                </div>
             </div>
         </div>
     );
 }
 
-export default Departure ;
+export default Departure;
