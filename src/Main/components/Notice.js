@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import '../css/Notice.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import Departure from './Departure';
 
 function Notice({ roomId, meetId, maxVotedMenu }) {
     const [date, setDate] = useState(dayjs());
@@ -82,22 +83,26 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
     return (
         <div className="promise-area">
             {isNoticeRegistered ? (
-                <div className="promise-content">
-                    <div className="promise-header">오늘 뭐 먹지?</div>
-                    <div className="promise-menu">{maxVotedMenu}</div>
-                    <div className="promise-alltime">
-                        <div>약속 날짜 : {date.format("YYYY-MM-DD")}</div>
-                        <div>약속 시간 : {time.format("HH:mm")}</div>
-                    </div>
-                    <div className="promise-place">
-                        <div className="place-name">
-                            약속 장소 : {place}
+                <>
+                    <div className="promise-content">
+                        <div className="promise-header">오늘 뭐 먹지?</div>
+                        <div className="promise-menu">{maxVotedMenu}</div>
+                        <div className="promise-alltime">
+                            <div>약속 날짜 : {date.format("YYYY-MM-DD")}</div>
+                            <div>약속 시간 : {time.format("HH:mm")}</div>
+                        </div>
+                        <div className="promise-place">
+                            <div className="place-name">
+                                약속 장소 : {place}
+                            </div>
+                        </div>
+                        <div className="promise-btns">
+                            <button className="promise-btn">공지 삭제</button>
                         </div>
                     </div>
-                    <div className="promise-btns">
-                        <button className="promise-btn">공지 삭제</button>
-                    </div>
-                </div>
+                    <Departure roomId={roomId}/>
+                </>
+            
             ) : (
                 <div className="promise-content">
                     <div className="promise-header">오늘 뭐 먹지?</div>

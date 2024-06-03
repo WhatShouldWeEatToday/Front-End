@@ -101,12 +101,6 @@ function Vote({ onClose, currentUser, roomId, selectedFriends, voteData, setVote
             handleEndVote(stompClient)
         }
     })
-
-    // useEffect(()=> {
-    //     const winnerMenu = voteCount1 > voteCount2 ? inputValue1 : inputValue2; 
-    //     setWinner(winnerMenu);
-
-    // }, [voteCount1 , voteCount2, inputValue1,  inputValue2]);
     
     const submitVote = () => {
         if (stompClient && stompClient.connected) {
