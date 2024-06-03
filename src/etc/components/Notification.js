@@ -3,25 +3,6 @@ import { getMemberInfo } from "../utils/MemberInfo";
 import React, { useRef, useEffect, useState } from "react";
 import "../css/Notification.css";
 
-// 임시데이터
-// const Notifications = [
-// {
-//   id: 1,
-//   type: "좋아요가 달렸습니다.",
-//   content: "한솥도시락 리뷰에 이소림님이 좋아요를 눌렀습니다.",
-// },
-// {
-//   id: 2,
-//   type: "친구추가 되었습니다.",
-//   content: "이지현님과 친구가 되었습니다.",
-// },
-// {
-//   id: 3,
-//   type: "채팅방에 초대되었습니다.",
-//   content: "이지현님이 채팅방에 당신을 초대하였습니다.",
-// },
-// ];
-
 function Notification({ onClose }) {
   const notificationRef = useRef();
   const [loginId, setLoginId] = useState("");
@@ -39,6 +20,20 @@ function Notification({ onClose }) {
         console.log(error);
       });
   };
+
+  // noticeType을 알맞은 알림 텍스트로 변환
+  function getNoticeText(noticeType) {
+    switch (noticeType) {
+      case "LIKES":
+        return "좋아요 알림";
+      case "CHAT_INVITE":
+        return "채팅초대 알림";
+      case "FRIEND_INVITE":
+        return "친구초대 알림";
+      default:
+        return "알림";
+    }
+  }
 
   // 로그인된 사용자 정보 가져오기
   const fetchMemberInfo = async () => {
@@ -78,7 +73,9 @@ function Notification({ onClose }) {
   const NotificationList = Notifications.map((notification) => {
     return (
       <div className="notification-list" key={notification.id}>
-        <div className="notification-type">{notification.noticeType}</div>
+        <div className="notification-type">
+          {getNoticeText(notification.noticeType)}
+        </div>
         <div className="notification-content">{notification.content}</div>
       </div>
     );
