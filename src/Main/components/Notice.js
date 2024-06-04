@@ -13,7 +13,7 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
     const [date, setDate] = useState(dayjs());
     const [time, setTime] = useState(dayjs());
     const [place, setPlace] = useState('');
-    const [noticeTime, setNotice] = useState("");
+    const [noticeTime, setNoticeTime] = useState("");
     const [stompClient, setStompClient] = useState(null);
     const [isNoticeRegistered, setIsNoticeRegistered] = useState(false); // 공지 등록 상태
 
@@ -30,6 +30,12 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
             console.log('WebSocket 연결 성공');
 
             client.subscribe(`/topic/room/${roomId}`, (message) => {
+                // 공지 등록 후 수신한 메시지를 처리하는 부분
+                const messageBody = JSON.parse(message.body);
+                console.log("공지 수신", messageBody);
+                    setIsNoticeRegistered(true);
+                    setNoticeTime(dayjs(messageBody.meetTime, "YYYYMMDDHHmm"));
+                    setPlace(messageBody.meetLocate);
             });
         }, (error) => {
             console.error('WebSocket 연결 오류', error);
@@ -46,7 +52,7 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
 
     useEffect(() => {
         const promiseTime = dayjs(date).format("YYYYMMDD") + dayjs(time).format('HHmm');
-        setNotice(promiseTime);
+        setNoticeTime(promiseTime);
     }, [date, time]);
 
     const submitVote = () => {
@@ -100,7 +106,7 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
                             <button className="promise-btn">공지 삭제</button>
                         </div>
                     </div>
-                    <Departure roomId={roomId}/>
+                    <Departure roomId={roomId} noticeTime={noticeTime}/>
                 </>
             
             ) : (
