@@ -1,16 +1,17 @@
-.promise-area{
+.notice-area{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     height: 500px;
 }
 
 .promise-content{
-    width: 80%;
-    height: 330px;
+    width: 70%;
+    height: 400px;
     background-color: #FBE156;
     border-radius: 30px;
-    margin: 10px;
+    margin: auto;
+    margin-top: 20px;
 }
 
 .promise-menu{
@@ -63,6 +64,82 @@
     font-family: 'Pretendard-Regular';
     background-color: white;
     margin: 10px;
+}
+
+.course-btn{
+    margin: auto;
+    width: 90%;
+    height: 50px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Pretendard-Regular';
+    background-color: #FBE156;
+    font-size: larger;
+    margin: 10px;
+}
+
+.noticePix-content{
+    width: 70%;
+    height: 450px;
+    background-color: #FBE156;
+    border-radius: 30px;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.noticePix-header{
+    width: 90%;
+    height: 50px;
+    text-align: center;
+    margin: auto;
+    align-content: center;
+    border-bottom: solid 2px black;
+    font-size: x-large;
+}
+
+.noticePix{
+    font-size: 50px;
+    margin: 20px;
+}
+
+.noticePix-alltime{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    align-items: center;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.noticePix-name{
+    margin-right: 10px;
+    font-size: larger;
+}
+
+.place{
+    width: 180px;
+    height: 20px;
+    border-radius: 30px;
+    border: none;
+    font-family: 'Pretendard-Regular';
+}
+
+.promise-btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.noticePix-delete{
+    width: 150px;
+    height: 40px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Pretendard-Regular';
+    background-color: white;
+    margin: 10px;
+    font-size: large;
+    margin-top: 20px;
 }
 
 .course-btn{
