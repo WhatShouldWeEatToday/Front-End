@@ -23,7 +23,7 @@ function ReviewPage() {
   const maxContent = 10; // 한 페이지에 보여줄 식당의 최대 개수
 
   // 주소 변수
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState("(지번)"); // findAll 하기 위해 초기값 "(지번)"으로 설정
 
   // 현재 로그인된 유저 이름
   const [nickname, setNickname] = useState(null);
@@ -37,11 +37,7 @@ function ReviewPage() {
     const selectedAddress = e.target.value;
     setAddress(selectedAddress);
     setPage(1);
-    if (selectedAddress) {
-      getRestaurantsByAddress(selectedAddress);
-    } else {
-      getRestaurants(); // 아무것도 선택되지 않은 경우 모든 식당 정보 가져옴
-    }
+    getRestaurantsByAddress(selectedAddress);
   };
 
   // 리뷰리스트 토글
@@ -70,33 +66,7 @@ function ReviewPage() {
       });
   };
 
-  // findAll
-  const getRestaurants = async () => {
-    axios
-      // maxContent(한 페이지에 보여줄 식당의 최대 개수)
-      .get(
-        `http://localhost:8080/review/findAll?page=${
-          page - 1
-        }&size=${maxContent}`
-      )
-      .then((res) => {
-        console.log(res.data);
-        const { totalPages } = res.data;
-        setTotalPages(totalPages);
-        setRestaurantList(res.data);
-        const updatedReviewList = res.data.content.map((restaurant) => ({
-          id: restaurant.id,
-          name: restaurant.name,
-          reviewList: restaurant.reviewList,
-        }));
-        setReviewList(updatedReviewList);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  // findAllByAddress
+  // findAll / findAllByAddress (주소에 "(지번)" 들어갈 시 findAll)
   const getRestaurantsByAddress = async (address) => {
     axios
       .get(
@@ -122,27 +92,21 @@ function ReviewPage() {
   };
 
   // 리뷰 좋아요 등록/삭제
-  const addorDeleteLikes = async (reviewId) => {
+  const addOrDeleteLikes = async (reviewId) => {
     const headers = {
       Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
-    axios
-      .post(
+    try {
+      const response = await axios.post(
         `http://localhost:8080/api/review/${reviewId}/likes`,
-        {
-          reviewId: reviewId,
-        },
-        {
-          headers: headers, // 헤더 설정
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        console.log("좋아요 클릭");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        { reviewId },
+        { headers }
+      );
+      console.log("좋아요 클릭");
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // 로그인된 사용자 정보 가져오기
@@ -156,11 +120,7 @@ function ReviewPage() {
   };
 
   useEffect(() => {
-    if (address) {
-      getRestaurantsByAddress(address);
-    } else {
-      getRestaurants();
-    }
+    getRestaurantsByAddress(address);
     fetchMemberInfo();
   }, [page, address]); // 페이지 또는 주소가 변경될 때마다 실행
 
@@ -175,7 +135,7 @@ function ReviewPage() {
             id="address"
             onChange={handleAddressChange}
           >
-            <option value="">동/읍/면</option>
+            <option value="(지번)">동/읍/면</option>
             <option value="선산읍">선산읍</option>
             <option value="고아읍">고아읍</option>
             <option value="산동읍">산동읍</option>
@@ -204,195 +164,153 @@ function ReviewPage() {
         </div>
         {restaurantList &&
           restaurantList.content &&
-          [...restaurantList.content]
-            .sort((restaurantA, restaurantB) => {
-              // 식당 A와 B의 최신 리뷰 생성일을 찾기
-              const latestReviewA = restaurantA.reviewList?.content?.reduce(
-                (latest, current) =>
-                  new Date(latest.created_Date) > new Date(current.created_Date)
-                    ? latest
-                    : current,
-                // 리뷰가 없는 경우 초기값 = "1900-01-01"
-                { created_Date: "1900-01-01" }
-              );
-              const latestReviewB = restaurantB.reviewList?.content?.reduce(
-                (latest, current) =>
-                  new Date(latest.created_Date) > new Date(current.created_Date)
-                    ? latest
-                    : current,
-                { created_Date: "1900-01-01" }
-              );
-
-              // 최신 리뷰 생성일을 기준으로 내림차순 정렬
-              return (
-                new Date(latestReviewB.created_Date) -
-                new Date(latestReviewA.created_Date)
-              );
-            })
-            .map((restaurant) => (
-              <div className="restaurant-details" key={restaurant.id}>
-                <div
-                  className="restaurant-name"
-                  onClick={() => {
-                    goRestaurantDetailPage(restaurant.id);
-                  }}
-                >
-                  {restaurant.name}
-                </div>
-                <button
-                  className="toggle-reviews-btn"
-                  onClick={() => toggleReviews(restaurant.id)}
-                >
-                  ▼
-                </button>
-                <div className="restaurant-address">
-                  {restaurant.addressRoad}
-                </div>
-                <div className="restaurant-tel">{restaurant.tel}</div>
-                <div className="star-rating-info">
-                  <span className="star-icon">★</span>
-                  <span className="star-degree">{restaurant.degree}</span>
-                  <span className="total-reviews">
-                    ({restaurant.totalReviews})
-                  </span>
-                </div>
-                {/* 식당 리뷰 정보 */}
-                {openReviews[restaurant.id] &&
-                  restaurant.reviewList &&
-                  restaurant.reviewList.content && (
-                    <div className="review-list">
-                      {restaurant.reviewList &&
-                        restaurant.reviewList.content &&
-                        restaurant.reviewList.content
-                          .sort(
-                            (a, b) =>
-                              new Date(b.created_Date) -
-                              new Date(a.created_Date)
-                          )
-                          .map((review) => (
-                            <div className="review-info-box" key={review.id}>
-                              <div className="review-details">
-                                <img
-                                  src={
-                                    process.env.PUBLIC_URL + "/img/account.png"
-                                  }
-                                  width="50px"
-                                  height="50px"
-                                  alt="account-img"
-                                />
-                                <span className="review-writers">
-                                  {review.writers}
-                                </span>
-                                <span className="review-createdDate">
-                                  {review.createdDate}
-                                </span>
-                                {/* 좋아요 버튼 */}
-                                <div
-                                  className="like-box"
+          [...restaurantList.content].map((restaurant) => (
+            <div className="restaurant-details" key={restaurant.id}>
+              <div
+                className="restaurant-name"
+                onClick={() => {
+                  goRestaurantDetailPage(restaurant.id);
+                }}
+              >
+                {restaurant.name}
+              </div>
+              <button
+                className="toggle-reviews-btn"
+                onClick={() => toggleReviews(restaurant.id)}
+              >
+                ▼
+              </button>
+              <div className="restaurant-address">{restaurant.addressRoad}</div>
+              <div className="restaurant-tel">{restaurant.tel}</div>
+              <div className="star-rating-info">
+                <span className="star-icon">★</span>
+                <span className="star-degree">{restaurant.degree}</span>
+                <span className="total-reviews">
+                  ({restaurant.totalReviews})
+                </span>
+              </div>
+              {/* 식당 리뷰 정보 */}
+              {openReviews[restaurant.id] &&
+                restaurant.reviewList &&
+                restaurant.reviewList.content && (
+                  <div className="review-list">
+                    {restaurant.reviewList &&
+                      restaurant.reviewList.content &&
+                      restaurant.reviewList.content.map((review) => (
+                        <div className="review-info-box" key={review.id}>
+                          <div className="review-details">
+                            <img
+                              src={process.env.PUBLIC_URL + "/img/account.png"}
+                              width="50px"
+                              height="50px"
+                              alt="account-img"
+                            />
+                            <span className="review-writers">
+                              {review.writers}
+                            </span>
+                            <span className="review-createdDate">
+                              {review.createdDate}
+                            </span>
+                            {/* 좋아요 버튼 */}
+                            <div
+                              className="like-box"
+                              onClick={() => {
+                                addOrDeleteLikes(review.id);
+                              }}
+                            >
+                              <img
+                                src={process.env.PUBLIC_URL + "/img/like.png"}
+                                width="23px"
+                                height="30px"
+                                alt="like-img"
+                              />
+                              <span className="review-totalLikes">
+                                {review.totalLikes}
+                              </span>
+                            </div>
+                            {/* 영수증 인증 뱃지 */}
+                            {review.reviewType !== "NOT_CERTIFY" && (
+                              <img
+                                className="verified-img"
+                                src={
+                                  process.env.PUBLIC_URL + "/img/Verified.png"
+                                }
+                                width="27px"
+                                height="27px"
+                                alt="verified-img"
+                              />
+                            )}
+                            {review.writers === nickname && (
+                              <div className="review-edit-delete-box">
+                                <button
+                                  className="review-edit-btn"
+                                  title="수정"
                                   onClick={() => {
-                                    addorDeleteLikes(review.id);
+                                    goEditPage(restaurant.id, review.id);
                                   }}
                                 >
                                   <img
                                     src={
-                                      process.env.PUBLIC_URL + "/img/like.png"
+                                      process.env.PUBLIC_URL + "/img/Edit.png"
                                     }
-                                    width="23px"
-                                    height="30px"
-                                    alt="like-img"
+                                    width="25px"
+                                    height="25px"
+                                    alt="edit-img"
                                   />
-                                  <span className="review-totalLikes">
-                                    {review.totalLikes}
-                                  </span>
-                                </div>
-                                {/* 영수증 인증 뱃지 */}
-                                {review.reviewType !== "NOT_CERTIFY" && (
+                                </button>
+                                <button
+                                  className="review-delete-btn"
+                                  title="삭제"
+                                  onClick={() => {
+                                    deleteReview(review.id);
+                                  }}
+                                >
                                   <img
-                                    className="verified-img"
                                     src={
-                                      process.env.PUBLIC_URL +
-                                      "/img/Verified.png"
+                                      process.env.PUBLIC_URL + "/img/Delete.png"
                                     }
-                                    width="27px"
-                                    height="27px"
-                                    alt="verified-img"
+                                    width="25px"
+                                    height="25px"
+                                    alt="delete-img"
                                   />
-                                )}
-                                {review.writers === nickname && (
-                                  <div className="review-edit-delete-box">
-                                    <button
-                                      className="review-edit-btn"
-                                      title="수정"
-                                      onClick={() => {
-                                        goEditPage(restaurant.id, review.id);
-                                      }}
-                                    >
-                                      <img
-                                        src={
-                                          process.env.PUBLIC_URL +
-                                          "/img/Edit.png"
-                                        }
-                                        width="25px"
-                                        height="25px"
-                                        alt="edit-img"
-                                      />
-                                    </button>
-                                    <button
-                                      className="review-delete-btn"
-                                      title="삭제"
-                                      onClick={() => {
-                                        deleteReview(review.id);
-                                      }}
-                                    >
-                                      <img
-                                        src={
-                                          process.env.PUBLIC_URL +
-                                          "/img/Delete.png"
-                                        }
-                                        width="25px"
-                                        height="25px"
-                                        alt="delete-img"
-                                      />
-                                    </button>
-                                  </div>
-                                )}
+                                </button>
                               </div>
-                              <div className="review-star-tags">
-                                <span className="star-icon2">★</span>
-                                <span className="review-star-rating">
-                                  {review.stars}
-                                </span>
-                                <img
-                                  className="thumbUp-img"
-                                  src={
-                                    process.env.PUBLIC_URL + "/img/ThumbUp.png"
-                                  }
-                                  width="32px"
-                                  height="32px"
-                                  alt="thumbUp-img"
-                                />
-                                {review.taste === 1 && (
-                                  <div className="taste-tag">맛</div>
-                                )}
-                                {review.cost === 1 && (
-                                  <div className="cost-tag">가성비</div>
-                                )}
-                                {review.kind === 1 && (
-                                  <div className="kind-tag">친절</div>
-                                )}
-                                {review.mood === 1 && (
-                                  <div className="mood-tag">분위기</div>
-                                )}
-                                {review.park === 1 && (
-                                  <div className="park-tag">주차</div>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                    </div>
-                  )}
-              </div>
-            ))}
+                            )}
+                          </div>
+                          <div className="review-star-tags">
+                            <span className="star-icon2">★</span>
+                            <span className="review-star-rating">
+                              {review.stars}
+                            </span>
+                            <img
+                              className="thumbUp-img"
+                              src={process.env.PUBLIC_URL + "/img/ThumbUp.png"}
+                              width="32px"
+                              height="32px"
+                              alt="thumbUp-img"
+                            />
+                            {review.taste === 1 && (
+                              <div className="taste-tag">맛</div>
+                            )}
+                            {review.cost === 1 && (
+                              <div className="cost-tag">가성비</div>
+                            )}
+                            {review.kind === 1 && (
+                              <div className="kind-tag">친절</div>
+                            )}
+                            {review.mood === 1 && (
+                              <div className="mood-tag">분위기</div>
+                            )}
+                            {review.park === 1 && (
+                              <div className="park-tag">주차</div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+            </div>
+          ))}
         <ReviewPagination
           page={page}
           totalPages={totalPages}
