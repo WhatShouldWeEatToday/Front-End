@@ -1,5 +1,6 @@
 import "../css/RestaurantInfomodule.css";
 import axios from "../../etc/utils/apis";
+import { getMemberInfo } from "../../etc/utils/MemberInfo";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -20,8 +21,12 @@ function RestaurantInfo({ restaurantId }) {
   const [totalPark, setTotalPark] = useState(0);
   const [reviewList, setReviewList] = useState({}); // 리뷰 Object
 
+  // 현재 로그인된 유저 이름
+  const [nickname, setNickname] = useState(null);
+
   useEffect(() => {
     getRestaurantDetails();
+    fetchMemberInfo();
   }, [restaurantId]);
 
   const goEditPage = (reviewId) => {
@@ -68,7 +73,7 @@ function RestaurantInfo({ restaurantId }) {
       });
   };
 
-  //즐겨찾기 등록
+  // 즐겨찾기 등록
   const clickBookmark = async (restaurantId) => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
@@ -93,27 +98,31 @@ function RestaurantInfo({ restaurantId }) {
   };
 
   // 리뷰 좋아요 등록/삭제
-  const addorDeleteLikes = async (reviewId) => {
+  const addOrDeleteLikes = async (reviewId) => {
     const headers = {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
+      Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
-    axios
-      .post(
+    try {
+      const response = await axios.post(
         `http://localhost:8080/api/review/${reviewId}/likes`,
-        {
-          reviewId: reviewId,
-        },
-        {
-          headers: headers, // 헤더 설정
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        console.log("좋아요 클릭");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        { reviewId },
+        { headers }
+      );
+      console.log("좋아요 클릭");
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 로그인된 사용자 정보 가져오기
+  const fetchMemberInfo = async () => {
+    try {
+      const res = await getMemberInfo();
+      setNickname(res.data.nickname);
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패 : ", error);
+    }
   };
 
   return (
@@ -150,7 +159,7 @@ function RestaurantInfo({ restaurantId }) {
         {reviewList &&
           reviewList.content &&
           reviewList.content
-            .sort((a, b) => new Date(b.created_Date) - new Date(a.created_Date))
+            .sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate))
             .map((review) => (
               <div className="review-info-box" key={review.id}>
                 <div className="review-details">
@@ -168,7 +177,7 @@ function RestaurantInfo({ restaurantId }) {
                   <div
                     className="like-box"
                     onClick={() => {
-                      addorDeleteLikes(review.id);
+                      addOrDeleteLikes(review.id);
                     }}
                   >
                     <img
@@ -191,35 +200,39 @@ function RestaurantInfo({ restaurantId }) {
                       height="27px"
                     />
                   )}
-                  <button
-                    className="review-edit-btn"
-                    title="수정"
-                    onClick={() => {
-                      goEditPage(review.id);
-                    }}
-                  >
-                    <img
-                      alt="edit-img"
-                      src={process.env.PUBLIC_URL + "/img/Edit.png"}
-                      width="25px"
-                      height="25px"
-                    />
-                  </button>
-                  {/* 반드시 화살표 함수 사용해야함 */}
-                  <button
-                    className="review-delete-btn"
-                    title="삭제"
-                    onClick={() => {
-                      deleteReview(review.id);
-                    }}
-                  >
-                    <img
-                      alt="delete-img"
-                      src={process.env.PUBLIC_URL + "/img/Delete.png"}
-                      width="25px"
-                      height="25px"
-                    />
-                  </button>
+                  {review.writers === nickname && (
+                    <div className="review-edit-delete-box">
+                      <button
+                        className="review-edit-btn"
+                        title="수정"
+                        onClick={() => {
+                          goEditPage(review.id);
+                        }}
+                      >
+                        <img
+                          alt="edit-img"
+                          src={process.env.PUBLIC_URL + "/img/Edit.png"}
+                          width="25px"
+                          height="25px"
+                        />
+                      </button>
+                      {/* 반드시 화살표 함수 사용해야함 */}
+                      <button
+                        className="review-delete-btn"
+                        title="삭제"
+                        onClick={() => {
+                          deleteReview(review.id);
+                        }}
+                      >
+                        <img
+                          alt="delete-img"
+                          src={process.env.PUBLIC_URL + "/img/Delete.png"}
+                          width="25px"
+                          height="25px"
+                        />
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="review-star-tags">
                   <span className="star-icon2">★</span>
