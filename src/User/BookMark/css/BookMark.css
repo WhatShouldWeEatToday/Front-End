@@ -1,27 +1,28 @@
 .BookMark {
   margin-top: 80px;
 }
-.restaurant-details {
+.rest-details {
   width: 825px;
   border-top: 2px solid black;
   padding: 11px 8px;
 }
-.restaurant-details:nth-child(2) {
-  margin-top: 60px;
+.rest-details:nth-last-child(2) {
+  border-bottom: 2px solid black;
+  margin-bottom: 50px;
 }
-.restaurant-name {
+.rest-name {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 8px;
 }
-.restaurant-name:hover {
+.rest-name:hover {
   cursor: pointer;
 }
-.restaurant-address {
+.rest-address {
   font-size: 24px;
   margin-bottom: 8px;
 }
-.restaurant-tel {
+.rest-tel {
   font-size: 20px;
   margin-bottom: 5px;
 }

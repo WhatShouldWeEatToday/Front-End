@@ -2,11 +2,20 @@ import "../css/BookMark.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "../../../etc/utils/apis";
+import BookMarkPagination from "../components/BookMarkPagination";
 
 function BookMark() {
   const navigate = useNavigate();
 
   const [bookmarkList, setBookmarkList] = useState([]);
+
+  const [page, setPage] = useState(1); // 페이지 숫자
+  const [totalPages, setTotalPages] = useState(0); // 전체 데이터 수
+
+  // 페이지 변경
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   // 해당 식당 정보 페이지 이동
   const goRestaurantDetailPage = (restaurantId) => {
@@ -19,11 +28,13 @@ function BookMark() {
       Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // localStorage에서 저장된 accessToken을 가져와서 헤더에 포함
     };
     axios
-      .get(`http://localhost:8080/restaurant/bookmark`, {
+      .get(`http://localhost:8080/restaurant/bookmark?page=${page - 1}`, {
         headers: headers, // 헤더 설정
       })
       .then((res) => {
         console.log(res.data);
+        const { totalPages } = res.data;
+        setTotalPages(totalPages);
         setBookmarkList(res.data);
       })
       .catch((error) => {
@@ -49,24 +60,25 @@ function BookMark() {
 
   useEffect(() => {
     getBookmarkList();
-  }, []);
+  }, [page]);
 
   return (
     <div className="BookMark">
       {bookmarkList &&
         bookmarkList.content &&
         [...bookmarkList.content].map((bookmark) => (
-          <div className="restaurant-details" key={bookmark.id}>
+          // 식당 정보
+          <div className="rest-details" key={bookmark.id}>
             <div
-              className="restaurant-name"
+              className="rest-name"
               onClick={() => {
                 goRestaurantDetailPage(bookmark.restaurantId);
               }}
             >
               {bookmark.restaurantName}
             </div>
-            <div className="restaurant-address">{bookmark.addressRoad}</div>
-            <div className="restaurant-tel">{bookmark.restaurantTel}</div>
+            <div className="rest-address">{bookmark.addressRoad}</div>
+            <div className="rest-tel">{bookmark.restaurantTel}</div>
             <div className="star-rating-info">
               <span className="star-icon">★</span>
               <span className="star-degree">{bookmark.degrees}</span>
@@ -82,6 +94,11 @@ function BookMark() {
             </div>
           </div>
         ))}
+      <BookMarkPagination
+        page={page}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 }

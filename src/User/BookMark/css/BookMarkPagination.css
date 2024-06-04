@@ -1,0 +1,21 @@
+.BookMarkPagination {
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+}
+
+.bookmark-page-btn {
+  margin: auto;
+  background-color: #fbe156;
+  border: none;
+  width: 100px;
+  height: 50px;
+  border-radius: 30px;
+  font-family: "Pretendard-Regular";
+  font-size: x-large;
+}
+
+.bookmark-page-text {
+  margin: auto;
+  font-size: x-large;
+}
