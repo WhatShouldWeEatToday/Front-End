@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import "../css/TopHeader.css";
 import { NavLink } from "react-router-dom";
 import Notification from "./Notification";
+import MyMenu from "./MyMenu";
 
 function TopHeader() {
   const accessToken = sessionStorage.getItem("accessToken");
   const refreshToken = sessionStorage.getItem("refreshToken");
   const [showNotification, setShowNotification] = useState(false);
+  const [showMyMenu, setShowMyMenu] = useState(false);
   const [nickname, setNickname] = useState(null); // 현재 로그인된 유저 이름
   // console.log("토큰1: ", accessToken);
   // console.log("토큰2: ", refreshToken);
@@ -22,6 +24,10 @@ function TopHeader() {
 
   const toggleNotification = () => {
     setShowNotification(!showNotification);
+  };
+
+  const toggleMyMenu = () => {
+    setShowMyMenu(!showMyMenu);
   };
 
   // 로그인된 사용자 정보 가져오기
@@ -61,14 +67,17 @@ function TopHeader() {
           />
         </div>
         {showNotification && <Notification onClose={toggleNotification} />}
-        <NavLink to="/mypage">
-          <img
-            src={process.env.PUBLIC_URL + "/img/account.png"}
-            width="50px"
-            height="50px"
-            alt="profile"
-          />
-        </NavLink>
+        <img
+          src={process.env.PUBLIC_URL + "/img/account.png"}
+          width="50px"
+          height="50px"
+          alt="profile"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleMyMenu();
+          }}
+        />
+        {showMyMenu && <MyMenu onClose={toggleMyMenu} />}
       </div>
     );
   } else {
@@ -85,7 +94,7 @@ function TopHeader() {
             alt="alert_on"
           />
         </div>
-        <NavLink to="/mypage">
+        <NavLink to="/signin">
           <img
             src={process.env.PUBLIC_URL + "/img/account.png"}
             width="50px"

@@ -1,0 +1,20 @@
+.MyMenu {
+  position: absolute;
+  top: 70px;
+  width: 10rem;
+  border-radius: 30px;
+  background-color: #fbe156;
+  padding: 5px 0px;
+}
+
+.myinfo-edit,
+.mybookmark {
+  margin: 7px 0px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.myinfo-edit,
+.mybookmark:hover {
+  cursor: pointer;
+}
