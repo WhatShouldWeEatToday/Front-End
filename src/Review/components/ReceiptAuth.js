@@ -33,7 +33,7 @@ function ReceiptAuth({ restaurantId }) {
         .then((res) => {
           console.log(res.data);
           alert("영수증 제출 성공");
-          navigate(`/restaurant/${restaurantId}/review/receiptAuth/true`);
+          navigate(`/restaurant/${restaurantId}/review/receiptAuth/CERTIFY`);
         })
         .catch((error) => {
           console.error(error);
@@ -45,7 +45,7 @@ function ReceiptAuth({ restaurantId }) {
   };
 
   const skipAuthentication = () => {
-    navigate(`/restaurant/${restaurantId}/review/receiptAuth/false`);
+    navigate(`/restaurant/${restaurantId}/review/receiptAuth/NOT_CERTIFY`);
   };
 
   return (

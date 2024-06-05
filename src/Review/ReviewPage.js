@@ -229,7 +229,7 @@ function ReviewPage() {
                               </span>
                             </div>
                             {/* 영수증 인증 뱃지 */}
-                            {review.reviewType !== "NOT_CERTIFY" && (
+                            {review.reviewType === "CERTIFY" && (
                               <img
                                 className="verified-img"
                                 src={

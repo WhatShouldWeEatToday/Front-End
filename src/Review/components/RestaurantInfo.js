@@ -41,7 +41,7 @@ function RestaurantInfo({ restaurantId }) {
     axios
       .get(`http://localhost:8080/restaurant/${restaurantId}/details`)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         setName(res.data.name);
         setAddress(res.data.addressRoad);
         setTel(res.data.tel);
@@ -191,7 +191,7 @@ function RestaurantInfo({ restaurantId }) {
                     </span>
                   </div>
                   {/* 영수증 인증 뱃지 */}
-                  {review.reviewType !== "NOT_CERTIFY" && (
+                  {review.reviewType === "CERTIFY" && (
                     <img
                       alt="verified-img"
                       className="verified-img"
