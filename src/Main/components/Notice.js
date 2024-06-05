@@ -30,12 +30,12 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
             console.log('WebSocket 연결 성공');
 
             client.subscribe(`/topic/room/${roomId}`, (message) => {
-                // 공지 등록 후 수신한 메시지를 처리하는 부분
-                const messageBody = JSON.parse(message.body);
-                console.log("공지 수신", messageBody);
-                    setIsNoticeRegistered(true);
-                    setNoticeTime(dayjs(messageBody.meetTime, "YYYYMMDDHHmm"));
-                    setPlace(messageBody.meetLocate);
+                const noticeData = JSON.parse(message.body);
+                console.log("noticeData", noticeData);
+                console.log("noticeTime!!!!!!!!!!!!!!!!!", noticeData.meetTime)
+                setNoticeTime(noticeData.meetTime);
+                setPlace(noticeData.meetLocate);
+                setIsNoticeRegistered(true);
             });
         }, (error) => {
             console.error('WebSocket 연결 오류', error);
@@ -52,6 +52,7 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
 
     useEffect(() => {
         const promiseTime = dayjs(date).format("YYYYMMDD") + dayjs(time).format('HHmm');
+        console.log("시간promiseTime!!!!!!!!!!!!!!!!!!!!!!", promiseTime);
         setNoticeTime(promiseTime);
     }, [date, time]);
 
@@ -63,27 +64,24 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
 
         if (stompClient && stompClient.connected) {
             alert("공지가 등록되었습니다.");
-            handleSubmitNotice(stompClient);
             setIsNoticeRegistered(true); // 공지 등록 상태 변경
+
+            const noticeRequest = {
+                meetLocate: place,
+                meetTime: noticeTime,
+                meetMenu: maxVotedMenu,
+            };
+
+            console.log(noticeRequest); //시간 찍힘 확인
+
+            const headers = {
+                Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+            };
+
+            stompClient.send(`/app/meet/register/${roomId}/${meetId}`, headers, JSON.stringify(noticeRequest));
         } else {
             console.error("WebSocket이 연결되지 않았습니다.");
         }
-    };
-
-    const handleSubmitNotice = (client) => {
-        const noticeRequest = {
-            meetLocate: place,
-            meetTime: noticeTime,
-            meetMenu: maxVotedMenu,
-        };
-
-        console.log("noticeRequest", noticeRequest);
-
-        const headers = {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
-        };
-
-        client.send(`/app/meet/register/${roomId}/${meetId}`, headers, JSON.stringify(noticeRequest));
     };
 
     return (
@@ -106,9 +104,8 @@ function Notice({ roomId, meetId, maxVotedMenu }) {
                             <button className="promise-btn">공지 삭제</button>
                         </div>
                     </div>
-                    <Departure roomId={roomId} noticeTime={noticeTime}/>
+                    <Departure roomId={roomId} />
                 </>
-            
             ) : (
                 <div className="promise-content">
                     <div className="promise-header">오늘 뭐 먹지?</div>

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import Header from "../../etc/components/Header"
 import "../css/Course.css";
 
 const { Tmapv2  } = window;
@@ -9,33 +8,50 @@ function Course(){
 	const [totalDistance, setTotalDistance] = useState();
 	const [totalTime, setTotalTime] = useState();
 	const [steps, setSteps] = useState();
+	const [restaurantName, setRestaurantName] = useState('');
 
-    useEffect(() => {
-        const storedCourseData = sessionStorage.getItem('courseData');
+     // 로컬 스토리지에서 데이터 가져오기
+	 useEffect(() => {
+        const storedCourseData = localStorage.getItem('courseData');
         if (storedCourseData) {
             const parsedData = JSON.parse(storedCourseData);
+            console.log("parsedData", parsedData);
             setCourseData(parsedData);
+        }
+
+        // URL의 쿼리 파라미터에서 restaurantName 값을 읽어옵니다.
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('restaurantName');
+        if (name) {
+            setRestaurantName(decodeURIComponent(name));
         }
     }, []);
 
+    // courseData 변경 시 로그 찍기
     useEffect(() => {
-        if (courseData && 'features' in courseData.course) {
-			console.log("받은 도보 데이터", courseData.course);
-			setTotalDistance(parseFloat((courseData.course.features[0].properties.totalDistance / 1000).toFixed(1)));
-			setTotalTime(Math.round(courseData.course.features[0].properties.totalTime / 60));
-			onlyWalkmap();
-        } else 
-		if (courseData && 'plan' in courseData.course.metaData)
-			{
-			console.log(courseData.course.metaData)
-			console.log("데이터: ", courseData.course.metaData.plan);
-			console.log("bus: ", courseData.course.metaData.plan.itineraries[0].legs[1].passShape);
-			console.log(" 스텝: ", courseData.course.metaData.plan.itineraries[0].legs[0].steps);
-			setSteps(courseData.course.metaData.plan.itineraries[0].legs[1].steps);
-			setTotalDistance(parseFloat((courseData.course.metaData.plan.itineraries[0].totalDistance / 1000).toFixed(1)));
-			setTotalTime(Math.round(courseData.course.metaData.plan.itineraries[0].totalTime / 60));
-			initTmap();
-		}
+        if (courseData) {
+            console.log("courseData가 업데이트되었습니다:", courseData);
+        }
+    }, [courseData]);
+
+    useEffect(() => {
+        if (courseData) {
+            if ('features' in courseData) {
+                console.log("받은 도보 데이터", courseData);
+                setTotalDistance(parseFloat((courseData.features[0].properties.totalDistance / 1000).toFixed(1)));
+                setTotalTime(Math.round(courseData.features[0].properties.totalTime / 60));
+                onlyWalkmap();
+            } else if ('plan' in courseData.metaData) {
+                console.log(courseData.metaData);
+                console.log("데이터: ", courseData.metaData.plan);
+                console.log("bus: ", courseData.metaData.plan.itineraries[0].legs[1].passShape);
+                console.log(" 스텝: ", courseData.metaData.plan.itineraries[0].legs[0].steps);
+                setSteps(courseData.metaData.plan.itineraries[0].legs[1].steps);
+                setTotalDistance(parseFloat((courseData.metaData.plan.itineraries[0].totalDistance / 1000).toFixed(1)));
+                setTotalTime(Math.round(courseData.metaData.plan.itineraries[0].totalTime / 60));
+                initTmap();
+            }
+        }
     }, [courseData, steps]);
 
 	var map;
@@ -50,7 +66,7 @@ function Course(){
 		// 1. 지도 띄우기
 		if(!mapDiv.firstChild){
 			map = new Tmapv2.Map("map_div", {
-				center : new Tmapv2.LatLng(courseData.course.features[0].geometry.coordinates[1], courseData.course.features[0].geometry.coordinates[0]),
+				center : new Tmapv2.LatLng(courseData.features[0].geometry.coordinates[1], courseData.features[0].geometry.coordinates[0]),
 				width : "50%",
 				height : "400px",
 				zoom : 17,
@@ -62,7 +78,7 @@ function Course(){
 		// 2. 시작, 도착 심볼찍기
 		marker_s = new Tmapv2.Marker(
 			{
-				position : new Tmapv2.LatLng(courseData.course.features[0].geometry.coordinates[1], courseData.course.features[0].geometry.coordinates[0]),
+				position : new Tmapv2.LatLng(courseData.features[0].geometry.coordinates[1], courseData.features[0].geometry.coordinates[0]),
 				icon : "https://tmapapi.tmapmobility.com/upload/tmap/marker/pin_r_b_s.png",
 				iconSize : new Tmapv2.Size(24, 38),
 				map : map
@@ -70,7 +86,7 @@ function Course(){
 
 		marker_e = new Tmapv2.Marker(
 			{
-				position : new Tmapv2.LatLng(courseData.course.features[courseData.course.features.length - 1].geometry.coordinates[1], courseData.course.features[courseData.course.features.length - 1].geometry.coordinates[0]),
+				position : new Tmapv2.LatLng(courseData.features[courseData.features.length - 1].geometry.coordinates[1], courseData.features[courseData.features.length - 1].geometry.coordinates[0]),
 				icon : "https://tmapapi.tmapmobility.com/upload/tmap/marker/pin_b_m_e.png",
 				iconSize : new Tmapv2.Size(24, 38),
 				map : map
@@ -88,8 +104,8 @@ function Course(){
 		drawInfoArr = [];
 		
 		// 4. 경로그리기
-		for (var i in courseData.course.features) {
-			const coordinates = courseData.course.features[i].geometry.coordinates;
+		for (var i in courseData.features) {
+			const coordinates = courseData.features[i].geometry.coordinates;
 	
 			// coordinates가 배열의 배열인지 확인
 			if (Array.isArray(coordinates[0])) {
@@ -127,7 +143,7 @@ function Course(){
 
     if (!mapDiv.firstChild) {
         map = new Tmapv2.Map("map_div", {
-            center: new Tmapv2.LatLng(courseData.course.metaData.requestParameters.startY, courseData.course.metaData.requestParameters.startX),
+            center: new Tmapv2.LatLng(courseData.metaData.requestParameters.startY, courseData.metaData.requestParameters.startX),
             width: "50%",
             height: "400px",
             zoom: 17,
@@ -138,14 +154,14 @@ function Course(){
 
     // 2. 시작, 도착 심볼찍기
     marker_s = new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(courseData.course.metaData.requestParameters.startY, courseData.course.metaData.requestParameters.startX),
+        position: new Tmapv2.LatLng(courseData.metaData.requestParameters.startY, courseData.metaData.requestParameters.startX),
         icon: "https://tmapapi.tmapmobility.com/upload/tmap/marker/pin_r_b_s.png",
         iconSize: new Tmapv2.Size(24, 38),
         map: map
     });
 
     marker_e = new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(courseData.course.metaData.requestParameters.endY, courseData.course.metaData.requestParameters.endX),
+        position: new Tmapv2.LatLng(courseData.metaData.requestParameters.endY, courseData.metaData.requestParameters.endX),
         icon: "https://tmapapi.tmapmobility.com/upload/tmap/marker/pin_b_m_e.png",
         iconSize: new Tmapv2.Size(24, 38),
         map: map
@@ -160,7 +176,7 @@ function Course(){
     }
 
     // 4. 경로그리기
-    courseData.course.metaData.plan.itineraries[0].legs.forEach(leg => {
+    courseData.metaData.plan.itineraries[0].legs.forEach(leg => {
         if (leg.mode === "WALK") {
             if (leg.steps) {  // steps가 정의되었는지 확인
                 drawPath(leg.steps, "#4169E1");
@@ -202,12 +218,10 @@ function Course(){
     }
 }
 
-	
     return(
         <div className="CourseSession">
-            <Header></Header>
 			<div className="Course">
-				<div className="course-menu">떡볶이</div>
+				<div className="course-menu">{restaurantName}</div>
 				<div id="map_div"></div>
 				<div className="totalTime-result">총 거리: {totalDistance}km, 총 시간: {totalTime}분</div>
 			</div>
