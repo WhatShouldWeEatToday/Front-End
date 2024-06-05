@@ -1,13 +1,20 @@
 import "../css/MyMenu.css";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import SignOut from "./SignOut";
 
 function MyMenu({ onClose }) {
   const navigate = useNavigate();
   const menuRef = useRef();
 
+  const [showSignOut, setShowSignOut] = useState(false);
+
   const goMyBookmarkPage = () => {
     navigate(`/restaurant/bookmark`);
+  };
+
+  const toggleSignOut = () => {
+    setShowSignOut(!showSignOut);
   };
 
   useEffect(() => {
@@ -32,6 +39,16 @@ function MyMenu({ onClose }) {
         <div className="mybookmark" onClick={() => goMyBookmarkPage()}>
           내 즐겨찾기
         </div>
+        <div
+          className="signout"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSignOut();
+          }}
+        >
+          회원 탈퇴
+        </div>
+        {showSignOut && <SignOut onClose={toggleSignOut} />}
       </div>
     </div>
   );
