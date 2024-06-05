@@ -70,3 +70,50 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.third-area{
+    margin: auto;
+    width: 75%;
+    height: 430px;
+    border-radius: 30px;
+    background-color: aliceblue;
+}
+
+.recomandRestaurant-list{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 25%;
+    border-bottom: 3px solid black;
+    margin: 20px;
+}
+
+.recomandRestaurant-name{
+    font-weight: bold;
+    font-size: x-large;
+    text-align: left;
+}
+
+.recomandRestaurant-addressRoad{
+    text-align: left;
+}
+
+.recomandRestaurant-tel{
+    text-align: left;
+
+}
+
+.recomandRestaurant-infor{
+
+    text-align: left;
+}
+
+.clickCourse{
+    justify-content: right;
+    width: 80px;
+    height: 30px;
+    border: solid #FBE156 2px;
+    border-radius: 30px;
+    background-color: white;
+    margin-bottom: 10px;
+}
