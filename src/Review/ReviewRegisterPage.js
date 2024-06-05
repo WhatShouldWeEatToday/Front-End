@@ -63,6 +63,7 @@ function ReviewRegisterPage() {
           kind: kind,
           mood: mood,
           park: park,
+          reviewType: authStatus,
         },
         {
           headers: headers, // 헤더 설정
