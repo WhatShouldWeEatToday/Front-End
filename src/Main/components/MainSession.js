@@ -34,15 +34,6 @@ function MainSession() {
                 <div className='foodText'>
                     오늘 선정된 음식은?
                 </div>
-                {/*임시로 검색시 이미지 보이도록 설정*/}
-                <input type="text" value={foodName} onChange={handleInputChange} />
-                <button onClick={handleSearch}>Search</button>
-                {imgUrl &&
-                <div>
-                    <h2>{foodName}</h2>
-                    <img src={imgUrl} alt={foodName}/>
-                </div>
-                }
             </div>
         </div>
     );
